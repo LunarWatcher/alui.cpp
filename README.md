@@ -1,6 +1,6 @@
 # alui
 
-UI library for Allegro inspired by [Agui](https://github.com/jmasterx/Agui/), based on modern C++.
+UI library for Allegro inspired by [Agui](https://github.com/jmasterx/Agui/).
 
 This is a WIP library that I'll be poking at on and off for the foreseeable future.
 
