@@ -39,7 +39,6 @@ int main() {
 
     ALLEGRO_FONT* font = al_load_ttf_font(FONT, 36, 0);
 
-
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_mouse_event_source());
     al_register_event_source(queue, al_get_timer_event_source(timer));
@@ -67,8 +66,16 @@ int main() {
     //text->setDimensions(50, 100);
     text2->setColour(al_map_rgb(255, 255, 255));
     text2->setFlex(1, 1);
+    text2->setPadding(15.f);
 
     rootLayout->push(text2);
+
+    auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5");
+    testText->setFont(font);
+    testText->setColour(al_map_rgb(255, 255, 255));
+    testText->setFlex(1, 1);
+
+    rootLayout->push(testText);
 
     gui.pushFront(rootLayout);
 

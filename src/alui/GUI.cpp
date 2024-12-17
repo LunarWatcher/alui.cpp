@@ -50,10 +50,12 @@ void GUI::pushFront(std::shared_ptr<Layout> component) {
     // push_back means this is rendered last, which means it's rendered on top of everything else (assuming there's
     // overlap anyway)
     this->rootComponents.push_back(component);
+    component->setFont(this->font);
 }  
 
 void GUI::pushBack(std::shared_ptr<Layout> component) {
     this->rootComponents.push_front(component);
+    component->setFont(this->font);
 }  
 
 void GUI::resize(int screenWidth, int screenHeight) {

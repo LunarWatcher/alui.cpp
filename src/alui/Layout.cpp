@@ -31,8 +31,24 @@ bool Layout::onClick(float x, float y) {
 
 void Layout::push(std::shared_ptr<Component> c) { // NOLINT
     dirty = true;
+    // If the font is not null, there's probably an existing component hierarchy
+    if (font != nullptr && c->getFont() == nullptr) {
+        c->setFont(font);
+    }
     c->setParent(this);
     this->children.push_back(c);
+}
+
+void Layout::setFont(ALLEGRO_FONT* font) {
+    Component::setFont(font);
+
+    for (auto& child : children) {
+        // Don't override child fonts if they're set already; this is _probably_ only going to apply during
+        // initialisation anyway.
+        if (child->getFont() == nullptr) {
+            child->setFont(font);
+        }
+    }
 }
 
 }

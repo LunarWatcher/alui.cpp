@@ -16,7 +16,7 @@ void FlexBox::resizeChildren(
     float parentWidth, float parentHeight
 ) {
     std::vector<FlexAlgoData> components;
-    
+
     components.reserve(children.size());
     for (auto& child : children) {
         components.push_back({
@@ -30,7 +30,7 @@ void FlexBox::resizeChildren(
     // §9b2: determine available space (modified)
     auto mainSize = this->f.getMinAxialSize(dir)->compute(
         dir == FlexDirection::HORIZONTAL ? parentWidth : parentHeight
-    ) 
+    )
         // Padding is internal, and also an offset on the position (with the right padding, but all of that is a future
         // me problem)
         - this->f.padding.getSizeForDimension(this->dir);
@@ -42,7 +42,7 @@ void FlexBox::resizeChildren(
     float runningMainSize = 0;
     float lineMaxOpposingSize = 0;
 
-    // §9b3: min size computation 
+    // §9b3: min size computation
     for (auto& [component, flexBaseSize, hypotheticalMainSize, flexOpposingSize, frozen] : components) {
         auto flex = component->getFlex();
 
@@ -52,13 +52,19 @@ void FlexBox::resizeChildren(
         flexBaseSize = minAxialSize;
 
         hypotheticalMainSize = std::clamp(
-            flexBaseSize, 
+            flexBaseSize,
             unwrap(flex.getMinAxialSize(dir), 0),
             unwrap(flex.getMaxAxialSize(dir), maxSize)
         );
         if (hypotheticalMainSize < 0) { hypotheticalMainSize = 0; }
 
-        std::cout << "Flex base, hypothetical main: " << flexBaseSize << ", " << hypotheticalMainSize << std::endl;
+        flexOpposingSize = component->computeCrossSize(dir, hypotheticalMainSize);
+        lineMaxOpposingSize = std::max(
+            flexOpposingSize,
+            lineMaxOpposingSize
+        );
+
+        //std::cout << "Flex base, hypothetical main: " << flexBaseSize << ", " << hypotheticalMainSize << std::endl;
 
         // §9b3, closing paragraph
         runningMainSize += hypotheticalMainSize;
@@ -72,14 +78,20 @@ void FlexBox::resizeChildren(
 
         // inflexible elements will not change sizes
         if (flex.flexGrow == 0 && flex.flexShrink == 0) {
-            std::cout << "Flex preemptively frozen" << std::endl;
+            //std::cout << "Flex preemptively frozen" << std::endl;
             frozen = true;
         }
     }
-    // §9b5 (flex lines): TODO
+    // §9.3 (flex lines): TODO
     // Temporary hack; one flex line. Not sure how flex lines are going to be stored, but a .size() can be shoved in
     // instead later
     auto flexLines = 1;
+    // § 9.4: cross size {{{
+    for (auto& it : components) {
+        // TODO(fix): this assumes height: 100% (or whatever the flex equivalent is)
+        it.flexOpposingSize = lineMaxOpposingSize;
+    }
+    // }}}
 
     // § 9.7 {{{
     // 1. Sum hypothetical main sizes [Done separately]
@@ -91,7 +103,7 @@ void FlexBox::resizeChildren(
 
     // First pass; find the factor pool. This could technically be done when building lines, but I'm not going for
     // efficient yet
-    // TODO: figure out if 
+    // TODO: figure out if
     float factorPool = 0;
     for (auto& it : components) {
         if (!it.frozen) {
@@ -100,10 +112,10 @@ void FlexBox::resizeChildren(
         }
     }
 
-    std::cout << "Factor pool: " << factorPool << std::endl;
+    //std::cout << "Factor pool: " << factorPool << std::endl;
 
     auto freeSpace = mainSize - runningMainSize;
-    std::cout << "Free space: " << freeSpace << std::endl;
+    //std::cout << "Free space: " << freeSpace << std::endl;
 
     for (auto& item : toProcess) {
         item->flexAxialSize += freeSpace * (item->c->getFlex().flexGrow / ((float) factorPool));
@@ -124,7 +136,7 @@ void FlexBox::resizeChildren(
         std::cout << "Next x, y = " << x << ", " << y << std::endl;
     }
     // }}}
-    
+
     dirty = false;
 
 }

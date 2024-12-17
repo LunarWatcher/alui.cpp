@@ -29,6 +29,10 @@ private:
     float x, y, width, height;
 
 public:
+    /**
+     * \param font          The default font to use for all child components. The font is set automatically when new
+     *                      components are added to the hierarchy
+     */
     GUI(ALLEGRO_FONT* font);
 
     // Handles updates and animations, if I ever implement any. We'll see how deep this rabbit hole goes

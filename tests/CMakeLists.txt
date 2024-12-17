@@ -1,4 +1,4 @@
-add_executable(tests 
+add_executable(tests
     src/ABCDTests.cpp
 )
 
@@ -16,6 +16,6 @@ FetchContent_MakeAvailable(Catch2)
 
 target_link_libraries(tests Catch2::Catch2WithMain)
 
-target_link_libraries(tests alui.cppsrc)
+target_link_libraries(tests alui)
 
 # vim:ft=cmake

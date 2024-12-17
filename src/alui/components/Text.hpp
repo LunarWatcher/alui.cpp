@@ -15,12 +15,13 @@ protected:
      */
     std::string reflowedContent;
     ALLEGRO_COLOR textColour;
-    ALLEGRO_FONT* font = nullptr;
 public:
     Text(const std::string& str);
 
     virtual void render(GUI& ctx) override;
     virtual void tick() override {}
+
+    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize) override;
 
     virtual void setColour(ALLEGRO_COLOR colour) {
         this->textColour = colour;

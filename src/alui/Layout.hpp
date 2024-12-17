@@ -20,6 +20,11 @@ class Layout : public Component {
 protected:
     float x, y;
 
+    /**
+     * \brief Whether or not to show a scrollbar
+     */
+    bool showOverflow;
+
     std::vector<std::shared_ptr<Component>> children;
 
 public:
@@ -41,6 +46,10 @@ public:
     ) = 0;
 
     virtual void push(std::shared_ptr<Component> c);
+    virtual void setShowOverflow(bool showOverflow) {
+        this->showOverflow = showOverflow;
+    }
+    virtual void setFont(ALLEGRO_FONT* font) override;
 
 };
 
