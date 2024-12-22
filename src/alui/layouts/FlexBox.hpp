@@ -42,6 +42,8 @@ protected:
 
         bool frozen = false;
     };
+
+    float flexGap;
     FlexDirection dir;
 public:
     FlexBox(FlexDirection layoutDirection);
@@ -51,6 +53,8 @@ public:
         float parentX, float parentY,
         float parentWidth, float parentHeight
     ) override;
+
+    virtual void setFlexGap(float flexGap) { this->flexGap = flexGap; }
 
     //virtual Flex computeSizeRequirements(FlexDirection dir) override;
 };
