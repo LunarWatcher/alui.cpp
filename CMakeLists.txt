@@ -36,6 +36,7 @@ if (ALUI_DOCS)
         set(DOXYGEN_GENERATE_HTML YES)
         set(DOXYGEN_GENERATE_MAN NO)
         set(DOXYGEN_EXCLUDE_SYMBOLS "std::*")
+        set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "README.md")
         list(APPEND DOXYGEN_EXCLUDE_PATTERNS "*/build/*" "*/_deps/*")
 
         doxygen_add_docs(
