@@ -11,11 +11,11 @@ namespace alui {
 
 class GUI;
 
-/** @enum alui::SizingMethod
+/** @enum alui::SizeUnit
  *
- * @brief determines how a component is sized
+ * @brief determines how sizes are interpreted. 
  */
-enum class SizingMethod {
+enum class SizeUnit {
     /**
      * Used for percentage-based layouts that can shrink or grow depending on how much space is free. Note that if no
      * space is free, the elements will be hidden - try to avoid this :)
@@ -79,24 +79,24 @@ struct Sizing {
  * \see layouts for various specific-purpose implementations
  *
  */
-struct Flex {
+struct ComponentConfig {
 
     // TODO: Rename to something that isn't fucking shit
     struct Size {
-        SizingMethod type;
+        SizeUnit type;
         float value;
 
         float compute(float parentSize) {
             switch(type) {
-            case SizingMethod::RELATIVE:
+            case SizeUnit::RELATIVE:
                 return parentSize * value / 100.0f;
-            case SizingMethod::ABSOLUTE:
+            case SizeUnit::ABSOLUTE:
                 return value;
             }
         }
     };
 
-    float flexGrow = 0;
+    float flexGrow = 1;
     float flexShrink = 0;
 
     Sizing padding, margin;
@@ -105,6 +105,8 @@ struct Flex {
     std::optional<Size> minHeight;
     std::optional<Size> maxWidth;
     std::optional<Size> maxHeight;
+
+    std::shared_ptr<Background> background;
 
     std::optional<Size> getMinAxialSize(FlexDirection dir) {
         return dir == FlexDirection::HORIZONTAL ? minWidth : minHeight;
@@ -133,9 +135,9 @@ protected:
     ALLEGRO_FONT* font = nullptr;
 
     Component* parent;
-    Flex f;
+    ComponentConfig f;
 
-    virtual float unwrap(std::optional<Flex::Size> orig, float def) {
+    virtual float unwrap(std::optional<ComponentConfig::Size> orig, float def) {
         if (orig) {
             return orig->value;
         }
@@ -198,19 +200,19 @@ public:
 
     virtual bool isDirty() { return dirty; }
     virtual void clearDirty() { dirty = false; }
-    const Flex& getFlex() { return f; }
+    const ComponentConfig& getFlex() { return f; }
 
-    virtual void setMinDimensions(Flex::Size width, Flex::Size height) {
+    virtual void setMinDimensions(ComponentConfig::Size width, ComponentConfig::Size height) {
         f.minWidth = width;
         f.minHeight = height;
     }
 
-    virtual void setMaxDimensions(Flex::Size width, Flex::Size height) {
+    virtual void setMaxDimensions(ComponentConfig::Size width, ComponentConfig::Size height) {
         f.maxWidth = width;
         f.maxHeight = height;
     }
 
-    virtual void setDimensions(Flex::Size width, Flex::Size height) {
+    virtual void setDimensions(ComponentConfig::Size width, ComponentConfig::Size height) {
         f.minWidth = width;
         f.maxWidth = width;
 
