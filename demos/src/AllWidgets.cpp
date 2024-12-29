@@ -53,7 +53,7 @@ int main() {
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL);
     rootLayout->setPosition(0, 0);
-    rootLayout->setDimensions({alui::SizingMethod::ABSOLUTE, 640.0}, {alui::SizingMethod::ABSOLUTE, 480.0});
+    rootLayout->setDimensions({alui::SizeUnit::ABSOLUTE, 640.0}, {alui::SizeUnit::ABSOLUTE, 480.0});
 
     auto text = std::make_shared<alui::Text>("Hewwo x3");
     //text->setDimensions(50, 100);
