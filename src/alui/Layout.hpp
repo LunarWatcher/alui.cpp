@@ -18,8 +18,6 @@ namespace alui {
  */
 class Layout : public Component {
 protected:
-    float x, y;
-
     /**
      * \brief Whether or not to show a scrollbar
      */
@@ -28,16 +26,12 @@ protected:
     std::vector<std::shared_ptr<Component>> children;
 
 public:
+    Layout(const ComponentConfig& cfg) : Component(cfg) {}
+
     virtual void tick() override;
     virtual void render(GUI& ctx) override;
 
     virtual bool onClick(float x, float y) override;
-
-    virtual void setPosition(float x, float y) {
-        this->x = x;
-        this->y = y;
-        this->dirty = true;
-    }
 
     virtual void resizeChildren(
         Layout* parent,

@@ -99,6 +99,8 @@ struct ComponentConfig {
     float flexGrow = 1;
     float flexShrink = 0;
 
+    float x, y;
+
     Sizing padding, margin;
 
     std::optional<Size> minWidth;
@@ -134,6 +136,8 @@ protected:
 
     Component* parent;
     ComponentConfig f;
+
+    Component(const ComponentConfig& cfg) : f(cfg) {}
 
     virtual float unwrap(std::optional<ComponentConfig::Size> orig, float def) {
         if (orig) {
@@ -216,6 +220,12 @@ public:
 
         f.minHeight = height;
         f.maxHeight = height;
+    }
+
+    virtual void setPosition(float x, float y) {
+        f.x = x;
+        f.y = y;
+        this->dirty = true;
     }
 
     virtual void setPadding(Sizing padding) { this->f.padding = padding; }

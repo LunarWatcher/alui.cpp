@@ -10,7 +10,7 @@
 
 namespace alui {
 
-Text::Text(const std::string& str) : content(str) {
+Text::Text(const std::string& str, const ComponentConfig& cfg) : content(str), Component(cfg) {
 
 }
 

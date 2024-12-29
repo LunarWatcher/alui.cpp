@@ -46,7 +46,7 @@ protected:
     float flexGap;
     FlexDirection dir;
 public:
-    FlexBox(FlexDirection layoutDirection);
+    FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg);
 
     virtual void resizeChildren(
         Layout* parent,

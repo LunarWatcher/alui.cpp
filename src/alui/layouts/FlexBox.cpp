@@ -6,7 +6,7 @@
 
 namespace alui {
 
-FlexBox::FlexBox(FlexDirection layoutDirection) : dir(layoutDirection) {
+FlexBox::FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg) : dir(layoutDirection), Layout(cfg) {
 
 }
 
@@ -121,8 +121,8 @@ void FlexBox::resizeChildren(
         item->flexAxialSize += freeSpace * (item->c->getFlex().flexGrow / ((float) factorPool));
     }
 
-    float x = this->x + this->f.padding.left;
-    float y = this->y + this->f.padding.top;
+    float x = this->f.x + this->f.padding.left;
+    float y = this->f.y + this->f.padding.top;
 
     for (auto& item : components) {
         item.c->updateComputedPos(x, y);

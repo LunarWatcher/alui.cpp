@@ -51,29 +51,37 @@ int main() {
     // alui {{{
     alui::GUI gui(font);
 
-    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL);
-    rootLayout->setPosition(0, 0);
-    rootLayout->setDimensions({alui::SizeUnit::ABSOLUTE, 640.0}, {alui::SizeUnit::ABSOLUTE, 480.0});
+    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
+        .x = 0, .y = 0,
+        .minWidth = alui::ComponentConfig::Size { alui::SizeUnit::ABSOLUTE, 640.0f },
+        .minHeight = alui::ComponentConfig::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+    });
 
-    auto text = std::make_shared<alui::Text>("Hewwo x3");
+    auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
+        .flexGrow = 1,
+        .flexShrink = 1,
+    });
     //text->setDimensions(50, 100);
     text->setColour(al_map_rgb(255, 255, 255));
-    text->setFlex(1, 1);
 
     rootLayout->push(text);
 
-    auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3");
+    auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3", alui::ComponentConfig {
+        .flexGrow = 1,
+        .flexShrink = 1,
+        .padding = 15.0f
+    });
     //text->setDimensions(50, 100);
     text2->setColour(al_map_rgb(255, 255, 255));
-    text2->setFlex(1, 1);
-    text2->setPadding(15.f);
 
     rootLayout->push(text2);
 
-    auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5");
+    auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5", alui::ComponentConfig {
+        .flexGrow = 1,
+        .flexShrink = 1,
+    });
     testText->setFont(font);
     testText->setColour(al_map_rgb(255, 255, 255));
-    testText->setFlex(1, 1);
 
     rootLayout->push(testText);
 
