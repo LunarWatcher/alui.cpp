@@ -7,7 +7,6 @@
 namespace alui {
 
 GUI::GUI(ALLEGRO_FONT* font) : font(font) {
-
 }
 
 void GUI::tick() {

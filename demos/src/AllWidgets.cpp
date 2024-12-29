@@ -62,26 +62,26 @@ int main() {
         .flexShrink = 1,
     });
     //text->setDimensions(50, 100);
-    text->setColour(al_map_rgb(255, 255, 255));
+    text->setTextColour(al_map_rgb(255, 255, 255));
 
     rootLayout->push(text);
 
-    auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3", alui::ComponentConfig {
+    auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", alui::ComponentConfig {
         .flexGrow = 1,
         .flexShrink = 1,
         .padding = 15.0f
     });
     //text->setDimensions(50, 100);
-    text2->setColour(al_map_rgb(255, 255, 255));
+    text2->setTextColour(al_map_rgb(255, 255, 255));
 
     rootLayout->push(text2);
 
-    auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5", alui::ComponentConfig {
+    auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
         .flexGrow = 1,
         .flexShrink = 1,
     });
     testText->setFont(font);
-    testText->setColour(al_map_rgb(255, 255, 255));
+    testText->setTextColour(al_map_rgb(255, 255, 255));
 
     rootLayout->push(testText);
 

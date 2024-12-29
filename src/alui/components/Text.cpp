@@ -16,12 +16,12 @@ Text::Text(const std::string& str, const ComponentConfig& cfg) : content(str), C
 
 void Text::render(GUI& ctx) {
     Component::render(ctx);
-    //al_set_clipping_rectangle(
-        //std::floor(x),
-        //std::floor(y),
-        //std::floor(width),
-        //std::floor(height)
-    //);
+    al_set_clipping_rectangle(
+        std::floor(getContentX()),
+        std::floor(getContentY()),
+        std::floor(getInternalWidth()),
+        std::floor(getInternalHeight())
+    );
 
     al_draw_multiline_text(
         font,

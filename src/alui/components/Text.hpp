@@ -1,9 +1,9 @@
 #pragma once
 
 #include "allegro5/color.h"
-#include "allegro5/allegro_font.h"
 #include "alui/Component.hpp"
 #include <string>
+
 namespace alui {
 
 class Text : public Component {
@@ -19,7 +19,7 @@ public:
 
     virtual float computeCrossSize(FlexDirection dir, float virtualMainSize) override;
 
-    virtual void setColour(ALLEGRO_COLOR colour) {
+    virtual void setTextColour(ALLEGRO_COLOR colour) {
         this->textColour = colour;
     }
 
