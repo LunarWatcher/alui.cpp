@@ -106,8 +106,6 @@ struct ComponentConfig {
     std::optional<Size> maxWidth;
     std::optional<Size> maxHeight;
 
-    std::shared_ptr<Background> background;
-
     std::optional<Size> getMinAxialSize(FlexDirection dir) {
         return dir == FlexDirection::HORIZONTAL ? minWidth : minHeight;
     }
