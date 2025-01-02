@@ -59,9 +59,4 @@ float Component::computeCrossSize(FlexDirection dir, float) {
         );
 }
 
-void Component::setFlex(float flexGrow, float flexShrink) {
-    f.flexGrow = flexGrow;
-    f.flexShrink = flexShrink;
-}
-
 } /* alui */

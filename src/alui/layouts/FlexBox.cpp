@@ -44,7 +44,7 @@ void FlexBox::resizeChildren(
 
     // §9b3: min size computation
     for (auto& [component, flexBaseSize, hypotheticalMainSize, flexOpposingSize, frozen] : components) {
-        auto flex = component->getFlex();
+        auto conf = component->getConfig();
 
         auto minAxialSize = component->computeSizeRequirements(this->dir);
         // TODO
@@ -53,8 +53,8 @@ void FlexBox::resizeChildren(
 
         hypotheticalMainSize = std::clamp(
             flexBaseSize,
-            unwrap(flex.getMinAxialSize(dir), 0),
-            unwrap(flex.getMaxAxialSize(dir), maxSize)
+            unwrap(conf.getMinAxialSize(dir), 0),
+            unwrap(conf.getMaxAxialSize(dir), maxSize)
         );
         if (hypotheticalMainSize < 0) { hypotheticalMainSize = 0; }
 
@@ -77,7 +77,7 @@ void FlexBox::resizeChildren(
         );
 
         // inflexible elements will not change sizes
-        if (flex.flexGrow == 0 && flex.flexShrink == 0) {
+        if (conf.flex.grow == 0 && conf.flex.shrink == 0) {
             //std::cout << "Flex preemptively frozen" << std::endl;
             frozen = true;
         }
@@ -108,7 +108,7 @@ void FlexBox::resizeChildren(
     for (auto& it : components) {
         if (!it.frozen) {
             toProcess.push_back(&it);
-            factorPool += it.c->getFlex().flexGrow;
+            factorPool += it.c->getConfig().flex.grow;
         }
     }
 
@@ -118,7 +118,7 @@ void FlexBox::resizeChildren(
     //std::cout << "Free space: " << freeSpace << std::endl;
 
     for (auto& item : toProcess) {
-        item->flexAxialSize += freeSpace * (item->c->getFlex().flexGrow / ((float) factorPool));
+        item->flexAxialSize += freeSpace * (item->c->getConfig().flex.grow / ((float) factorPool));
     }
 
     float x = this->f.x + this->f.padding.left;
