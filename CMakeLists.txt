@@ -22,9 +22,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory(src)
 
-#if(ALUI_BUILD_TESTS)
-    #add_subdirectory(tests)
-#endif()
+if(ALUI_BUILD_TESTS)
+    add_subdirectory(tests)
+
+    add_custom_target(test
+        COMMAND tests
+        DEPENDS tests
+        COMMENT "Test alui.cpp")
+endif()
 
 if (ALUI_ENABLE_DEMOS)
     add_subdirectory(demos)
@@ -37,7 +42,6 @@ if (ALUI_DOCS)
         set(DOXYGEN_GENERATE_MAN NO)
         set(DOXYGEN_EXCLUDE_SYMBOLS "std::*")
         set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "README.md")
-        set(DOXYGEN_INPUT "docs/")
         set(DOXYGEN_RECURSIVE YES)
         list(APPEND DOXYGEN_EXCLUDE_PATTERNS "*/build/*" "*/_deps/*")
 
@@ -51,8 +55,4 @@ if (ALUI_DOCS)
     endif()
 endif()
 
-#add_custom_target(test
-    #COMMAND tests
-    #DEPENDS tests
-    #COMMENT "Test alui.cpp")
 # vim:ft=cmake

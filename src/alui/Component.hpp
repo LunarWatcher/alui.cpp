@@ -68,6 +68,11 @@ struct Sizing {
     float getSizeForDimension(FlexDirection dir) {
         return dir == FlexDirection::HORIZONTAL ? left + right : top + bot;
     }
+
+    float getCrossSizeForDimension(FlexDirection dir) {
+
+        return dir == FlexDirection::HORIZONTAL ? top + bot : left + right;
+    }
 };
 
 /**

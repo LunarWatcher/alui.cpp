@@ -38,7 +38,7 @@ protected:
         float flexBaseSize;
         // There is no way this is the correct use of axial
         float flexAxialSize;
-        float flexOpposingSize;
+        float flexCrossSize;
 
         bool frozen = false;
     };
