@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.28)
 project(alui.cpp)
 
+option(ALUI_ENABLE_DEMOS "WHether or not to build demos" OFF)
 option(ALUI_BUILD_TESTS "Whether or not to build tests. Forced ON if building standalone" OFF)
 option(ALUI_DOCS "Whether or not to build doxygen docs" OFF)
 
@@ -12,16 +13,12 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     else()
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
     endif()
-    set(ALUI_ENABLE_DEMOS ON CACHE BOOL)
-    set(ALUI_BUILD_TESTS ON CACHE BOOL)
-    set(ALUI_DOCS ON CACHE BOOL)
+    set(ALUI_ENABLE_DEMOS ON)
+    set(ALUI_BUILD_TESTS ON)
+    set(ALUI_DOCS ON)
 else()
     message (STATUS "alui: Running as a submodule")
     set(ALUI_STANDALONE OFF)
-
-    set(ALUI_ENABLE_DEMOS OFF CACHE BOOL)
-    set(ALUI_BUILD_TESTS OFF CACHE BOOL)
-    set(ALUI_DOCS OFF CACHE BOOL)
 endif()
 
 option(ALUI_LINT "Whether or not to run clang-tidy" OFF)
