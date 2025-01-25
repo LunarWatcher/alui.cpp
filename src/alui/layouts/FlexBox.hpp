@@ -35,10 +35,9 @@ protected:
     struct FlexAlgoData {
         std::shared_ptr<Component> c;
 
-        float flexBaseSize;
-        // There is no way this is the correct use of axial
-        float flexAxialSize;
-        float flexCrossSize;
+        float flexBaseSize = 0;
+        float flexAxialSize = 0;
+        float flexCrossSize = 0;
 
         bool frozen = false;
     };

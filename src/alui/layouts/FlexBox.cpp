@@ -5,13 +5,13 @@
 
 namespace alui {
 
-FlexBox::FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg) : dir(layoutDirection), Layout(cfg) {
+FlexBox::FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg) : Layout(cfg), dir(layoutDirection) {
 
 }
 
 void FlexBox::resizeChildren(
-    Layout* parent,
-    float parentX, float parentY,
+    Layout*,
+    float, float,
     float parentWidth, float parentHeight
 ) {
     std::vector<FlexAlgoData> components;
@@ -85,7 +85,7 @@ void FlexBox::resizeChildren(
     // §9.3 (flex lines): TODO
     // Temporary hack; one flex line. Not sure how flex lines are going to be stored, but a .size() can be shoved in
     // instead later
-    auto flexLines = 1;
+    auto flexLines = 1; // NOLINT
     // § 9.4: cross size {{{
     //for (auto& it : components) {
         //// TODO(fix): this assumes height: 100% (or whatever the flex equivalent is)
@@ -120,7 +120,7 @@ void FlexBox::resizeChildren(
 
     for (auto& item : toProcess) {
         // Allocate remaining free space and compute cross size
-        item->flexAxialSize += freeSpace * (item->c->getConfig().flex.grow / ((float) factorPool));
+        item->flexAxialSize += freeSpace * (item->c->getConfig().flex.grow / factorPool);
         item->flexCrossSize = item->c->computeCrossSize(dir, item->flexAxialSize);
     }
 

@@ -121,7 +121,7 @@ struct ComponentConfig {
         Flex(float f) : grow(f), shrink(f) {}
         Flex(float g, float s) : grow(g), shrink(s) {}
         Flex(float g, float s, float basis) : grow(g), shrink(s), basis(basis) {}
-    } flex;
+    } flex{1};
 
 
     /**
@@ -129,21 +129,21 @@ struct ComponentConfig {
      *
      * \see [Positioning](docs/Positioning.md)
      */
-    float x;
+    float x = 0;
 
     /**
      * \brief Y position; only respected for layouts
      *
      * \see [Positioning](docs/Positioning.md)
      */
-    float y;
+    float y = 0;
 
-    Sizing padding, margin;
+    Sizing padding{0}, margin{0};
 
-    std::optional<Size> minWidth;
-    std::optional<Size> minHeight;
-    std::optional<Size> maxWidth;
-    std::optional<Size> maxHeight;
+    std::optional<Size> minWidth = std::nullopt;
+    std::optional<Size> minHeight = std::nullopt;
+    std::optional<Size> maxWidth = std::nullopt;
+    std::optional<Size> maxHeight = std::nullopt;
 
     std::optional<Size> getMinAxialSize(FlexDirection dir) {
         return dir == FlexDirection::HORIZONTAL ? minWidth : minHeight;

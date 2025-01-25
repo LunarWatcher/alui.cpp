@@ -90,7 +90,7 @@ int main() {
     while(true) {
         al_wait_for_event(queue, &event);
 
-        switch(event.type) {
+        switch(event.type) { // NOLINT
             case ALLEGRO_EVENT_TIMER:
                 redraw = true;
                 break;

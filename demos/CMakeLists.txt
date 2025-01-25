@@ -51,6 +51,10 @@ function (demo_executable name file)
         alui 
         allegro allegro_font allegro_ttf allegro_primitives allegro_color
     )
+
+    if (ALUI_LINT)
+        set_target_properties(${name} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
+    endif()
 endfunction()
 
 demo_executable(all-widgets AllWidgets.cpp)

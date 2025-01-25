@@ -31,7 +31,7 @@ public:
 
     virtual float computeCrossSize(FlexDirection dir, float virtualMainSize) override;
     virtual void processText(
-        LineCallback func,
+        const LineCallback& func,
         float maxWidth,
         bool bustCache = false
     );

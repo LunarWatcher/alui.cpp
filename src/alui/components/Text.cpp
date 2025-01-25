@@ -1,6 +1,5 @@
 #include "Text.hpp"
 #include "allegro5/allegro_font.h"
-#include "allegro5/bitmap.h"
 #include "allegro5/utf8.h"
 #include "alui/Component.hpp"
 #include "alui/GUI.hpp"
@@ -12,7 +11,7 @@
 
 namespace alui {
 
-Text::Text(const std::string& str, const ComponentConfig& cfg) : content(str), Component(cfg) {
+Text::Text(const std::string& str, const ComponentConfig& cfg) : Component(cfg), content(str) {
 
 }
 
@@ -61,8 +60,8 @@ float Text::computeCrossSize(FlexDirection dir, float virtualMainSize) {
     }
 }
 
-void Text::processText(LineCallback func, float maxWidth, bool bustCache) {
-    if (bustCache || computedLines.size() == 0) {
+void Text::processText(const LineCallback& func, float maxWidth, bool bustCache) {
+    if (bustCache || computedLines.empty()) {
         computedLines.clear();
 
         int currRangeStart = 0;
@@ -84,7 +83,8 @@ void Text::processText(LineCallback func, float maxWidth, bool bustCache) {
         // The start of the current byte. nextCodepoint - currBytePtr = codepoint size
         int currBytePtr = 0;
         // The start of the previous byte. currBytePtr - prevBytePtr = lastCodepoint size
-        int prevBytePtr = 0;
+        // (Currently not in use)
+        //int prevBytePtr = 0;
 
         while ((codepoint = al_ustr_get_next(codepoints.get(), &nextCodepointPtr)) != -1) {
             if (codepoint == -2) {
@@ -123,12 +123,12 @@ void Text::processText(LineCallback func, float maxWidth, bool bustCache) {
             }
 
             lastCodepoint = codepoint;
-            prevBytePtr = currBytePtr;
+            //prevBytePtr = currBytePtr;
             currBytePtr = nextCodepointPtr;
         }
 
         // TODO: Check if this checks out
-        if (currRangeStart < content.size()) {
+        if ((size_t) currRangeStart < content.size()) {
             computedLines.push_back(content.substr(currRangeStart, content.size() - currRangeStart));
         }
     }
