@@ -18,7 +18,8 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y xvfb libvorbis-dev libtheora-dev libwebp-dev libphysfs-dev libopusfile-dev libdumb1-dev libflac-dev libpulse-dev libgtk-3-dev pandoc libenet-dev pulseaudio libasound2-dev libopenal-dev libgl1-mesa-dev libglu-dev libopenmpt-dev
+          sudo apt-get install -y xvfb libvorbis-dev libtheora-dev libwebp-dev libphysfs-dev libopusfile-dev libdumb1-dev libflac-dev libpulse-dev libgtk-3-dev pandoc libenet-dev pulseaudio libasound2-dev libopenal-dev \
+            libgl1-mesa-dev libglu-dev libopenmpt-dev libx11-dev
       - name: Build
         run: |
           mkdir build
@@ -36,7 +37,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install deps
         run: |
-          sudo apt update && sudo apt upgrade -y
+          sudo apt-get update
+          sudo apt-get install -y xvfb libvorbis-dev libtheora-dev libwebp-dev libphysfs-dev libopusfile-dev libdumb1-dev libflac-dev libpulse-dev libgtk-3-dev pandoc libenet-dev pulseaudio libasound2-dev libopenal-dev \
+            libgl1-mesa-dev libglu-dev libopenmpt-dev libx11-dev
       - name: Check clang-tidy
         run: |
           mkdir build
