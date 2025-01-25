@@ -23,7 +23,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DWANT_SHADERS_GL=on
+          cmake .. -DWANT_SHADERS_GL=on -DCMAKE_BUILD_TYPE=Debug
           cmake --build . -j $(nproc)
       - name: Test
         run: |
