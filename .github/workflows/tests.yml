@@ -1,0 +1,32 @@
+name: Tests
+on:
+  push:
+    branches: [ master, development ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{matrix.os}}
+    name: Build and test on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install packages and set up mock display
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libvorbis-dev libtheora-dev libwebp-dev libphysfs-dev libopusfile-dev libdumb1-dev libflac-dev libpulse-dev libgtk-3-dev pandoc libcurl4-nss-dev libenet-dev pulseaudio libasound2-dev libopenal-dev libgl1-mesa-dev libglu-dev libopenmpt-dev
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DWANT_SHADERS_GL=on
+          cmake --build . -j $(nproc)
+      - name: Test
+        run: |
+          cd build
+          cmake --build . --target test
+
