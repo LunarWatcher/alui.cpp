@@ -33,6 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Run clang-tidy
     steps:
+      - uses: actions/checkout@v4
       - name: Install deps
         run: |
           sudo apt update && sudo apt upgrade -y
