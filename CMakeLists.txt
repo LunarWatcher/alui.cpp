@@ -48,7 +48,7 @@ if (ALUI_TEST OR ALUI_ENABLE_DEMOS)
     set(WANT_NATIVE_DIALOG ON CACHE STRING "" FORCE)
 
     set(SHARED ON CACHE STRING "" FORCE)
-    set(BUILD_SHARED_LIBS ON CACHE STRING "" FORCE)
+    set(BUILD_SHARED_LIBS ON)
 
     include(FetchContent)
 
@@ -56,23 +56,19 @@ if (ALUI_TEST OR ALUI_ENABLE_DEMOS)
         GIT_REPOSITORY https://github.com/liballeg/allegro5
         GIT_TAG 5.2.10.0
         OVERRIDE_FIND_PACKAGE
+        PATCH_COMMAND git apply ${CMAKE_CURRENT_SOURCE_DIR}/3p-patches/allegro.patch
         EXCLUDE_FROM_ALL
     )
-
-    include(ExternalProject)
-    ExternalProject_Add(Freetype
+    FetchContent_Declare(Freetype
         GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype
         GIT_TAG VER-2-13-3
-        PATCH_COMMAND ""
-        INSTALL_DIR ""
-        INSTALL_COMMAND ""
-        CMAKE_CACHE_ARGS
-        -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-        -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+        OVERRIDE_FIND_PACKAGE
+        EXCLUDE_FROM_ALL
     )
-
-    ExternalProject_Get_Property(Freetype SOURCE_DIR)
-    set(FREETYPE_INCLUDE_DIRS ${SOURCE_DIR}/include/)
+    FetchContent_MakeAvailable(
+        Freetype
+    )
+    set(FREETYPE_INCLUDE_DIRS ${freetype_SOURCE_DIR}/include/)
     set(FREETYPE_LIBRARIES freetype)
     set(FREETYPE_FOUND YES)
     add_definitions(-DFT_FREETYPE_H=<freetype/freetype.h>)
