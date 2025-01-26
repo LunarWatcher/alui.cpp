@@ -24,11 +24,11 @@ endif()
 option(ALUI_LINT "Whether or not to run clang-tidy" OFF)
 option(LINT_WARNINGS_ARE_ERRORS "Whether or not to set -warnings-as-errors" OFF)
 
-message(INFO "-- Alui configuration:")
-message(INFO "\t- Demos: ${ALUI_ENABLE_DEMOS}")
-message(INFO "\t- Tests: ${ALUI_BUILD_TESTS}")
-message(INFO "\t- Docs: ${ALUI_DOCS}")
-message(INFO "\t- Linting: ${ALUI_LINT}")
+message(STATUS "-- Alui configuration:")
+message(STATUS "\t- Demos: ${ALUI_ENABLE_DEMOS}")
+message(STATUS "\t- Tests: ${ALUI_BUILD_TESTS}")
+message(STATUS "\t- Docs: ${ALUI_DOCS}")
+message(STATUS "\t- Linting: ${ALUI_LINT}")
 
 set (CMAKE_CXX_STANDARD 20)
 
@@ -48,6 +48,7 @@ if (ALUI_TEST OR ALUI_ENABLE_DEMOS)
     set(WANT_NATIVE_DIALOG ON CACHE STRING "" FORCE)
 
     set(SHARED ON CACHE STRING "" FORCE)
+    set(BUILD_SHARED_LIBS ON CACHE STRING "" FORCE)
 
     include(FetchContent)
 
@@ -57,16 +58,22 @@ if (ALUI_TEST OR ALUI_ENABLE_DEMOS)
         OVERRIDE_FIND_PACKAGE
         EXCLUDE_FROM_ALL
     )
-    FetchContent_Declare(freetype
+    FetchContent_Declare(Freetype
         GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype
         GIT_TAG VER-2-13-3
         OVERRIDE_FIND_PACKAGE
         EXCLUDE_FROM_ALL
     )
+    FetchContent_MakeAvailable(
+        Freetype
+    )
+    set(FREETYPE_INCLUDE_DIRS ${freetype_SOURCE_DIR}/include/)
+    set(FREETYPE_LIBRARIES freetype)
+    set(FREETYPE_FOUND YES)
+    add_definitions(-DFT_FREETYPE_H=<freetype/freetype.h>)
 
     FetchContent_MakeAvailable(
         allegro5
-        freetype
     )
     # For some reason, Allegro's targets doesn't include header include dirs
     # This probably isn't enough to cover everything either, it's apparently supposed to be covered by 
