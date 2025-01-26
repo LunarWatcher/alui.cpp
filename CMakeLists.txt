@@ -57,9 +57,16 @@ if (ALUI_TEST OR ALUI_ENABLE_DEMOS)
         OVERRIDE_FIND_PACKAGE
         EXCLUDE_FROM_ALL
     )
+    FetchContent_Declare(freetype
+        GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype
+        GIT_TAG VER-2-13-3
+        OVERRIDE_FIND_PACKAGE
+        EXCLUDE_FROM_ALL
+    )
 
     FetchContent_MakeAvailable(
         allegro5
+        freetype
     )
     # For some reason, Allegro's targets doesn't include header include dirs
     # This probably isn't enough to cover everything either, it's apparently supposed to be covered by 
