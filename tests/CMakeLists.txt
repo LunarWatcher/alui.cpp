@@ -18,33 +18,6 @@ target_link_libraries(tests
     alui
 )
 
-include(FetchContent)
-
-FetchContent_Declare(allegro5
-    GIT_REPOSITORY https://github.com/liballeg/allegro5
-    GIT_TAG 5.2.10.0
-    OVERRIDE_FIND_PACKAGE
-    EXCLUDE_FROM_ALL
-)
-
-FetchContent_MakeAvailable(
-    allegro5
-)
-
-# For some reason, Allegro's targets doesn't include header include dirs
-# This probably isn't enough to cover everything either, it's apparently supposed to be covered by 
-# `make install`.
-set (ALLEGRO_INCLUDE_DIRS
-    ${allegro5_SOURCE_DIR}/include/
-    ${allegro5_BINARY_DIR}/include/
-    ${allegro5_SOURCE_DIR}/addons/image/
-    ${allegro5_SOURCE_DIR}/addons/ttf/
-    ${allegro5_SOURCE_DIR}/addons/font/
-    ${allegro5_SOURCE_DIR}/addons/color/
-    ${allegro5_SOURCE_DIR}/addons/main/
-    ${allegro5_SOURCE_DIR}/addons/primitives/
-)
-
 target_include_directories(tests PUBLIC ${ALLEGRO_INCLUDE_DIRS})
 target_link_libraries(tests allegro_ttf)
 
