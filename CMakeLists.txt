@@ -58,16 +58,21 @@ if (ALUI_TEST OR ALUI_ENABLE_DEMOS)
         OVERRIDE_FIND_PACKAGE
         EXCLUDE_FROM_ALL
     )
-    FetchContent_Declare(Freetype
+
+    include(ExternalProject)
+    ExternalProject_Add(Freetype
         GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype
         GIT_TAG VER-2-13-3
-        OVERRIDE_FIND_PACKAGE
-        EXCLUDE_FROM_ALL
+        PATCH_COMMAND ""
+        INSTALL_DIR ""
+        INSTALL_COMMAND ""
+        CMAKE_CACHE_ARGS
+        -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
     )
-    FetchContent_MakeAvailable(
-        Freetype
-    )
-    set(FREETYPE_INCLUDE_DIRS ${freetype_SOURCE_DIR}/include/)
+
+    ExternalProject_Get_Property(Freetype SOURCE_DIR)
+    set(FREETYPE_INCLUDE_DIRS ${SOURCE_DIR}/include/)
     set(FREETYPE_LIBRARIES freetype)
     set(FREETYPE_FOUND YES)
     add_definitions(-DFT_FREETYPE_H=<freetype/freetype.h>)
