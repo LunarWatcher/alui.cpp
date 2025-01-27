@@ -43,6 +43,8 @@ endif()
 add_subdirectory(src)
 
 if (ALUI_TEST OR ALUI_ENABLE_DEMOS)
+    configure_file(tests/3p/dejavu.ttf ${CMAKE_BINARY_DIR}/dejavu.ttf COPYONLY)
+
     set(WANT_TESTS OFF CACHE STRING "" FORCE)
     set(WANT_EXAMPLES OFF CACHE STRING "" FORCE)
     set(WANT_DEMO OFF CACHE STRING "" FORCE)

@@ -16,8 +16,7 @@
 
 int main() {
     // General allegro boilerplate {{{
-    // This is not portable, but for now, I don't care
-    constexpr auto FONT = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc";
+    constexpr auto FONT = "./dejavu.ttf";
 
     if(!al_init()) {
         std::cout << "couldn't initialize allegro" << std::endl;

@@ -21,5 +21,4 @@ target_link_libraries(tests
 target_include_directories(tests PUBLIC ${ALLEGRO_INCLUDE_DIRS})
 target_link_libraries(tests allegro_ttf)
 
-configure_file(3p/dejavu.ttf ${CMAKE_BINARY_DIR}/dejavu.ttf COPYONLY)
 # vim:ft=cmake
