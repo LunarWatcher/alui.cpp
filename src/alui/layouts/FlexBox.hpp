@@ -35,10 +35,9 @@ protected:
     struct FlexAlgoData {
         std::shared_ptr<Component> c;
 
-        float flexBaseSize;
-        // There is no way this is the correct use of axial
-        float flexAxialSize;
-        float flexOpposingSize;
+        float flexBaseSize = 0;
+        float flexAxialSize = 0;
+        float flexCrossSize = 0;
 
         bool frozen = false;
     };
@@ -46,7 +45,7 @@ protected:
     float flexGap;
     FlexDirection dir;
 public:
-    FlexBox(FlexDirection layoutDirection);
+    FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg);
 
     virtual void resizeChildren(
         Layout* parent,

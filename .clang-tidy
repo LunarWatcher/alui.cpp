@@ -12,6 +12,7 @@ Checks: >
   modernize-deprecated-headers,
   -bugprone-easily-swappable-parameters,
   -bugprone-exception-escape,
+  -bugprone-macro-parentheses,
   -clang-analyzer-optin.core.EnumCastOutOfRange,
   -clang-diagnostic-unused-parameter,
   -misc-non-private-*,

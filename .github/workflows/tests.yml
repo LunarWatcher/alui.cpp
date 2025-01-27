@@ -1,0 +1,48 @@
+name: Tests
+on:
+  push:
+    branches: [ master, development ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{matrix.os}}
+    name: Build and test on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install packages and set up mock display
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libvorbis-dev libtheora-dev libwebp-dev libphysfs-dev libopusfile-dev libdumb1-dev libflac-dev libpulse-dev libgtk-3-dev pandoc libenet-dev pulseaudio libasound2-dev libopenal-dev \
+            libgl1-mesa-dev libglu-dev libopenmpt-dev libx11-dev
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DWANT_SHADERS_GL=on -DCMAKE_BUILD_TYPE=Debug
+          cmake --build . -j $(nproc)
+      - name: Test
+        run: |
+          cd build
+          cmake --build . --target test
+  lint:
+    runs-on: ubuntu-latest
+    name: Run clang-tidy
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libvorbis-dev libtheora-dev libwebp-dev libphysfs-dev libopusfile-dev libdumb1-dev libflac-dev libpulse-dev libgtk-3-dev pandoc libenet-dev pulseaudio libasound2-dev libopenal-dev \
+            libgl1-mesa-dev libglu-dev libopenmpt-dev libx11-dev
+      - name: Check clang-tidy
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DALUI_LINT=ON -DLINT_WARNINGS_ARE_ERRORS=ON
+          cmake --build . -j 2

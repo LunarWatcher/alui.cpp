@@ -47,7 +47,7 @@ public:
      * This is the funciton you should normally be using, unless you want to push a component that appears behind
      * another already-visible component for some reason.
      */
-    void pushFront(std::shared_ptr<Layout> component);
+    void pushFront(const std::shared_ptr<Layout>& component);
 
     /**
      * Pushes a component behind the other current elements.
@@ -57,7 +57,7 @@ public:
      * behind existing elements. If you don't, or if there's no overlap, use pushFront instead.
      *
      */
-    void pushBack(std::shared_ptr<Layout> component);
+    void pushBack(const std::shared_ptr<Layout>& component);
 
     void resize(int screenWidth, int screenHeight);
 

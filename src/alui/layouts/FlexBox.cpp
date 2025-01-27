@@ -2,17 +2,16 @@
 #include "alui/Component.hpp"
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 
 namespace alui {
 
-FlexBox::FlexBox(FlexDirection layoutDirection) : dir(layoutDirection) {
+FlexBox::FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg) : Layout(cfg), dir(layoutDirection) {
 
 }
 
 void FlexBox::resizeChildren(
-    Layout* parent,
-    float parentX, float parentY,
+    Layout*,
+    float, float,
     float parentWidth, float parentHeight
 ) {
     std::vector<FlexAlgoData> components;
@@ -44,7 +43,7 @@ void FlexBox::resizeChildren(
 
     // §9b3: min size computation
     for (auto& [component, flexBaseSize, hypotheticalMainSize, flexOpposingSize, frozen] : components) {
-        auto flex = component->getFlex();
+        auto conf = component->getConfig();
 
         auto minAxialSize = component->computeSizeRequirements(this->dir);
         // TODO
@@ -53,8 +52,8 @@ void FlexBox::resizeChildren(
 
         hypotheticalMainSize = std::clamp(
             flexBaseSize,
-            unwrap(flex.getMinAxialSize(dir), 0),
-            unwrap(flex.getMaxAxialSize(dir), maxSize)
+            unwrap(conf.getMinAxialSize(dir), 0),
+            unwrap(conf.getMaxAxialSize(dir), maxSize)
         );
         if (hypotheticalMainSize < 0) { hypotheticalMainSize = 0; }
 
@@ -71,13 +70,14 @@ void FlexBox::resizeChildren(
 
         // This currently means that the non-axial dimension is maxed out relative to the other elements, so not "true"
         // flexbox, but it's a start
+        // TODO: This is ignored due to later code, sort out your shit
         flexOpposingSize = lineMaxOpposingSize = std::max(
             lineMaxOpposingSize,
             minOpposingSize
         );
 
         // inflexible elements will not change sizes
-        if (flex.flexGrow == 0 && flex.flexShrink == 0) {
+        if (conf.flex.grow == 0 && conf.flex.shrink == 0) {
             //std::cout << "Flex preemptively frozen" << std::endl;
             frozen = true;
         }
@@ -85,12 +85,12 @@ void FlexBox::resizeChildren(
     // §9.3 (flex lines): TODO
     // Temporary hack; one flex line. Not sure how flex lines are going to be stored, but a .size() can be shoved in
     // instead later
-    auto flexLines = 1;
+    auto flexLines = 1; // NOLINT
     // § 9.4: cross size {{{
-    for (auto& it : components) {
-        // TODO(fix): this assumes height: 100% (or whatever the flex equivalent is)
-        it.flexOpposingSize = lineMaxOpposingSize;
-    }
+    //for (auto& it : components) {
+        //// TODO(fix): this assumes height: 100% (or whatever the flex equivalent is)
+        //it.flexOpposingSize = lineMaxOpposingSize;
+    //}
     // }}}
 
     // § 9.7 {{{
@@ -104,11 +104,12 @@ void FlexBox::resizeChildren(
     // First pass; find the factor pool. This could technically be done when building lines, but I'm not going for
     // efficient yet
     // TODO: figure out if
+    // TODO: Figure out what past me meant with that unfinished todo
     float factorPool = 0;
     for (auto& it : components) {
         if (!it.frozen) {
             toProcess.push_back(&it);
-            factorPool += it.c->getFlex().flexGrow;
+            factorPool += it.c->getConfig().flex.grow;
         }
     }
 
@@ -118,22 +119,24 @@ void FlexBox::resizeChildren(
     //std::cout << "Free space: " << freeSpace << std::endl;
 
     for (auto& item : toProcess) {
-        item->flexAxialSize += freeSpace * (item->c->getFlex().flexGrow / ((float) factorPool));
+        // Allocate remaining free space and compute cross size
+        item->flexAxialSize += freeSpace * (item->c->getConfig().flex.grow / factorPool);
+        item->flexCrossSize = item->c->computeCrossSize(dir, item->flexAxialSize);
     }
 
-    float x = this->x + this->f.padding.left;
-    float y = this->y + this->f.padding.top;
+    float x = this->f.x + this->f.padding.left;
+    float y = this->f.y + this->f.padding.top;
 
     for (auto& item : components) {
         item.c->updateComputedPos(x, y);
-        auto width = dir == FlexDirection::HORIZONTAL ? item.flexAxialSize : item.flexOpposingSize;
-        auto height = dir == FlexDirection::HORIZONTAL ? item.flexOpposingSize : item.flexAxialSize;
-        std::cout << width << "," << height << std::endl;
+        auto width = dir == FlexDirection::HORIZONTAL ? item.flexAxialSize : item.flexCrossSize;
+        auto height = dir == FlexDirection::HORIZONTAL ? item.flexCrossSize : item.flexAxialSize;
+        //std::cout << width << "," << height << std::endl;
 
         item.c->updateComputedSizes(width, height);
 
         (dir == FlexDirection::HORIZONTAL ? x : y) += item.flexAxialSize;
-        std::cout << "Next x, y = " << x << ", " << y << std::endl;
+        //std::cout << "Next x, y = " << x << ", " << y << std::endl;
     }
     // }}}
 

@@ -16,8 +16,7 @@
 
 int main() {
     // General allegro boilerplate {{{
-    // This is not portable, but for now, I don't care
-    constexpr auto FONT = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc";
+    constexpr auto FONT = "./dejavu.ttf";
 
     if(!al_init()) {
         std::cout << "couldn't initialize allegro" << std::endl;
@@ -51,29 +50,34 @@ int main() {
     // alui {{{
     alui::GUI gui(font);
 
-    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL);
-    rootLayout->setPosition(0, 0);
-    rootLayout->setDimensions({alui::SizeUnit::ABSOLUTE, 640.0}, {alui::SizeUnit::ABSOLUTE, 480.0});
+    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
+        .x = 0, .y = 0,
+        .minWidth = alui::ComponentConfig::Size { alui::SizeUnit::ABSOLUTE, 640.f },
+        .minHeight = alui::ComponentConfig::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+    });
 
-    auto text = std::make_shared<alui::Text>("Hewwo x3");
+    auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
+        .flex{1}
+    });
     //text->setDimensions(50, 100);
-    text->setColour(al_map_rgb(255, 255, 255));
-    text->setFlex(1, 1);
+    text->setTextColour(al_map_rgb(255, 255, 255));
 
     rootLayout->push(text);
 
-    auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3");
+    auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", alui::ComponentConfig {
+        .flex{1},
+        .padding = 15.0f
+    });
     //text->setDimensions(50, 100);
-    text2->setColour(al_map_rgb(255, 255, 255));
-    text2->setFlex(1, 1);
-    text2->setPadding(15.f);
+    text2->setTextColour(al_map_rgb(255, 255, 255));
 
     rootLayout->push(text2);
 
-    auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5");
+    auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
+        .flex{1}
+    });
     testText->setFont(font);
-    testText->setColour(al_map_rgb(255, 255, 255));
-    testText->setFlex(1, 1);
+    testText->setTextColour(al_map_rgb(255, 255, 255));
 
     rootLayout->push(testText);
 
@@ -85,7 +89,7 @@ int main() {
     while(true) {
         al_wait_for_event(queue, &event);
 
-        switch(event.type) {
+        switch(event.type) { // NOLINT
             case ALLEGRO_EVENT_TIMER:
                 redraw = true;
                 break;

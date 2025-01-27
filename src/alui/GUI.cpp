@@ -7,7 +7,6 @@
 namespace alui {
 
 GUI::GUI(ALLEGRO_FONT* font) : font(font) {
-
 }
 
 void GUI::tick() {
@@ -41,11 +40,11 @@ void GUI::render() {
     }
 }
 
-void GUI::handleEvent(const ALLEGRO_EVENT& ev) {
+void GUI::handleEvent(const ALLEGRO_EVENT& ev) { // NOLINT
 
 }
 
-void GUI::pushFront(std::shared_ptr<Layout> component) {
+void GUI::pushFront(const std::shared_ptr<Layout>& component) {
     // No, this is not a mistake.
     // push_back means this is rendered last, which means it's rendered on top of everything else (assuming there's
     // overlap anyway)
@@ -53,12 +52,12 @@ void GUI::pushFront(std::shared_ptr<Layout> component) {
     component->setFont(this->font);
 }  
 
-void GUI::pushBack(std::shared_ptr<Layout> component) {
+void GUI::pushBack(const std::shared_ptr<Layout>& component) {
     this->rootComponents.push_front(component);
     component->setFont(this->font);
 }  
 
-void GUI::resize(int screenWidth, int screenHeight) {
+void GUI::resize(int screenWidth, int screenHeight) { // NOLINT
     // TODO
 }
 

@@ -6,6 +6,7 @@
 #include <allegro5/color.h>
 #include <functional>
 #include <optional>
+#include <stdexcept>
 
 namespace alui {
 
@@ -67,6 +68,11 @@ struct Sizing {
     float getSizeForDimension(FlexDirection dir) {
         return dir == FlexDirection::HORIZONTAL ? left + right : top + bot;
     }
+
+    float getCrossSizeForDimension(FlexDirection dir) {
+
+        return dir == FlexDirection::HORIZONTAL ? top + bot : left + right;
+    }
 };
 
 /**
@@ -93,18 +99,51 @@ struct ComponentConfig {
             case SizeUnit::ABSOLUTE:
                 return value;
             }
+            [[unlikely]]
+            throw std::runtime_error("Fatal");
         }
     };
 
-    float flexGrow = 1;
-    float flexShrink = 0;
+    struct Flex {
+        float grow;
+        float shrink; 
 
-    Sizing padding, margin;
+        /**
+         * \brief Defines the flex basis. 
+         *
+         * Note that unlike CSS flex, this value can only be numeric, and 0 and negative numbers have a special meaning.
+         * If this value is 0 or negative, it's computed based on the minimum size of the elements. There's no
+         * equivalent for many of the special CSS values as this implementation is not a complete 1:1 with CSS.
+         */
+        float basis = 0;
 
-    std::optional<Size> minWidth;
-    std::optional<Size> minHeight;
-    std::optional<Size> maxWidth;
-    std::optional<Size> maxHeight;
+        Flex() : grow(1), shrink(1), basis(0) {}
+        Flex(float f) : grow(f), shrink(f) {}
+        Flex(float g, float s) : grow(g), shrink(s) {}
+        Flex(float g, float s, float basis) : grow(g), shrink(s), basis(basis) {}
+    } flex{1};
+
+
+    /**
+     * \brief X position; only respected for layouts
+     *
+     * \see [Positioning](docs/Positioning.md)
+     */
+    float x = 0;
+
+    /**
+     * \brief Y position; only respected for layouts
+     *
+     * \see [Positioning](docs/Positioning.md)
+     */
+    float y = 0;
+
+    Sizing padding{0}, margin{0};
+
+    std::optional<Size> minWidth = std::nullopt;
+    std::optional<Size> minHeight = std::nullopt;
+    std::optional<Size> maxWidth = std::nullopt;
+    std::optional<Size> maxHeight = std::nullopt;
 
     std::optional<Size> getMinAxialSize(FlexDirection dir) {
         return dir == FlexDirection::HORIZONTAL ? minWidth : minHeight;
@@ -134,6 +173,8 @@ protected:
 
     Component* parent;
     ComponentConfig f;
+
+    Component(const ComponentConfig& cfg) : f(cfg) {}
 
     virtual float unwrap(std::optional<ComponentConfig::Size> orig, float def) {
         if (orig) {
@@ -172,8 +213,6 @@ public:
      */
     virtual bool onClick(float x, float y);
 
-    virtual void setFlex(float flexGrow, float flexShrink);
-
     virtual float computeSizeRequirements(FlexDirection dir);
     virtual float computeCrossSize(FlexDirection dir, float virtualMainSize);
 
@@ -198,7 +237,7 @@ public:
 
     virtual bool isDirty() { return dirty; }
     virtual void clearDirty() { dirty = false; }
-    const ComponentConfig& getFlex() { return f; }
+    const ComponentConfig& getConfig() { return f; }
 
     virtual void setMinDimensions(ComponentConfig::Size width, ComponentConfig::Size height) {
         f.minWidth = width;
@@ -216,6 +255,12 @@ public:
 
         f.minHeight = height;
         f.maxHeight = height;
+    }
+
+    virtual void setPosition(float x, float y) {
+        f.x = x;
+        f.y = y;
+        this->dirty = true;
     }
 
     virtual void setPadding(Sizing padding) { this->f.padding = padding; }
