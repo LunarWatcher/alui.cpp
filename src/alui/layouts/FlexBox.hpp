@@ -2,6 +2,7 @@
 
 #include "alui/Component.hpp"
 #include "alui/Layout.hpp"
+#include <vector>
 
 namespace alui {
 
@@ -20,7 +21,7 @@ namespace alui {
  * The following paragraphs have been implemented from
  * [the flexbox standard](https://drafts.csswg.org/css-flexbox-1/#layout-algorithm):
  * * § 9.2
- * * § 9.3 [TODO]
+ * * § 9.3
  * * § 9.4 [TODO]
  * * § 9.6, bullet 16 [TODO]
  * * § 9.7
@@ -40,6 +41,13 @@ protected:
         float flexCrossSize = 0;
 
         bool frozen = false;
+    };
+
+    struct FlexLine {
+        std::vector<FlexAlgoData> components;
+        float runningMainSize = 0;
+        float maxCrossSize = 0;
+        float factorPool = 0;
     };
 
     float flexGap;
