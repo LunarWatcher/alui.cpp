@@ -4,14 +4,6 @@ if (ALUI_ENABLE_DEMOS)
     )
 endif()
 
-set(CLIPBOARD_PROVIDER alui/meta/NoopClipboard.cpp)
-
-if(LINUX)
-    set(CLIPBOARD_PROVIDER alui/meta/NoopClipboard.cpp)
-else()
-    message(WARNING "Unknown configuration; clipboard implementation is noop")
-endif()
-
 add_library(alui STATIC
     alui/GUI.cpp
     alui/Component.cpp
@@ -20,8 +12,6 @@ add_library(alui STATIC
     alui/components/Text.cpp
 
     alui/layouts/FlexBox.cpp
-
-    ${CLIPBOARD_PROVIDER}
 )
 
 target_include_directories(alui PUBLIC .)
