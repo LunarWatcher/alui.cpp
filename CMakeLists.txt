@@ -24,7 +24,7 @@ endif()
 option(ALUI_LINT "Whether or not to run clang-tidy" OFF)
 option(LINT_WARNINGS_ARE_ERRORS "Whether or not to set -warnings-as-errors" OFF)
 
-message(STATUS "-- Alui configuration:")
+message(STATUS "Alui configuration:")
 message(STATUS "\t- Demos: ${ALUI_ENABLE_DEMOS}")
 message(STATUS "\t- Tests: ${ALUI_BUILD_TESTS}")
 message(STATUS "\t- Docs: ${ALUI_DOCS}")

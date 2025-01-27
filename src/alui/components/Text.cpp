@@ -76,7 +76,7 @@ void Text::processText(const LineCallback& func, float maxWidth, bool bustCache)
         // The current codepoint
         int32_t codepoint;
         // The previous codepoint, cached for utility purposes
-        int32_t lastCodepoint;
+        int32_t lastCodepoint = 0;
 
         // Functionally a pointer to the next codepoint, indicates where al_ustr_get_next should start its search
         int nextCodepointPtr = 0;
