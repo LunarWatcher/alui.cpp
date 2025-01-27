@@ -12,7 +12,7 @@ else()
     message(WARNING "Unknown configuration; clipboard implementation is noop")
 endif()
 
-add_library(alui SHARED
+add_library(alui STATIC
     alui/GUI.cpp
     alui/Component.cpp
     alui/Layout.cpp
