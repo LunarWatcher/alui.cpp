@@ -58,11 +58,12 @@ if (ALUI_TEST OR ALUI_ENABLE_DEMOS)
 
     include(FetchContent)
 
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_allegro5 ON)
     FetchContent_Declare(allegro5
         GIT_REPOSITORY https://github.com/liballeg/allegro5
         GIT_TAG 5.2.10.0
         OVERRIDE_FIND_PACKAGE
-        PATCH_COMMAND git apply ${CMAKE_CURRENT_SOURCE_DIR}/3p-patches/allegro.patch
+        PATCH_COMMAND git reset --hard && git apply ${CMAKE_CURRENT_SOURCE_DIR}/3p-patches/allegro.patch
         EXCLUDE_FROM_ALL
     )
     FetchContent_Declare(Freetype
