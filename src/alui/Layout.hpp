@@ -45,6 +45,10 @@ public:
     }
     virtual void setFont(ALLEGRO_FONT* font) override;
 
+    const decltype(children)& getChildren() {
+        return children;
+    }
+
 };
 
 }

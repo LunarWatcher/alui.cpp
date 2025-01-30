@@ -27,8 +27,8 @@ namespace alui {
  * * § 9.7
  *
  * The rest have either been omitted in their entirety (due to a lack of need or lack of relevant config options), or
- * been implemented in some other ✨ Special Way ✨. Consequently, this is not a guaranteed match to browser-rendered
- * flexboxes, but it's good enough for use in games.
+ * been implemented in some other ✨ Special Way ✨. Several of the implemented paragraphs have somewhat non-standard
+ * implementations, as the goal isn't a 100% compliant flexbox implementation.
  *
  */
 class FlexBox : public Layout  {

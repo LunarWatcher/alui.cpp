@@ -2,6 +2,7 @@
 #include "alui/Component.hpp"
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 
 namespace alui {
 
@@ -139,6 +140,16 @@ void FlexBox::resizeChildren(
     // }}}
 
     dirty = false;
+    // TODO: sort out computedX/Y
+    this->computedX = 0;
+    this->computedY = 0;
+    this->computedWidth = parentWidth;
+    this->computedHeight = std::min(
+        parentHeight,
+        // TODO: This will not work if gui.y != 0
+        y
+    );
+    std::cout << "Resized flexbox to " << computedWidth << ", " << computedHeight << std::endl;
 
 }
 

@@ -75,6 +75,22 @@ struct Sizing {
     }
 };
 
+struct Size {
+    SizeUnit type;
+    float value;
+
+    float compute(float parentSize) {
+        switch(type) {
+        case SizeUnit::RELATIVE:
+            return parentSize * value / 100.0f;
+        case SizeUnit::ABSOLUTE:
+            return value;
+        }
+        [[unlikely]]
+        throw std::runtime_error("Fatal");
+    }
+};
+
 /**
  * \brief Meta struct defining how layouts flex.
  *
@@ -88,21 +104,6 @@ struct Sizing {
 struct ComponentConfig {
 
     // TODO: Rename to something that isn't fucking shit
-    struct Size {
-        SizeUnit type;
-        float value;
-
-        float compute(float parentSize) {
-            switch(type) {
-            case SizeUnit::RELATIVE:
-                return parentSize * value / 100.0f;
-            case SizeUnit::ABSOLUTE:
-                return value;
-            }
-            [[unlikely]]
-            throw std::runtime_error("Fatal");
-        }
-    };
 
     struct Flex {
         float grow;
@@ -122,6 +123,23 @@ struct ComponentConfig {
         Flex(float g, float s) : grow(g), shrink(s) {}
         Flex(float g, float s, float basis) : grow(g), shrink(s), basis(basis) {}
     } flex{1};
+
+    /**
+     * \brief Optional component ID
+     * 
+     * The ID can be used to quickly identify elements in common callbacks and similar.
+     *
+     * \note ID = 0 is reserved, and means the element has no ID. It's also up to end-user code to set IDs, and to keep
+     *      track of which IDs refer to which component.
+     *
+     * \warning Non-zero ID uniqueness is not systemically enforced. It's up to the invoking code to use IDs correctly.
+     *      However, aside error in your code, the only ID duplicated by the library is ID = 0. If you use ID = 0 in your
+     *      code, you will run into duplicate IDs. There may also be cases where the ID being duplicated across a UI is
+     *      desirable, for example in lists, where the ID just reflects the position of the element. However, such use
+     *      of IDs should be 1-indexed to avoid errors with undefined or incorrectly defined IDs that end up defaulting
+     *      to 0.
+     */
+    int id = 0;
 
 
     /**
@@ -166,8 +184,10 @@ protected:
     float computedX, computedY, computedWidth, computedHeight;
 
     bool dirty = true;
+    bool focused = false;
 
     std::vector<ClickListener> clickListeners;
+
 
     ALLEGRO_FONT* font = nullptr;
 
@@ -176,7 +196,7 @@ protected:
 
     Component(const ComponentConfig& cfg) : f(cfg) {}
 
-    virtual float unwrap(std::optional<ComponentConfig::Size> orig, float def) {
+    virtual float unwrap(std::optional<Size> orig, float def) {
         if (orig) {
             return orig->value;
         }
@@ -201,6 +221,12 @@ protected:
      */
     virtual float getContentY() { return computedY + f.padding.top; }
 
+private:
+    void clearFocus() { focused = false; }
+    void focus() { focused = true; }
+    
+
+    friend class GUI;
 public:
     virtual ~Component() = default;
 
@@ -239,17 +265,17 @@ public:
     virtual void clearDirty() { dirty = false; }
     const ComponentConfig& getConfig() { return f; }
 
-    virtual void setMinDimensions(ComponentConfig::Size width, ComponentConfig::Size height) {
+    virtual void setMinDimensions(Size width, Size height) {
         f.minWidth = width;
         f.minHeight = height;
     }
 
-    virtual void setMaxDimensions(ComponentConfig::Size width, ComponentConfig::Size height) {
+    virtual void setMaxDimensions(Size width, Size height) {
         f.maxWidth = width;
         f.maxHeight = height;
     }
 
-    virtual void setDimensions(ComponentConfig::Size width, ComponentConfig::Size height) {
+    virtual void setDimensions(Size width, Size height) {
         f.minWidth = width;
         f.maxWidth = width;
 
@@ -270,6 +296,7 @@ public:
         this->font = font;
     }
     virtual ALLEGRO_FONT* getFont() { return font; }
+    virtual bool contains(float x, float y);
 };
 
 }

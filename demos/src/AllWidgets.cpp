@@ -48,17 +48,21 @@ int main() {
     ALLEGRO_EVENT event;
     // }}}
     // alui {{{
-    alui::GUI gui(font);
+    alui::GUI gui({
+        .font = font,
+        .width = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
+        .height = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+    });
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
         .x = 0, .y = 0,
-        .minWidth = alui::ComponentConfig::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .minHeight = alui::ComponentConfig::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
+        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
     });
 
     auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
         .flex{1},
-        .minWidth = alui::ComponentConfig::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
     });
     //text->setDimensions(50, 100);
     text->setTextColour(al_map_rgb(255, 255, 255));
@@ -68,7 +72,7 @@ int main() {
     auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", alui::ComponentConfig {
         .flex{1},
         .padding = 15.0f,
-        .minWidth = alui::ComponentConfig::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
     });
     //text->setDimensions(50, 100);
     text2->setTextColour(al_map_rgb(255, 255, 255));
@@ -77,7 +81,7 @@ int main() {
 
     auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
         .flex{1},
-        .minWidth = alui::ComponentConfig::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
     });
     testText->setFont(font);
     testText->setTextColour(al_map_rgb(255, 255, 255));
@@ -93,18 +97,20 @@ int main() {
         al_wait_for_event(queue, &event);
 
         switch(event.type) { // NOLINT
-            case ALLEGRO_EVENT_TIMER:
-                redraw = true;
-                break;
+        case ALLEGRO_EVENT_TIMER:
+            redraw = true;
+            break;
 
-            case ALLEGRO_EVENT_DISPLAY_CLOSE:
-                done = true;
-                break;
+        case ALLEGRO_EVENT_DISPLAY_CLOSE:
+            done = true;
+            break;
         }
 
         if(done) {
             break;
         }
+
+        gui.handleEvent(event);
 
         if(redraw && al_is_event_queue_empty(queue)) {
 

@@ -149,7 +149,7 @@ if (ALUI_DOCS)
         doxygen_add_docs(
             doxygen
             ${PROJECT_SOURCE_DIR}
-            COMMENT "Generate Doxygen"
+            COMMENT "Generate documentation"
         )
     else()
         message(WARNING "ALUI_DOCS is ON, but Doxygen was not found. Docs will not be generated")
