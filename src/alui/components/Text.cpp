@@ -1,5 +1,6 @@
 #include "Text.hpp"
 #include "allegro5/allegro_font.h"
+#include "allegro5/display.h"
 #include "allegro5/utf8.h"
 #include "alui/Component.hpp"
 #include "alui/GUI.hpp"
@@ -55,8 +56,8 @@ float Text::computeCrossSize(FlexDirection dir, float virtualMainSize) {
 
         return (float) (lineCount * lineHeight) + f.padding.getCrossSizeForDimension(dir);
     } else {
-        [[unlikely]]
-        throw std::runtime_error("Not implemented");
+        // TODO: account for box sizing and row formation
+        return (float) al_get_display_width(al_get_current_display());
     }
 }
 

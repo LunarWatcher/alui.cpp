@@ -5,7 +5,6 @@
 #include "alui/Component.hpp"
 #include "alui/Layout.hpp"
 #include <algorithm>
-#include <iostream>
 #include <memory>
 
 namespace alui {
@@ -27,16 +26,7 @@ void GUI::tick() {
         auto* disp = al_get_current_display();
         auto displayWidth = (float) al_get_display_width(disp);
         auto displayHeight = (float) al_get_display_height(disp);
-        // GUI is not a container, so defer resizing to the child components.
-        for (auto& component : this->rootComponents) {
-
-            if (auto l = std::dynamic_pointer_cast<Layout>(component)) {
-                l->resizeChildren(
-                    nullptr,
-                    cfg.x, cfg.y, cfg.width.compute(displayWidth), cfg.height.compute(displayHeight)
-                );
-            }
-        }
+        resize(displayWidth, displayHeight);
     }
 
 }
@@ -102,8 +92,18 @@ void GUI::pushBack(const std::shared_ptr<Layout>& component) {
     component->setFont(this->cfg.font);
 }  
 
-void GUI::resize(int screenWidth, int screenHeight) { // NOLINT
-    // TODO
+void GUI::resize(float displayWidth, float displayHeight) {
+    // GUI is not a container, so defer resizing to the child components.
+    for (auto& component : this->rootComponents) {
+
+        if (auto l = std::dynamic_pointer_cast<Layout>(component)) {
+            l->recomputeBounds(
+                nullptr,
+                cfg.x, cfg.y,
+                cfg.width.compute(displayWidth), cfg.height.compute(displayHeight)
+            );
+        }
+    }
 }
 
 std::shared_ptr<Component> GUI::getClickedComponent(float x, float y) {

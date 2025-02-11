@@ -297,6 +297,10 @@ public:
     }
     virtual ALLEGRO_FONT* getFont() { return font; }
     virtual bool contains(float x, float y);
+
+    std::pair<float, float> getComputedPositions() {
+        return {computedX, computedY};
+    }
 };
 
 }

@@ -116,7 +116,7 @@ public:
      */
     void pushBack(const std::shared_ptr<Layout>& component);
 
-    void resize(int screenWidth, int screenHeight);
+    void resize(float screenWidth, float screenHeight);
 
     void setPosition(float x, float y) {
         this->cfg.x = x;

@@ -25,6 +25,22 @@ protected:
 
     std::vector<std::shared_ptr<Component>> children;
 
+    virtual void updateComputedPos(float x, float y) override {
+        dirty = false;
+
+        this->computedX = x;
+        this->computedY = y;
+
+        for (auto& child : children) {
+            auto [sx, sy] = child->getComputedPositions();
+
+            child->updateComputedPos(
+                sx + x,
+                sy + y
+            );
+        }
+    }
+
 public:
     Layout(const ComponentConfig& cfg) : Component(cfg) {}
 
@@ -33,7 +49,7 @@ public:
 
     virtual bool onClick(float x, float y) override;
 
-    virtual void resizeChildren(
+    virtual void recomputeBounds(
         Layout* parent,
         float parentX, float parentY,
         float parentWidth, float parentHeight

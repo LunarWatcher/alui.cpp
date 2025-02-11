@@ -55,12 +55,12 @@ protected:
 public:
     FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg);
 
-    virtual void resizeChildren(
-        Layout* parent,
-        float parentX, float parentY,
-        float parentWidth, float parentHeight
-    ) override;
 
+    virtual void recomputeBounds(
+        Layout*,
+        float allocatedX, float allocatedY,
+        float parentMaxWidth, float parentMaxHeight
+    ) override;
     virtual void setFlexGap(float flexGap) { this->flexGap = flexGap; }
 
     //virtual Flex computeSizeRequirements(FlexDirection dir) override;

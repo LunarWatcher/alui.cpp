@@ -21,7 +21,7 @@ protected:
     };
 
     std::vector<std::string> computedLines;
-
+ 
 public:
     using LineCallback = std::function<void(const std::string& line)>;
     Text(const std::string& str, const ComponentConfig& cfg);

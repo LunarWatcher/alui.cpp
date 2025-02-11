@@ -10,11 +10,24 @@ FlexBox::FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg) : La
 
 }
 
-void FlexBox::resizeChildren(
+void FlexBox::recomputeBounds(
     Layout*,
     float, float,
     float parentWidth, float parentHeight
 ) {
+    for (auto& component : this->children) {
+        if (auto* layout = dynamic_cast<Layout*>(component.get()); layout != nullptr) {
+            layout->recomputeBounds(this,
+                0, 0,
+                // TODO: This isn't going to work properly I think, at least not with the variables as they're currently
+                // defined in the superclass function
+                parentWidth,
+                parentHeight
+            );
+        }
+    }
+
+    std::cout << "End nested loops" << std::endl;
     std::vector<FlexLine> lines;
 
     lines.reserve(children.size());
@@ -124,9 +137,10 @@ void FlexBox::resizeChildren(
 
         for (auto& item : components) {
             item.c->updateComputedPos(x, y);
+            std::cout << "Set item pos to " << x << "," << y << std::endl;
             auto width = dir == FlexDirection::HORIZONTAL ? item.flexAxialSize : item.flexCrossSize;
             auto height = dir == FlexDirection::HORIZONTAL ? item.flexCrossSize : item.flexAxialSize;
-            //std::cout << width << "," << height << std::endl;
+            std::cout << width << "," << height << std::endl;
 
             item.c->updateComputedSizes(width, height);
 
