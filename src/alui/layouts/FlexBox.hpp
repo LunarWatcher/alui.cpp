@@ -55,10 +55,8 @@ protected:
 public:
     FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg);
 
-
     virtual void recomputeBounds(
         Layout*,
-        float allocatedX, float allocatedY,
         float parentMaxWidth, float parentMaxHeight
     ) override;
     virtual void setFlexGap(float flexGap) { this->flexGap = flexGap; }

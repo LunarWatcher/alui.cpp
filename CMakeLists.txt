@@ -4,6 +4,8 @@ project(alui.cpp)
 option(ALUI_ENABLE_DEMOS "WHether or not to build demos" OFF)
 option(ALUI_BUILD_TESTS "Whether or not to build tests. Forced ON if building standalone" OFF)
 option(ALUI_DOCS "Whether or not to build doxygen docs" OFF)
+option(ALUI_SANITISE "Whether or not to -fsanitise=undefined" OFF)
+option(ALUI_TEST_OPTIONS "Additional options passed to the test" "")
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     message (STATUS "alui: Running standalone")
@@ -29,6 +31,7 @@ message(STATUS "\t- Demos: ${ALUI_ENABLE_DEMOS}")
 message(STATUS "\t- Tests: ${ALUI_BUILD_TESTS}")
 message(STATUS "\t- Docs: ${ALUI_DOCS}")
 message(STATUS "\t- Linting: ${ALUI_LINT}")
+message(STATUS "\t- Sanitising: ${ALUI_SANITISE}")
 
 set (CMAKE_CXX_STANDARD 20)
 
@@ -40,9 +43,14 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FS /EHsc")
 endif()
 
+if (ALUI_SANITISE)
+    # TODO: Figure out if there's a better way to dynamically-ish set sanitisers
+    set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
+endif()
+
 add_subdirectory(src)
 
-if (ALUI_TEST OR ALUI_ENABLE_DEMOS)
+if (ALUI_BUILD_TESTS OR ALUI_ENABLE_DEMOS)
     configure_file(tests/3p/dejavu.ttf ${CMAKE_BINARY_DIR}/dejavu.ttf COPYONLY)
 
     set(WANT_TESTS OFF CACHE STRING "" FORCE)
@@ -127,7 +135,7 @@ if(ALUI_BUILD_TESTS)
     add_subdirectory(tests)
 
     add_custom_target(test
-        COMMAND tests
+        COMMAND tests ${ALUI_TEST_OPTIONS}
         DEPENDS tests
         COMMENT "Test alui.cpp")
 endif()

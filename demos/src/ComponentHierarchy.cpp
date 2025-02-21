@@ -63,12 +63,12 @@ int main() {
     auto n1 = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
         .x = 0, .y = 0,
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 240.f },
+        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 140.f },
     });
     auto n2 = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
         .x = 0, .y = 0,
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 240.f },
+        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 140.f },
     });
 
     auto t1 = std::make_shared<alui::Text>("Hewwo x3 (L1)", alui::ComponentConfig {
@@ -83,18 +83,26 @@ int main() {
         .flex{1},
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
     });
+    auto t4 = std::make_shared<alui::Text>("Root container text", alui::ComponentConfig {
+        .flex{1},
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+    });
 
     t1->setTextColour(al_map_rgb(255, 255, 255));
     t2->setTextColour(al_map_rgb(255, 255, 255));
     t3->setTextColour(al_map_rgb(255, 255, 255));
+    t4->setTextColour(al_map_rgb(255, 255, 255));
 
     n1->push(t1);
     n2->push(t2);
     n2->push(t3);
 
+    // Child layout
     rootLayout->push(n1);
     rootLayout->push(n2);
-    gui.pushBack(rootLayout);
+    // Child element
+    rootLayout->push(t4);
+    gui.push(rootLayout);
 
     // }}}
 

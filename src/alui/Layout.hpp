@@ -25,21 +25,7 @@ protected:
 
     std::vector<std::shared_ptr<Component>> children;
 
-    virtual void updateComputedPos(float x, float y) override {
-        dirty = false;
-
-        this->computedX = x;
-        this->computedY = y;
-
-        for (auto& child : children) {
-            auto [sx, sy] = child->getComputedPositions();
-
-            child->updateComputedPos(
-                sx + x,
-                sy + y
-            );
-        }
-    }
+    virtual void updateComputedPos(float x, float y) override;
 
 public:
     Layout(const ComponentConfig& cfg) : Component(cfg) {}
@@ -51,7 +37,6 @@ public:
 
     virtual void recomputeBounds(
         Layout* parent,
-        float parentX, float parentY,
         float parentWidth, float parentHeight
     ) = 0;
 
@@ -64,6 +49,8 @@ public:
     const decltype(children)& getChildren() {
         return children;
     }
+
+    friend class GUI;
 
 };
 

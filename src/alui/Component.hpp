@@ -21,7 +21,10 @@ enum class SizeUnit {
      * Used for percentage-based layouts that can shrink or grow depending on how much space is free. Note that if no
      * space is free, the elements will be hidden - try to avoid this :)
      *
-     * Width and height must be [0, 100]. If a dimension equals 0, it'll be determined by the containing layout.
+     * Width and height must be [0, 1]. If a dimension equals 0, it'll be determined by the containing layout. If the
+     * percentage exceeds the size of the screen, behaviour, overflow, and rendering behaviour is undefined[^1].
+     *
+     * [^1]: At the time of writing c:
      */
     RELATIVE,
     /**
@@ -42,6 +45,7 @@ enum class FlexDirection {
 };
 
 
+// TODO: better name
 struct Sizing {
     float top, bot, left, right;
 
@@ -79,15 +83,19 @@ struct Size {
     SizeUnit type;
     float value;
 
+    Size() = delete;
+    Size(float v) : type(SizeUnit::ABSOLUTE), value(v) {}
+    Size(SizeUnit type, float value) : type(type), value(value) {}
+
     float compute(float parentSize) {
         switch(type) {
         case SizeUnit::RELATIVE:
-            return parentSize * value / 100.0f;
+            return parentSize * value;
         case SizeUnit::ABSOLUTE:
             return value;
         }
         [[unlikely]]
-        throw std::runtime_error("Fatal");
+        throw std::runtime_error(std::string("Fatal: unknown size type: ") + std::to_string(static_cast<int>(type)));
     }
 };
 
@@ -137,7 +145,7 @@ struct ComponentConfig {
      *      code, you will run into duplicate IDs. There may also be cases where the ID being duplicated across a UI is
      *      desirable, for example in lists, where the ID just reflects the position of the element. However, such use
      *      of IDs should be 1-indexed to avoid errors with undefined or incorrectly defined IDs that end up defaulting
-     *      to 0.
+     *      to 0. There may be cases where duplicate IDs are desired, but this is left as an exercise to end-users.
      */
     int id = 0;
 
@@ -197,6 +205,7 @@ protected:
     Component(const ComponentConfig& cfg) : f(cfg) {}
 
     virtual float unwrap(std::optional<Size> orig, float def) {
+        // TODO: This does not respect relative sizes 
         if (orig) {
             return orig->value;
         }
@@ -300,6 +309,10 @@ public:
 
     std::pair<float, float> getComputedPositions() {
         return {computedX, computedY};
+    }
+
+    std::pair<float, float> getComputedSize() {
+        return {computedWidth, computedHeight};
     }
 };
 

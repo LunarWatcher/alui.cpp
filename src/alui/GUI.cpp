@@ -17,9 +17,7 @@ void GUI::tick() {
     for (auto& component : this->rootComponents) {
         component->tick();
 
-        if (component->isDirty()) {
-            dirty = true;
-        }
+        dirty = dirty || component->isDirty();
     }
 
     if (dirty) {
@@ -38,7 +36,7 @@ void GUI::render() {
 }
 
 bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
-    switch (ev.type) {
+    switch (ev.type) { // NOLINT
         case ALLEGRO_EVENT_KEY_CHAR:
         case ALLEGRO_EVENT_KEY_UP:
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
@@ -79,7 +77,7 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
     return false;
 }
 
-void GUI::pushFront(const std::shared_ptr<Layout>& component) {
+void GUI::push(const std::shared_ptr<Layout>& component) {
     // No, this is not a mistake.
     // push_back means this is rendered last, which means it's rendered on top of everything else (assuming there's
     // overlap anyway)
@@ -96,13 +94,13 @@ void GUI::resize(float displayWidth, float displayHeight) {
     // GUI is not a container, so defer resizing to the child components.
     for (auto& component : this->rootComponents) {
 
-        if (auto l = std::dynamic_pointer_cast<Layout>(component)) {
+        if (auto* l = static_cast<Layout*>(component.get())) {
             l->recomputeBounds(
                 nullptr,
-                cfg.x, cfg.y,
                 cfg.width.compute(displayWidth), cfg.height.compute(displayHeight)
             );
         }
+
     }
 }
 

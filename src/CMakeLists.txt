@@ -4,6 +4,12 @@ if (ALUI_ENABLE_DEMOS)
     )
 endif()
 
+if (ALUI_BUILD_TESTS)
+    add_compile_definitions(
+        -DALUI_TEST=1
+    )
+endif()
+
 add_library(alui STATIC
     alui/GUI.cpp
     alui/Component.cpp

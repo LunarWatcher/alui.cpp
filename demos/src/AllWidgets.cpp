@@ -88,7 +88,7 @@ int main() {
 
     rootLayout->push(testText);
 
-    gui.pushFront(rootLayout);
+    gui.push(rootLayout);
 
     // }}}
 

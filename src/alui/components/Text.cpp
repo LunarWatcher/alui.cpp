@@ -4,11 +4,13 @@
 #include "allegro5/utf8.h"
 #include "alui/Component.hpp"
 #include "alui/GUI.hpp"
-#include <iostream>
 #include <limits>
 #include <cmath>
 #include <stdexcept>
 #include <string>
+#if defined ALUI_TEST || 1
+#include <iostream>
+#endif
 
 namespace alui {
 
@@ -42,22 +44,38 @@ void Text::render(GUI& ctx) {
 
 float Text::computeCrossSize(FlexDirection dir, float virtualMainSize) {
     // TODO: figure out a better solution for when FlexDirection::VERTICAL
-    auto maxWidth = dir == FlexDirection::HORIZONTAL ? virtualMainSize - this->f.padding.getSizeForDimension(dir) : std::numeric_limits<float>::max();
+    auto maxWidth = dir == FlexDirection::HORIZONTAL 
+        ? virtualMainSize - this->f.padding.getSizeForDimension(dir) 
+        : unwrap(f.maxWidth, std::numeric_limits<float>::max());
     processText([&](const auto&) {}, maxWidth, true);
-    std::cout << "used maxWidth = " << maxWidth << ", vms: " << virtualMainSize << std::endl;
+    //std::cout << "used maxWidth = " << maxWidth << ", vms: " << virtualMainSize << std::endl;
 
     int lineCount = (int) computedLines.size();
 
     //std::cout << lineCount << std::endl;
 
     if (dir == FlexDirection::HORIZONTAL) {
+        // Horizontal rows: cross size is height
+
         // TODO: cache somewhere?
         auto lineHeight = al_get_font_line_height(font);
 
         return (float) (lineCount * lineHeight) + f.padding.getCrossSizeForDimension(dir);
     } else {
-        // TODO: account for box sizing and row formation
-        return (float) al_get_display_width(al_get_current_display());
+        // Vertical "rows": Cross size is display width
+        auto* display = al_get_current_display();
+        if (display == nullptr) {
+            // ... except in test cases, where cross size is display width or 600px
+            // TODO: This probably wouldn't be hard-coded. Might be easier to cache the width somewhere (GUI?)
+#ifdef ALUI_TEST
+            std::cout << "Warning: running in test mode, display is null, returning 600px" << std::endl;
+            return 600;
+#else
+            throw std::runtime_error("Looks like you've misconfigured your setup.");
+#endif
+        }
+        return (float) al_get_display_width(display);
+        //return unwrap(f.minWidth, 0) + f.padding.getCrossSizeForDimension(dir);
     }
 }
 

@@ -104,7 +104,7 @@ public:
      * This is the funciton you should normally be using, unless you want to push a component that appears behind
      * another already-visible component for some reason.
      */
-    void pushFront(const std::shared_ptr<Layout>& component);
+    void push(const std::shared_ptr<Layout>& component);
 
     /**
      * Pushes a component behind the other current elements.
