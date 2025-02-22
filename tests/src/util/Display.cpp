@@ -5,6 +5,8 @@
 #include "allegro5/drawing.h"
 #include "allegro5/events.h"
 
+#include <stdexcept>
+
 namespace alui {
 
 Display::Display(int width, int height) 
