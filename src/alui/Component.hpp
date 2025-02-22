@@ -7,6 +7,7 @@
 #include <functional>
 #include <optional>
 #include <stdexcept>
+#include <string>
 
 namespace alui {
 
