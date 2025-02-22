@@ -34,7 +34,7 @@ jobs:
           cmake .. -DWANT_SHADERS_GL=on -DCMAKE_BUILD_TYPE=Debug -DALUI_TEST_OPTIONS="--debugCapture=false"
           cmake --build . -j $(nproc)
       - name: Mock display (Ubuntu, xorg)
-        if: matrix.os-config.os == 'ubuntu-latest' && matrix.os-config.windowSystem == "libx11-dev"
+        if: matrix.os-config.os == 'ubuntu-latest' && matrix.os-config.windowSystem == 'libx11-dev'
         run: |
           apt-get update -qy
           export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
