@@ -40,7 +40,7 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
           echo "tzdata tzdata/Areas select Europe\ntzdata tzdata/Zones/Europe select Berlin" >> seed.txt
           debconf-set-selections seed.txt
-          apt-get install -y curl unzip zip sed xvfb xorg-dev libglu1-mesa libgl1-mesa-dev libxinerama1 libxcursor1 libgtk-3-0 matchbox-window-manager
+          apt-get install -y xvfb xorg-dev libglu1-mesa libgl1-mesa-dev libxinerama1 libxcursor1 libgtk-3-0 matchbox-window-manager
           Xvfb :10 -ac -screen 0 1280x1024x24 & disown
           sleep 2 && DISPLAY=:10 matchbox-window-manager & disown
           echo "DISPLAY=:10" >> $GITHUB_ENV
