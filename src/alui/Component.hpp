@@ -171,11 +171,11 @@ struct ComponentConfig {
     std::optional<Size> maxWidth = std::nullopt;
     std::optional<Size> maxHeight = std::nullopt;
 
-    std::optional<Size> getMinAxialSize(FlexDirection dir) {
+    std::optional<Size> getMinAxialSize(FlexDirection dir) const {
         return dir == FlexDirection::HORIZONTAL ? minWidth : minHeight;
     }
 
-    std::optional<Size> getMaxAxialSize(FlexDirection dir) {
+    std::optional<Size> getMaxAxialSize(FlexDirection dir) const {
         return dir == FlexDirection::HORIZONTAL ? maxWidth : maxHeight;
     }
 };
@@ -249,7 +249,7 @@ public:
     virtual bool onClick(float x, float y);
 
     virtual float computeSizeRequirements(FlexDirection dir);
-    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize);
+    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize);
 
     virtual void updateComputedSizes(
         float width, float height

@@ -52,7 +52,6 @@ void Component::render(GUI&) {
 }
 
 float Component::computeSizeRequirements(FlexDirection dir) {
-    // TODO: This does not account for padding
     return
         std::max(
             dir == FlexDirection::HORIZONTAL ? unwrap(f.minWidth, 0) : unwrap(f.minHeight, 0),
@@ -60,7 +59,7 @@ float Component::computeSizeRequirements(FlexDirection dir) {
         );
 }
 
-float Component::computeCrossSize(FlexDirection dir, float) {
+float Component::computeCrossSize(FlexDirection dir, float, float) {
     // Primitive base implementation: the cross size is the min size for that dimension
     return
         std::max(

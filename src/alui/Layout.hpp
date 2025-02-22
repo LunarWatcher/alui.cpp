@@ -27,6 +27,22 @@ protected:
 
     virtual void updateComputedPos(float x, float y) override;
 
+    /**
+     * \copydoc Component::computeSizeRequirements(FlexDirection)
+     *
+     * \note Unlike the superimplementation in Component, this function REQUIRES recomputeBounds to have been invoked
+     * first
+     */
+    virtual float computeSizeRequirements(FlexDirection dir) override;
+
+    /**
+     * \copydoc Component::computeCrossSize(FlexDirection, float)
+     *
+     * \note Unlike the superimplementation in Component, this function REQUIRES recomputeBounds to have been invoked
+     * first
+     */
+    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override;
+
 public:
     Layout(const ComponentConfig& cfg) : Component(cfg) {}
 

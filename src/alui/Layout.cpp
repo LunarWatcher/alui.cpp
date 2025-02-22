@@ -63,4 +63,12 @@ void Layout::updateComputedPos(float parentX, float parentY) {
     }
 }
 
+float Layout::computeSizeRequirements(FlexDirection dir) {
+    return (dir == FlexDirection::HORIZONTAL ? computedWidth : computedHeight) + f.padding.getSizeForDimension(dir);
+}
+
+float Layout::computeCrossSize(FlexDirection dir, float, float) {
+    return (dir == FlexDirection::HORIZONTAL ? computedHeight : computedWidth) + f.padding.getCrossSizeForDimension(dir);
+}
+
 }

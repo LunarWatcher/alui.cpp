@@ -19,24 +19,20 @@ void FlexBox::recomputeBounds(
     // (This will also crash if minHeight is undefined, which is just stupid)
     //
     // §9b2: determine available space (modified)
-    auto mainSize = f.getMinAxialSize(dir) ? this->f.getMinAxialSize(dir)->compute(
-        dir == FlexDirection::HORIZONTAL ? parentWidth : parentHeight
-    )
+    auto parentDimension = dir == FlexDirection::HORIZONTAL ? parentWidth : parentHeight;
+    auto mainSize = f.getMinAxialSize(dir) ? this->f.getMinAxialSize(dir)->compute(parentDimension)
         // Padding is internal, and also an offset on the position (with the right padding, but all of that is a future
         // me problem)
-        - this->f.padding.getSizeForDimension(this->dir) : 0;
+        - this->f.padding.getSizeForDimension(this->dir)
+        : parentDimension - this->f.padding.getSizeForDimension(dir);
 
-    auto innerWidth = f.minWidth ? f.minWidth->compute(parentWidth) - f.padding.getSizeForDimension(FlexDirection::HORIZONTAL)
-        : parentWidth - f.padding.getSizeForDimension(dir);
+    auto internalWidth = f.minWidth ? f.minWidth->compute(parentWidth) : parentWidth;
+    internalWidth -= f.padding.getSizeForDimension(FlexDirection::HORIZONTAL);
+    auto internalHeight = f.minHeight ? f.minHeight->compute(parentHeight) : parentHeight;
+    internalHeight -= f.padding.getSizeForDimension(FlexDirection::VERTICAL);
 
-    // Nested layouts strategy:
-    // 1. Recursively determine the size of the layouts
-    // 2. Through the flexbox algorithm, determine the position of the elements
-    // 3. Recursively update the position of the children of the nested layouts. All computations assume x = 0, so
-    // recomputing down the tree is fairly easy.
 
-    // TODO: Layouts should not take the parent position, nor should positions be computed here. Positions should be
-    // determined relative to the parent layout, and they should all be processed in a single go in the GUI class
+    std::cout << "Using mainSize == " << mainSize << std::endl;
 
     std::vector<FlexLine> lines;
 
@@ -53,14 +49,15 @@ void FlexBox::recomputeBounds(
 
             auto conf = component->getConfig();
             if (auto* layout = dynamic_cast<Layout*>(component.get()); layout != nullptr) {
+                std::cout << "Invoked subtree" << std::endl;
                 layout->recomputeBounds(this,
-                    innerWidth,
-                    parentHeight
+                    internalWidth, internalHeight
                 );
             }
 
             auto minAxialSize = component->computeSizeRequirements(this->dir);
             flexBaseSize = minAxialSize;
+            std::cout << "set flexBaseSize to " << minAxialSize << std::endl;
 
             hypotheticalMainSize = std::clamp(
                 flexBaseSize,
@@ -88,11 +85,17 @@ void FlexBox::recomputeBounds(
                 };
             }
 
-            flexCrossSize = component->computeCrossSize(dir, hypotheticalMainSize);
+            flexCrossSize = component->computeCrossSize(
+                dir,
+                hypotheticalMainSize,
+                dir == FlexDirection::HORIZONTAL ? internalHeight : internalWidth
+            );
             currLine.maxCrossSize = std::max(
                 flexCrossSize,
                 currLine.maxCrossSize
             );
+
+            std::cout << "maxCrossSize is now " << currLine.maxCrossSize << std::endl;
 
             // inflexible elements will not change sizes
             if (conf.flex.grow == 0 && conf.flex.shrink == 0) {
@@ -137,7 +140,11 @@ void FlexBox::recomputeBounds(
             // Allocate remaining free space and compute cross size
             item.flexAxialSize += freeSpace * (item.c->getConfig().flex.grow / factorPool);
             item.flexCrossSize = std::clamp(
-                item.c->computeCrossSize(dir, item.flexAxialSize),
+                item.c->computeCrossSize(
+                    dir,
+                    item.flexAxialSize,
+                    dir == FlexDirection::HORIZONTAL ? internalHeight : internalWidth
+                ),
                 (dir == FlexDirection::HORIZONTAL ? f.minHeight : f.minWidth).value_or(Size {0.f}).compute(maxCrossSize),
                 (dir == FlexDirection::HORIZONTAL ? f.maxHeight : f.maxWidth).value_or(Size {
                     dir == FlexDirection::HORIZONTAL ? parentHeight : parentWidth
@@ -173,12 +180,12 @@ void FlexBox::recomputeBounds(
     this->computedY = 0;
     // TODO: The compute params are probably wrong
     this->computedWidth = std::clamp(
-        maxX,
+        maxX + f.padding.right,
         f.minWidth.value_or(Size {0.0f}).compute(parentWidth),
         f.maxWidth.value_or(Size {parentWidth}).compute(parentWidth)
     );
     this->computedHeight = std::clamp(
-        y,
+        y + f.padding.bot,
         f.minHeight.value_or(Size {0.0f}).compute(parentHeight),
         f.maxHeight.value_or(Size {parentHeight}).compute(parentHeight)
     );

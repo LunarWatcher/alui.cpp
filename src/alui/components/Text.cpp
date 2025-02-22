@@ -42,7 +42,7 @@ void Text::render(GUI& ctx) {
     //al_reset_clipping_rectangle();
 }
 
-float Text::computeCrossSize(FlexDirection dir, float virtualMainSize) {
+float Text::computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) {
     // TODO: figure out a better solution for when FlexDirection::VERTICAL
     auto maxWidth = dir == FlexDirection::HORIZONTAL 
         ? virtualMainSize - this->f.padding.getSizeForDimension(dir) 
@@ -62,20 +62,9 @@ float Text::computeCrossSize(FlexDirection dir, float virtualMainSize) {
 
         return (float) (lineCount * lineHeight) + f.padding.getCrossSizeForDimension(dir);
     } else {
-        // Vertical "rows": Cross size is display width
-        auto* display = al_get_current_display();
-        if (display == nullptr) {
-            // ... except in test cases, where cross size is display width or 600px
-            // TODO: This probably wouldn't be hard-coded. Might be easier to cache the width somewhere (GUI?)
-#ifdef ALUI_TEST
-            std::cout << "Warning: running in test mode, display is null, returning 600px" << std::endl;
-            return 600;
-#else
-            throw std::runtime_error("Looks like you've misconfigured your setup.");
-#endif
-        }
-        return (float) al_get_display_width(display);
-        //return unwrap(f.minWidth, 0) + f.padding.getCrossSizeForDimension(dir);
+        // Vertical rows: cross size is supposed to be text width capped to maxAxialSize, but I'm currently lazy and
+        // just want my tests to fail, so maxAxialSize it is
+        return maxCrossSize;
     }
 }
 
