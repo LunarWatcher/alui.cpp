@@ -16,7 +16,7 @@ jobs:
           #- os: ubuntu-latest
             #windowSystem: libwayland-dev
     runs-on: ${{matrix.os-config.os}}
-    name: Build and test on ${{ matrix.os-config.os }}
+    name: Build and test on ${{ matrix.os-config.os }} ${{ matrix.os-config.windowSystem }}
     steps:
       - uses: actions/checkout@v4
       - name: Install packages and set up mock display
