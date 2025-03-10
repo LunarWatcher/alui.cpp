@@ -61,15 +61,9 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
         .width = 600,
         .height = 900,
     });
-
-
     g.push(fb);
 
     REQUIRE(text->getFont() != nullptr);
-
-    SECTION("Validate nesting logic") {
-
-    }
 
     SECTION("Validate sizing and resizing") {
         Display disp(1000, 1500);
@@ -95,7 +89,7 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
         REQUIRE(fb->getComputedSize().first == 600.0f);
         REQUIRE(fb->getComputedSize().second == 300.0f);
         REQUIRE(inner->getComputedSize().first == 580.0f);
-        REQUIRE(inner->getComputedSize().second == 280.f);
+        REQUIRE(inner->getComputedSize().second == 230.f);
         REQUIRE(text->getComputedSize().first == 560.0f);
         REQUIRE(text->getComputedSize().second == 200.f);
     }
@@ -131,7 +125,7 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
         REQUIRE(fb->getComputedSize().first == 600.0f);
         REQUIRE(fb->getComputedSize().second == 300.0f);
         REQUIRE(inner->getComputedSize().first == 580.0f);
-        REQUIRE(inner->getComputedSize().second == 280.f);
+        REQUIRE(inner->getComputedSize().second == 230.f);
         REQUIRE(text->getComputedSize().first == 560.0f);
         REQUIRE(text->getComputedSize().second == 200.f);
     }
@@ -144,5 +138,83 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
     SECTION("Validate component size calculation functions") {
         REQUIRE(text->computeSizeRequirements(FlexDirection::VERTICAL) == 200);
         REQUIRE(text->computeCrossSize(FlexDirection::VERTICAL, 280, 560) == 560);
+    }
+}
+
+TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
+    std::unique_ptr<ALLEGRO_FONT, decltype(&al_destroy_font)> font(
+        al_load_ttf_font("./dejavu.ttf", 36, 0),
+        &al_destroy_font
+    );
+
+    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
+        .x = 0, .y = 0,
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
+        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+    });
+
+    auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
+        .flex{1},
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+    });
+    //text->setDimensions(50, 100);
+    text->setTextColour(al_map_rgb(255, 255, 255));
+
+    rootLayout->push(text);
+
+    auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", alui::ComponentConfig {
+        .flex{1},
+        .padding = 15.0f,
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+    });
+    //text->setDimensions(50, 100);
+    text2->setTextColour(al_map_rgb(255, 255, 255));
+
+    rootLayout->push(text2);
+
+    auto forcedSoftWrap = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
+        .flex{1},
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+    });
+    forcedSoftWrap->setFont(font.get());
+    forcedSoftWrap->setTextColour(al_map_rgb(255, 255, 255));
+
+    rootLayout->push(forcedSoftWrap);
+    GUI g({
+        .font = font.get(),
+        .width = 640,
+        .height = 480,
+    });
+    g.push(rootLayout);
+
+    SECTION("Validate sizing and resizing") {
+        Display disp(1000, 1500);
+        g.resize(640, 480);
+        disp.captureRender(
+            "FlexBoxTests-VerifyTextSizingInHorizontal.bmp",
+            [&]() {
+                g.render();
+            }
+        );
+
+        REQUIRE(rootLayout->getComputedSize().first == 640.0f);
+        REQUIRE(rootLayout->getComputedSize().second == 480.0f);
+
+        REQUIRE(text->getComputedSize().first == 320.0f);
+        REQUIRE(text->getComputedSize().second == 198.0f);
+        REQUIRE(text2->getComputedSize().first == 320.0f);
+        REQUIRE(text2->getComputedSize().second == 198.0f);
+
+        REQUIRE(forcedSoftWrap->getComputedSize().first == 640.0f);
+        REQUIRE(forcedSoftWrap->getComputedSize().second == 252.0f);
+
+        REQUIRE(text->getComputedPositions().first == 0.f);
+        REQUIRE(text->getComputedPositions().second == 0.f);
+
+        REQUIRE(text2->getComputedPositions().first == 320.f);
+        REQUIRE(text2->getComputedPositions().second == 0.f);
+
+        REQUIRE(forcedSoftWrap->getComputedPositions().first == 0.f);
+        REQUIRE(forcedSoftWrap->getComputedPositions().second == 198.f);
     }
 }

@@ -1,6 +1,5 @@
 #include "Text.hpp"
 #include "allegro5/allegro_font.h"
-#include "allegro5/display.h"
 #include "allegro5/utf8.h"
 #include "alui/Component.hpp"
 #include "alui/GUI.hpp"
@@ -43,6 +42,7 @@ void Text::render(GUI& ctx) {
 }
 
 float Text::computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) {
+    assert(font != nullptr);
     // TODO: figure out a better solution for when FlexDirection::VERTICAL
     auto maxWidth = dir == FlexDirection::HORIZONTAL 
         ? virtualMainSize - this->f.padding.getSizeForDimension(dir) 
@@ -56,6 +56,7 @@ float Text::computeCrossSize(FlexDirection dir, float virtualMainSize, float max
 
         // TODO: cache somewhere?
         auto lineHeight = al_get_font_line_height(font);
+        std::cout << "LOOKIE HERE BITCH: " << lineHeight * lineCount << std::endl;
 
         return (float) (lineCount * lineHeight) + f.padding.getCrossSizeForDimension(dir);
     } else {

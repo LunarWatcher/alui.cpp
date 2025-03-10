@@ -21,6 +21,8 @@ Display::Display(int width, int height)
     al_register_event_source(queue, al_get_display_event_source(display));
 }
 
+Display::Display(GUI& g) : Display((int) g.getConfig().width.value, (int) g.getConfig().height.value) {}
+
 Display::~Display() {
     if (display != nullptr) {
         al_destroy_display(display);

@@ -124,6 +124,8 @@ public:
 
     ALLEGRO_FONT* getFont() { return cfg.font; }
 
+    GUIConfig& getConfig() { return cfg; }
+
 };
 
 }

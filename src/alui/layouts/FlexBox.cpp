@@ -129,31 +129,35 @@ void FlexBox::recomputeBounds(
         float x = this->f.x + f.padding.left;
         auto freeSpace = mainSize - runningMainSize;
 
-
+        float localMaxCrossSize = 0;
         for (auto& item : components) {
             if (item.frozen) {
                 continue;
             }
             // Allocate remaining free space and compute cross size
             item.flexAxialSize += freeSpace * (item.c->getConfig().flex.grow / factorPool);
+                
             item.flexCrossSize = std::clamp(
                 item.c->computeCrossSize(
                     dir,
                     item.flexAxialSize,
-                    dir == FlexDirection::HORIZONTAL ? internalHeight : internalWidth
+                    maxCrossSize
                 ),
-                (dir == FlexDirection::HORIZONTAL ? f.minHeight : f.minWidth).value_or(Size {0.f}).compute(maxCrossSize),
-                (dir == FlexDirection::HORIZONTAL ? f.maxHeight : f.maxWidth).value_or(Size {
+                (dir == FlexDirection::HORIZONTAL ? item.c->getConfig().minHeight : item.c->getConfig().minWidth).value_or(Size {0.f}).compute(maxCrossSize),
+                (dir == FlexDirection::HORIZONTAL ? item.c->getConfig().maxHeight : item.c->getConfig().maxWidth).value_or(Size {
                     dir == FlexDirection::HORIZONTAL ? internalHeight : internalWidth
                 }).compute(maxCrossSize)
             );
+
+            localMaxCrossSize = std::max(localMaxCrossSize, item.flexCrossSize);
         }
 
         for (auto& item : components) {
             item.c->updateComputedPos(x, y);
             //std::cout << "Set item pos to " << x << "," << y << std::endl;
-            auto width = dir == FlexDirection::HORIZONTAL ? item.flexAxialSize : item.flexCrossSize;
-            auto height = dir == FlexDirection::HORIZONTAL ? item.flexCrossSize : item.flexAxialSize;
+            // TODO: allow for either item.crossSize or maxCrossSize
+            auto width = dir == FlexDirection::HORIZONTAL ? item.flexAxialSize : internalWidth;
+            auto height = dir == FlexDirection::HORIZONTAL ? localMaxCrossSize : item.flexAxialSize;
             //std::cout << width << "," << height << std::endl;
 
             item.c->updateComputedSizes(width, height);
@@ -162,8 +166,6 @@ void FlexBox::recomputeBounds(
 
             // TODO: + gap
             (dir == FlexDirection::HORIZONTAL ? x : y) += item.flexAxialSize;
-            std::cout << "item size in axis is " << item.flexAxialSize << std::endl;
-            //std::cout << "Next x, y = " << x << ", " << y << std::endl;
         }
         // TODO: + gap
         (dir == FlexDirection::HORIZONTAL ? y : x) += maxCrossSize;
