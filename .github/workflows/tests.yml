@@ -32,7 +32,8 @@ jobs:
           # WANT_SHADERS_GL: Compat option for forcing this to build properly
           # ALUI_TEST_OPTIONS: Option disabling debugCapture; CI builds do not need human-accessible .bmp debug output files
           cmake .. -DWANT_SHADERS_GL=on -DCMAKE_BUILD_TYPE=Release -DALUI_TEST_OPTIONS="--debugCapture=false"
-          cmake --build . -j $(nproc)
+          # --config Release is required for Windows; shouldn't do anything on Linux
+          cmake --build . -j $(nproc) --config Release
       - name: Mock display (Ubuntu, xorg)
         if: matrix.os-config.os == 'ubuntu-latest' && matrix.os-config.windowSystem == 'libx11-dev'
         run: |
@@ -52,7 +53,7 @@ jobs:
         if: matrix.os-config.os == 'windows-latest'
         run: |
           cd build
-          cmake --build . --target tests
+          cmake --build . --target tests --config Release
           .\bin\Release\tests.exe
   lint:
     runs-on: ubuntu-latest
