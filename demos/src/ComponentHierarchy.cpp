@@ -54,40 +54,54 @@ int main() {
         .height = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
     });
 
-    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
+    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::VERTICAL, alui::ComponentConfig {
         .x = 0, .y = 0,
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
         .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
     });
 
-    auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
+    auto n1 = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
+        .x = 0, .y = 0,
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
+        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 140.f },
+    });
+    auto n2 = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
+        .x = 0, .y = 0,
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
+        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 140.f },
+    });
+
+    auto t1 = std::make_shared<alui::Text>("Hewwo x3 (L1)", alui::ComponentConfig {
         .flex{1},
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
     });
-    //text->setDimensions(50, 100);
-    text->setTextColour(al_map_rgb(255, 255, 255));
-
-    rootLayout->push(text);
-
-    auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", alui::ComponentConfig {
-        .flex{1},
-        .padding = 15.0f,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
-    });
-    //text->setDimensions(50, 100);
-    text2->setTextColour(al_map_rgb(255, 255, 255));
-
-    rootLayout->push(text2);
-
-    auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
+    auto t2 = std::make_shared<alui::Text>("Hewwo x3 (L2)", alui::ComponentConfig {
         .flex{1},
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
     });
-    testText->setFont(font);
-    testText->setTextColour(al_map_rgb(255, 255, 255));
+    auto t3 = std::make_shared<alui::Text>("Hewwo x3 (L2, P2)", alui::ComponentConfig {
+        .flex{1},
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+    });
+    auto t4 = std::make_shared<alui::Text>("Root container text", alui::ComponentConfig {
+        .flex{1},
+        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+    });
 
-    rootLayout->push(testText);
+    t1->setTextColour(al_map_rgb(255, 255, 255));
+    t2->setTextColour(al_map_rgb(255, 255, 255));
+    t3->setTextColour(al_map_rgb(255, 255, 255));
+    t4->setTextColour(al_map_rgb(255, 255, 255));
 
+    n1->push(t1);
+    n2->push(t2);
+    n2->push(t3);
+
+    // Child layout
+    rootLayout->push(n1);
+    rootLayout->push(n2);
+    // Child element
+    rootLayout->push(t4);
     gui.push(rootLayout);
 
     // }}}

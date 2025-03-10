@@ -10,6 +10,14 @@
 
 namespace alui {
 
+struct GUIConfig {
+    ALLEGRO_FONT* font;
+
+    Size width, height;
+    float x = 0;
+    float y = 0;
+};
+
 /**
  * \brief Root GUI class.
  *
@@ -20,26 +28,74 @@ namespace alui {
  *
  * This also serves as a utility class to wrap UIs that are placed in separate areas, as well as a unified input adapter
  * system.
+ *
+ * ## General use
+ * ```cpp
+ * std::shared_ptr<GUI> gui(someFont);
+ * // Add elements
+ * ...
+ *
+ * while (true) {
+ *     al_wait_for_event(queue, &event);
+ *     ...
+ *     gui.handleEvent(event);
+ *
+ *     if (redraw && al_is_event_queue_empty(queue)) {
+ *         gui.tick();
+ *         // ... other updates
+ *         gui.render();
+ *
+ *         al_flip_display();
+ *         ...
+ *     }
+ * }
+ * ```
  */
 class GUI {
-private:
+protected:
     std::deque<std::shared_ptr<Component>> rootComponents;
-    ALLEGRO_FONT* font;
 
-    float x, y, width, height;
+    GUIConfig cfg;
+    std::shared_ptr<Component> focused;
+
+    std::shared_ptr<Component> getClickedComponent(float x, float y);
 
 public:
     /**
      * \param font          The default font to use for all child components. The font is set automatically when new
      *                      components are added to the hierarchy
      */
-    GUI(ALLEGRO_FONT* font);
+    GUI(const GUIConfig& cfg);
 
     // Handles updates and animations, if I ever implement any. We'll see how deep this rabbit hole goes
     void tick();
     void render();
 
-    void handleEvent(const ALLEGRO_EVENT& ev);
+    /**
+     * \brief Processes input events.
+     * \param ev    The event to process. The event does not need to be type-checked before being passed to this
+     *              function, as function only handles certain specific events.
+     * \returns     whether or not the event was handled by the GUI. Can be treated as a consume flag in certain cases.
+     * \see         [Allegro's event documentation](https://liballeg.org/a5docs/trunk/events.html)
+     *
+     * ## Handled events
+     *
+     * ### Mouse events
+     *
+     *
+     *
+     * ### Keyboard events
+     *
+     * #### Tab
+     *
+     * Tab is handled similarly to mouse down events, meaning they set a focused component. The exact handling of
+     * focused components is determined by the components themselves. Tab (and shift-tab) are handled as an
+     * accessibility/keyboard-only feature.
+     *
+     * #### Typing (input fields only)
+     *
+     */
+    bool handleEvent(const ALLEGRO_EVENT& ev);
 
     /**
      * Pushes a component in front of the other current components.
@@ -47,7 +103,7 @@ public:
      * This is the funciton you should normally be using, unless you want to push a component that appears behind
      * another already-visible component for some reason.
      */
-    void pushFront(const std::shared_ptr<Layout>& component);
+    void push(const std::shared_ptr<Layout>& component);
 
     /**
      * Pushes a component behind the other current elements.
@@ -59,14 +115,16 @@ public:
      */
     void pushBack(const std::shared_ptr<Layout>& component);
 
-    void resize(int screenWidth, int screenHeight);
+    void resize(float screenWidth, float screenHeight);
 
     void setPosition(float x, float y) {
-        this->x = x;
-        this->y = y;
+        this->cfg.x = x;
+        this->cfg.y = y;
     }
 
-    ALLEGRO_FONT* getFont() { return font; }
+    ALLEGRO_FONT* getFont() { return cfg.font; }
+
+    GUIConfig& getConfig() { return cfg; }
 
 };
 

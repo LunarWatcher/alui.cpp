@@ -15,5 +15,6 @@ function (demo_executable name file)
 endfunction()
 
 demo_executable(all-widgets AllWidgets.cpp)
+demo_executable(component-hierarchy ComponentHierarchy.cpp)
 
 # }}}

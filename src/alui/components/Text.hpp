@@ -21,7 +21,7 @@ protected:
     };
 
     std::vector<std::string> computedLines;
-
+ 
 public:
     using LineCallback = std::function<void(const std::string& line)>;
     Text(const std::string& str, const ComponentConfig& cfg);
@@ -29,7 +29,7 @@ public:
     virtual void render(GUI& ctx) override;
     virtual void tick() override {}
 
-    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize) override;
+    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override;
     virtual void processText(
         const LineCallback& func,
         float maxWidth,

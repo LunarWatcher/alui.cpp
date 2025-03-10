@@ -2,6 +2,7 @@
 
 #include "alui/Component.hpp"
 #include "alui/Layout.hpp"
+#include <vector>
 
 namespace alui {
 
@@ -20,14 +21,14 @@ namespace alui {
  * The following paragraphs have been implemented from
  * [the flexbox standard](https://drafts.csswg.org/css-flexbox-1/#layout-algorithm):
  * * § 9.2
- * * § 9.3 [TODO]
+ * * § 9.3
  * * § 9.4 [TODO]
  * * § 9.6, bullet 16 [TODO]
  * * § 9.7
  *
  * The rest have either been omitted in their entirety (due to a lack of need or lack of relevant config options), or
- * been implemented in some other ✨ Special Way ✨. Consequently, this is not a guaranteed match to browser-rendered
- * flexboxes, but it's good enough for use in games.
+ * been implemented in some other ✨ Special Way ✨. Several of the implemented paragraphs have somewhat non-standard
+ * implementations, as the goal isn't a 100% compliant flexbox implementation.
  *
  */
 class FlexBox : public Layout  {
@@ -42,17 +43,26 @@ protected:
         bool frozen = false;
     };
 
+    struct FlexLine {
+        std::vector<FlexAlgoData> components;
+        float runningMainSize = 0;
+        float maxCrossSize = 0;
+        float factorPool = 0;
+    };
+
     float flexGap;
     FlexDirection dir;
+
+    virtual float computeSizeRequirements(FlexDirection dir) override;
+    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override;
+
 public:
     FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg);
 
-    virtual void resizeChildren(
-        Layout* parent,
-        float parentX, float parentY,
-        float parentWidth, float parentHeight
+    virtual void recomputeBounds(
+        Layout*,
+        float parentMaxWidth, float parentMaxHeight
     ) override;
-
     virtual void setFlexGap(float flexGap) { this->flexGap = flexGap; }
 
     //virtual Flex computeSizeRequirements(FlexDirection dir) override;

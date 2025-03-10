@@ -7,6 +7,7 @@
 #include <functional>
 #include <optional>
 #include <stdexcept>
+#include <string>
 
 namespace alui {
 
@@ -21,7 +22,10 @@ enum class SizeUnit {
      * Used for percentage-based layouts that can shrink or grow depending on how much space is free. Note that if no
      * space is free, the elements will be hidden - try to avoid this :)
      *
-     * Width and height must be [0, 100]. If a dimension equals 0, it'll be determined by the containing layout.
+     * Width and height must be [0, 1]. If a dimension equals 0, it'll be determined by the containing layout. If the
+     * percentage exceeds the size of the screen, behaviour, overflow, and rendering behaviour is undefined[^1].
+     *
+     * [^1]: At the time of writing c:
      */
     RELATIVE,
     /**
@@ -42,6 +46,7 @@ enum class FlexDirection {
 };
 
 
+// TODO: better name
 struct Sizing {
     float top, bot, left, right;
 
@@ -65,13 +70,34 @@ struct Sizing {
      */
     Sizing(float top, float bot, float left, float right) : top(top), bot(bot), left(left), right(right) {}
 
-    float getSizeForDimension(FlexDirection dir) {
+    float getSizeForDimension(FlexDirection dir) const {
         return dir == FlexDirection::HORIZONTAL ? left + right : top + bot;
     }
 
-    float getCrossSizeForDimension(FlexDirection dir) {
+    float getCrossSizeForDimension(FlexDirection dir) const {
 
         return dir == FlexDirection::HORIZONTAL ? top + bot : left + right;
+    }
+};
+
+struct Size {
+    SizeUnit type;
+    float value;
+
+    Size() = delete;
+    Size(float v) : type(SizeUnit::ABSOLUTE), value(v) {}
+    Size(SizeUnit type, float value) : type(type), value(value) {}
+
+    float compute(float parentSize) {
+        switch(type) {
+        case SizeUnit::RELATIVE:
+            return parentSize * value;
+        case SizeUnit::ABSOLUTE:
+            return value;
+        }
+        [[unlikely]]
+        // .c_str(): Fuck you windows
+        throw std::runtime_error((std::string("Fatal: unknown size type: ") + std::to_string(static_cast<int>(type))).c_str());
     }
 };
 
@@ -88,21 +114,6 @@ struct Sizing {
 struct ComponentConfig {
 
     // TODO: Rename to something that isn't fucking shit
-    struct Size {
-        SizeUnit type;
-        float value;
-
-        float compute(float parentSize) {
-            switch(type) {
-            case SizeUnit::RELATIVE:
-                return parentSize * value / 100.0f;
-            case SizeUnit::ABSOLUTE:
-                return value;
-            }
-            [[unlikely]]
-            throw std::runtime_error("Fatal");
-        }
-    };
 
     struct Flex {
         float grow;
@@ -122,6 +133,23 @@ struct ComponentConfig {
         Flex(float g, float s) : grow(g), shrink(s) {}
         Flex(float g, float s, float basis) : grow(g), shrink(s), basis(basis) {}
     } flex{1};
+
+    /**
+     * \brief Optional component ID
+     * 
+     * The ID can be used to quickly identify elements in common callbacks and similar.
+     *
+     * \note ID = 0 is reserved, and means the element has no ID. It's also up to end-user code to set IDs, and to keep
+     *      track of which IDs refer to which component.
+     *
+     * \warning Non-zero ID uniqueness is not systemically enforced. It's up to the invoking code to use IDs correctly.
+     *      However, aside error in your code, the only ID duplicated by the library is ID = 0. If you use ID = 0 in your
+     *      code, you will run into duplicate IDs. There may also be cases where the ID being duplicated across a UI is
+     *      desirable, for example in lists, where the ID just reflects the position of the element. However, such use
+     *      of IDs should be 1-indexed to avoid errors with undefined or incorrectly defined IDs that end up defaulting
+     *      to 0. There may be cases where duplicate IDs are desired, but this is left as an exercise to end-users.
+     */
+    int id = 0;
 
 
     /**
@@ -145,11 +173,11 @@ struct ComponentConfig {
     std::optional<Size> maxWidth = std::nullopt;
     std::optional<Size> maxHeight = std::nullopt;
 
-    std::optional<Size> getMinAxialSize(FlexDirection dir) {
+    std::optional<Size> getMinAxialSize(FlexDirection dir) const {
         return dir == FlexDirection::HORIZONTAL ? minWidth : minHeight;
     }
 
-    std::optional<Size> getMaxAxialSize(FlexDirection dir) {
+    std::optional<Size> getMaxAxialSize(FlexDirection dir) const {
         return dir == FlexDirection::HORIZONTAL ? maxWidth : maxHeight;
     }
 };
@@ -166,8 +194,10 @@ protected:
     float computedX, computedY, computedWidth, computedHeight;
 
     bool dirty = true;
+    bool focused = false;
 
     std::vector<ClickListener> clickListeners;
+
 
     ALLEGRO_FONT* font = nullptr;
 
@@ -176,7 +206,8 @@ protected:
 
     Component(const ComponentConfig& cfg) : f(cfg) {}
 
-    virtual float unwrap(std::optional<ComponentConfig::Size> orig, float def) {
+    virtual float unwrap(std::optional<Size> orig, float def) {
+        // TODO: This does not respect relative sizes 
         if (orig) {
             return orig->value;
         }
@@ -201,6 +232,12 @@ protected:
      */
     virtual float getContentY() { return computedY + f.padding.top; }
 
+private:
+    void clearFocus() { focused = false; }
+    void focus() { focused = true; }
+    
+
+    friend class GUI;
 public:
     virtual ~Component() = default;
 
@@ -214,7 +251,7 @@ public:
     virtual bool onClick(float x, float y);
 
     virtual float computeSizeRequirements(FlexDirection dir);
-    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize);
+    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize);
 
     virtual void updateComputedSizes(
         float width, float height
@@ -237,19 +274,19 @@ public:
 
     virtual bool isDirty() { return dirty; }
     virtual void clearDirty() { dirty = false; }
-    const ComponentConfig& getConfig() { return f; }
+    ComponentConfig& getConfig() { return f; }
 
-    virtual void setMinDimensions(ComponentConfig::Size width, ComponentConfig::Size height) {
+    virtual void setMinDimensions(Size width, Size height) {
         f.minWidth = width;
         f.minHeight = height;
     }
 
-    virtual void setMaxDimensions(ComponentConfig::Size width, ComponentConfig::Size height) {
+    virtual void setMaxDimensions(Size width, Size height) {
         f.maxWidth = width;
         f.maxHeight = height;
     }
 
-    virtual void setDimensions(ComponentConfig::Size width, ComponentConfig::Size height) {
+    virtual void setDimensions(Size width, Size height) {
         f.minWidth = width;
         f.maxWidth = width;
 
@@ -270,6 +307,15 @@ public:
         this->font = font;
     }
     virtual ALLEGRO_FONT* getFont() { return font; }
+    virtual bool contains(float x, float y);
+
+    std::pair<float, float> getComputedPositions() {
+        return {computedX, computedY};
+    }
+
+    std::pair<float, float> getComputedSize() {
+        return {computedWidth, computedHeight};
+    }
 };
 
 }

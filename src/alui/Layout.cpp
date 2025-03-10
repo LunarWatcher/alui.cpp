@@ -1,5 +1,6 @@
 #include "Layout.hpp"
 #include <algorithm>
+#include <iostream>
 
 namespace alui {
 
@@ -48,6 +49,16 @@ void Layout::setFont(ALLEGRO_FONT* font) {
         if (child->getFont() == nullptr) {
             child->setFont(font);
         }
+    }
+}
+
+void Layout::updateComputedPos(float parentX, float parentY) {
+    this->computedX = parentX;
+    this->computedY = parentY;
+
+    for (auto& child : children) {
+        auto [cx, cy] = child->getComputedPositions();
+        child->updateComputedPos(cx + parentX, cy + parentY);
     }
 }
 

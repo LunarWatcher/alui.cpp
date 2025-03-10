@@ -25,6 +25,11 @@ protected:
 
     std::vector<std::shared_ptr<Component>> children;
 
+    virtual void updateComputedPos(float x, float y) override;
+
+    virtual float computeSizeRequirements(FlexDirection dir) override = 0;
+    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override = 0;
+
 public:
     Layout(const ComponentConfig& cfg) : Component(cfg) {}
 
@@ -33,9 +38,8 @@ public:
 
     virtual bool onClick(float x, float y) override;
 
-    virtual void resizeChildren(
+    virtual void recomputeBounds(
         Layout* parent,
-        float parentX, float parentY,
         float parentWidth, float parentHeight
     ) = 0;
 
@@ -44,6 +48,12 @@ public:
         this->showOverflow = showOverflow;
     }
     virtual void setFont(ALLEGRO_FONT* font) override;
+
+    const decltype(children)& getChildren() {
+        return children;
+    }
+
+    friend class GUI;
 
 };
 

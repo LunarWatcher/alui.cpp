@@ -1,5 +1,8 @@
 add_executable(tests
     src/unit/components/TextTests.cpp
+    src/unit/layouts/FlexBoxTests.cpp
+
+    src/util/Display.cpp
 
     src/Runner.cpp
 )
@@ -18,7 +21,7 @@ target_link_libraries(tests
     alui
 )
 
-target_include_directories(tests PUBLIC ${ALLEGRO_INCLUDE_DIRS})
-target_link_libraries(tests allegro_ttf)
+target_include_directories(tests PUBLIC ${ALLEGRO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(tests allegro_ttf allegro_image)
 
 # vim:ft=cmake

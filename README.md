@@ -13,7 +13,7 @@ This is a WIP library that I'll be poking at on and off for the foreseeable futu
 * C++20
 * allegro, with `allegro_font`, `allegro_color`, `allegro_primitives`.
     * There are additional requirements if running the demos (which you won't if you use this library correctly), but allegro is automatically built if the demos are built, so this is a non-issue unless you have some weird fucking system config
-    * Note that internally, thse four targets are linked as-is. It's up to the invoking CMakeLists to ensure these targets exist, or for files by those names are discoverable by the linker. This may change if a better way to link is found.
+    * Note that internally, these four targets are linked as-is. It's up to the invoking CMakeLists to ensure these targets exist, or for files by those names are discoverable by the linker. This may change if a better way to link is found.
 
 ## Using the library
 

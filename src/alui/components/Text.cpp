@@ -3,11 +3,13 @@
 #include "allegro5/utf8.h"
 #include "alui/Component.hpp"
 #include "alui/GUI.hpp"
-#include <iostream>
 #include <limits>
 #include <cmath>
 #include <stdexcept>
 #include <string>
+#if defined ALUI_TEST || 1
+#include <iostream>
+#endif
 
 namespace alui {
 
@@ -39,24 +41,26 @@ void Text::render(GUI& ctx) {
     //al_reset_clipping_rectangle();
 }
 
-float Text::computeCrossSize(FlexDirection dir, float virtualMainSize) {
+float Text::computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) {
+    assert(font != nullptr);
     // TODO: figure out a better solution for when FlexDirection::VERTICAL
-    auto maxWidth = dir == FlexDirection::HORIZONTAL ? virtualMainSize - this->f.padding.getSizeForDimension(dir) : std::numeric_limits<float>::max();
+    auto maxWidth = dir == FlexDirection::HORIZONTAL 
+        ? virtualMainSize - this->f.padding.getSizeForDimension(dir) 
+        : unwrap(f.maxWidth, std::numeric_limits<float>::max());
     processText([&](const auto&) {}, maxWidth, true);
-    std::cout << "used maxWidth = " << maxWidth << ", vms: " << virtualMainSize << std::endl;
 
     int lineCount = (int) computedLines.size();
 
-    //std::cout << lineCount << std::endl;
-
     if (dir == FlexDirection::HORIZONTAL) {
+        // Horizontal rows: cross size is height
+
         // TODO: cache somewhere?
         auto lineHeight = al_get_font_line_height(font);
-
         return (float) (lineCount * lineHeight) + f.padding.getCrossSizeForDimension(dir);
     } else {
-        [[unlikely]]
-        throw std::runtime_error("Not implemented");
+        // Vertical rows: cross size is supposed to be text width capped to maxAxialSize, but I'm currently lazy and
+        // just want my tests to fail, so maxAxialSize it is
+        return maxCrossSize;
     }
 }
 

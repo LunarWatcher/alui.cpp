@@ -18,3 +18,17 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+---
+
+Additionally, alui uses the following libraries:
+| Library           | License                                                                                                   |
+| ----------------- | --------------------------------------------------------------------------------------------------------- |
+| Allegro5[^1]      | https://github.com/liballeg/allegro5/blob/master/LICENSE.txt                                              |
+| Freetype[^2]      | [FreeType Project License](https://gitlab.freedesktop.org/freetype/freetype/-/blob/master/docs/FTL.TXT)   |
+| Catch2            | [Boost Software License 1.0](https://github.com/catchorg/Catch2/blob/devel/LICENSE.txt)                   |
+| Dejavu-fonts[^3]  | https://github.com/dejavu-fonts/dejavu-fonts/blob/master/LICENSE                                          |
+
+
+[^1]: Minor modifications are made to CMakeLists.txt when building tests or demos; see 3p-patches/allegro.patch for the applied changes.
+[^2]: In tests and demos only, as a requirement for the allegro_ttf plugin
+[^3]: In tests and demos only; see tests/3p/README.md (or the link) for the full license
