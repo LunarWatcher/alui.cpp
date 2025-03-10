@@ -56,8 +56,6 @@ float Text::computeCrossSize(FlexDirection dir, float virtualMainSize, float max
 
         // TODO: cache somewhere?
         auto lineHeight = al_get_font_line_height(font);
-        std::cout << "LOOKIE HERE BITCH: " << lineHeight * lineCount << std::endl;
-
         return (float) (lineCount * lineHeight) + f.padding.getCrossSizeForDimension(dir);
     } else {
         // Vertical rows: cross size is supposed to be text width capped to maxAxialSize, but I'm currently lazy and

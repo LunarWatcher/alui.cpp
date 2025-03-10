@@ -15,7 +15,6 @@ void FlexBox::recomputeBounds(
     Layout*,
     float parentWidth, float parentHeight
 ) {
-    std::cout << "Invoked with w,h=" << parentWidth << "," << parentHeight << std::endl;
     // TODO: find a better starting size
     // (This will also crash if minHeight is undefined, which is just stupid)
     //
@@ -36,8 +35,6 @@ void FlexBox::recomputeBounds(
 
     lines.reserve(children.size());
 
-
-    // TODO: For 9b5, this needs to be per-line
     {
         FlexLine currLine;
         // §9b3: min size computation + 9.3b5 (flex lines): {{{
@@ -46,13 +43,6 @@ void FlexBox::recomputeBounds(
             auto& [component, flexBaseSize, hypotheticalMainSize, flexCrossSize, frozen] = dataWrapper;
 
             auto conf = component->getConfig();
-            //if (auto* layout = dynamic_cast<Layout*>(component.get()); layout != nullptr) {
-                //std::cout << "Invoked subtree" << std::endl;
-                //layout->recomputeBounds(this,
-                    //internalWidth, internalHeight
-                //);
-            //}
-
             auto minAxialSize = component->computeSizeRequirements(this->dir);
             flexBaseSize = minAxialSize;
 
@@ -63,8 +53,6 @@ void FlexBox::recomputeBounds(
             );
             // Negative size is not an option
             if (hypotheticalMainSize < 0) { hypotheticalMainSize = 0; }
-
-            //std::cout << "Flex base, hypothetical main: " << flexBaseSize << ", " << hypotheticalMainSize << std::endl;
 
             if (
                 // Vertical lines do not support multiple lines in HTML, so this doesn't either
@@ -92,11 +80,8 @@ void FlexBox::recomputeBounds(
                 currLine.maxCrossSize
             );
 
-            std::cout << "maxCrossSize is now " << currLine.maxCrossSize << std::endl;
-
             // inflexible elements will not change sizes
             if (conf.flex.grow == 0 && conf.flex.shrink == 0) {
-                //std::cout << "Flex preemptively frozen" << std::endl;
                frozen = true;
             } else {
                 currLine.factorPool += component->getConfig().flex.grow;
@@ -154,15 +139,11 @@ void FlexBox::recomputeBounds(
 
         for (auto& item : components) {
             item.c->updateComputedPos(x, y);
-            //std::cout << "Set item pos to " << x << "," << y << std::endl;
             // TODO: allow for either item.crossSize or maxCrossSize
             auto width = dir == FlexDirection::HORIZONTAL ? item.flexAxialSize : internalWidth;
             auto height = dir == FlexDirection::HORIZONTAL ? localMaxCrossSize : item.flexAxialSize;
-            //std::cout << width << "," << height << std::endl;
 
             item.c->updateComputedSizes(width, height);
-
-            std::cout << "Updating element dims to " << width << "," << height << std::endl;
 
             // TODO: + gap
             (dir == FlexDirection::HORIZONTAL ? x : y) += item.flexAxialSize;
@@ -179,7 +160,6 @@ void FlexBox::recomputeBounds(
     this->computedX = this->f.x;
     this->computedY = this->f.y;
 
-    std::cout << "Final maxX,y = " << maxX << "," << y << std::endl;
     // TODO: The compute params are probably wrong
     this->computedWidth = std::clamp(
         maxX + f.padding.right - computedX,
@@ -191,8 +171,6 @@ void FlexBox::recomputeBounds(
         f.minHeight.value_or(Size {0.0f}).compute(parentHeight),
         f.maxHeight.value_or(Size {parentHeight}).compute(parentHeight)
     );
-    std::cout << "Resized flexbox to " << computedWidth << ", " << computedHeight << std::endl;
-
 }
 
 float FlexBox::computeSizeRequirements(FlexDirection dir) {
