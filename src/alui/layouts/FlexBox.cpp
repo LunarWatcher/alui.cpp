@@ -170,7 +170,7 @@ void FlexBox::recomputeBounds(
         // TODO: + gap
         (dir == FlexDirection::HORIZONTAL ? y : x) += maxCrossSize;
 
-        maxX = std::max(x, maxX);
+        maxX = std::max(x + f.padding.right, maxX);
     }
     // }}}
 
@@ -185,7 +185,7 @@ void FlexBox::recomputeBounds(
         f.maxWidth.value_or(Size {parentWidth}).compute(parentWidth)
     );
     this->computedHeight = std::clamp(
-        y + f.padding.bot,
+        y,
         f.minHeight.value_or(Size {0.0f}).compute(parentHeight),
         f.maxHeight.value_or(Size {parentHeight}).compute(parentHeight)
     );

@@ -91,9 +91,9 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
         REQUIRE(fb->getComputedSize().first == 600.0f);
         REQUIRE(fb->getComputedSize().second == 300.0f);
         REQUIRE(inner->getComputedSize().first == 580.0f);
-        REQUIRE(inner->getComputedSize().second == 300.f);
+        REQUIRE(inner->getComputedSize().second == 280.f);
         REQUIRE(text->getComputedSize().first == 560.0f);
-        REQUIRE(text->getComputedSize().second == 200.f); // TODO: correct when everything else passes
+        REQUIRE(text->getComputedSize().second == 200.f);
     }
 
     SECTION("Validate initial state") {

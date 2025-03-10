@@ -48,11 +48,8 @@ float Text::computeCrossSize(FlexDirection dir, float virtualMainSize, float max
         ? virtualMainSize - this->f.padding.getSizeForDimension(dir) 
         : unwrap(f.maxWidth, std::numeric_limits<float>::max());
     processText([&](const auto&) {}, maxWidth, true);
-    //std::cout << "used maxWidth = " << maxWidth << ", vms: " << virtualMainSize << std::endl;
 
     int lineCount = (int) computedLines.size();
-
-    //std::cout << lineCount << std::endl;
 
     if (dir == FlexDirection::HORIZONTAL) {
         // Horizontal rows: cross size is height

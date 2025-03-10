@@ -70,11 +70,11 @@ struct Sizing {
      */
     Sizing(float top, float bot, float left, float right) : top(top), bot(bot), left(left), right(right) {}
 
-    float getSizeForDimension(FlexDirection dir) {
+    float getSizeForDimension(FlexDirection dir) const {
         return dir == FlexDirection::HORIZONTAL ? left + right : top + bot;
     }
 
-    float getCrossSizeForDimension(FlexDirection dir) {
+    float getCrossSizeForDimension(FlexDirection dir) const {
 
         return dir == FlexDirection::HORIZONTAL ? top + bot : left + right;
     }
