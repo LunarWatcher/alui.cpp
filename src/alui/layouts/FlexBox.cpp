@@ -173,19 +173,19 @@ void FlexBox::recomputeBounds(
     // }}}
     
     dirty = false;
-    // TODO: sort out computedX/Y
-    this->computedX = 0;
-    this->computedY = 0;
+    // This will not work as expected if this isn't the root-level layout, but I think I'll just... ignore that c:
+    this->computedX = this->f.x;
+    this->computedY = this->f.y;
 
     std::cout << "Final maxX,y = " << maxX << "," << y << std::endl;
     // TODO: The compute params are probably wrong
     this->computedWidth = std::clamp(
-        maxX + f.padding.right,
+        maxX + f.padding.right - computedX,
         f.minWidth.value_or(Size {0.0f}).compute(parentWidth),
         f.maxWidth.value_or(Size {parentWidth}).compute(parentWidth)
     );
     this->computedHeight = std::clamp(
-        this->f.y - y,
+        y - computedY,
         f.minHeight.value_or(Size {0.0f}).compute(parentHeight),
         f.maxHeight.value_or(Size {parentHeight}).compute(parentHeight)
     );

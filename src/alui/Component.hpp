@@ -274,7 +274,7 @@ public:
 
     virtual bool isDirty() { return dirty; }
     virtual void clearDirty() { dirty = false; }
-    const ComponentConfig& getConfig() { return f; }
+    ComponentConfig& getConfig() { return f; }
 
     virtual void setMinDimensions(Size width, Size height) {
         f.minWidth = width;

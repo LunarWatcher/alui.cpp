@@ -75,7 +75,7 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
         Display disp(1000, 1500);
         g.resize(1000, 1500);
         disp.captureRender(
-            "FlexBoxTests::VerifyNestedSizingLogic.bmp",
+            "FlexBoxTests-VerifyNestedSizingLogic.bmp",
             [&]() {
                 g.render();
             }
@@ -90,6 +90,42 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
         // Text is inner + inner.padding
         REQUIRE(text->getComputedPositions().first == 20.0f);
         REQUIRE(text->getComputedPositions().second == 20.0f);
+
+
+        REQUIRE(fb->getComputedSize().first == 600.0f);
+        REQUIRE(fb->getComputedSize().second == 300.0f);
+        REQUIRE(inner->getComputedSize().first == 580.0f);
+        REQUIRE(inner->getComputedSize().second == 280.f);
+        REQUIRE(text->getComputedSize().first == 560.0f);
+        REQUIRE(text->getComputedSize().second == 200.f);
+    }
+
+    SECTION("Validate sizes in non-zero root element positions") {
+
+        fb->getConfig().x = 10;
+        fb->getConfig().y = 10;
+
+        Display disp(1000, 1500);
+        g.resize(1000, 1500);
+        disp.captureRender(
+            "FlexBoxTests-VerifySizingLogicWithOffsetXY.bmp",
+            [&]() {
+                g.render();
+            }
+        );
+
+#define POSITION(elementPos, rootPos) elementPos + rootPos
+
+        // Verify positions
+        REQUIRE(fb->getComputedPositions().first == POSITION(0.0f, fb->getConfig().x));
+        REQUIRE(fb->getComputedPositions().second == POSITION(0.0f, fb->getConfig().y));
+        // Inner is first + first.padding
+        REQUIRE(inner->getComputedPositions().first == POSITION(10.0f, fb->getConfig().x));
+        REQUIRE(inner->getComputedPositions().second == POSITION(10.0f, fb->getConfig().y));
+
+        // Text is inner + inner.padding
+        REQUIRE(text->getComputedPositions().first == POSITION(20.0f, fb->getConfig().x));
+        REQUIRE(text->getComputedPositions().second == POSITION(20.0f, fb->getConfig().y));
 
 
         REQUIRE(fb->getComputedSize().first == 600.0f);
