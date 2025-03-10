@@ -44,10 +44,16 @@ jobs:
           sleep 2 && DISPLAY=:10 matchbox-window-manager & disown
           echo "DISPLAY=:10" >> $GITHUB_ENV
       - name: Test
+        if: matrix.os-config.os != 'windows-latest'
         run: |
-
           cd build
           cmake --build . --target test
+      - name: Test
+        if: matrix.os-config.os == 'windows-latest'
+        run: |
+          cd build
+          cmake --build . --target tests
+          .\bin\tests.exe
   lint:
     runs-on: ubuntu-latest
     name: Run clang-tidy
