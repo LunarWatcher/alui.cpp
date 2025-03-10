@@ -53,7 +53,6 @@ void Layout::setFont(ALLEGRO_FONT* font) {
 }
 
 void Layout::updateComputedPos(float parentX, float parentY) {
-    std::cout << "Parent is " << parentX << "," << parentY << " in id=" << f.id << std::endl;
     this->computedX = parentX;
     this->computedY = parentY;
 
