@@ -44,12 +44,12 @@ jobs:
           Xvfb :10 -ac -screen 0 1280x1024x24 & disown
           sleep 2 && DISPLAY=:10 matchbox-window-manager & disown
           echo "DISPLAY=:10" >> $GITHUB_ENV
-      - name: Test
+      - name: Test (Everything but Windows)
         if: matrix.os-config.os != 'windows-latest'
         run: |
           cd build
           cmake --build . --target test
-      - name: Test
+      - name: Test (Windows)
         if: matrix.os-config.os == 'windows-latest'
         run: |
           cd build
