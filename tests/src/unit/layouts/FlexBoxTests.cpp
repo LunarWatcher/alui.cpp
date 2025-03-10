@@ -67,9 +67,13 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
 
     REQUIRE(text->getFont() != nullptr);
 
+    SECTION("Validate nesting logic") {
+
+    }
+
     SECTION("Validate sizing and resizing") {
-        Display disp(600, 900);
-        g.resize(600, 900);
+        Display disp(1000, 1500);
+        g.resize(1000, 1500);
         disp.captureRender(
             "FlexBoxTests::VerifyNestedSizingLogic.bmp",
             [&]() {

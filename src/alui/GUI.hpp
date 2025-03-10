@@ -52,14 +52,13 @@ struct GUIConfig {
  * ```
  */
 class GUI {
-private:
+protected:
     std::deque<std::shared_ptr<Component>> rootComponents;
 
     GUIConfig cfg;
     std::shared_ptr<Component> focused;
 
     std::shared_ptr<Component> getClickedComponent(float x, float y);
-
 
 public:
     /**

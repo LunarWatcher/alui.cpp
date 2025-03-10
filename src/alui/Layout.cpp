@@ -63,12 +63,4 @@ void Layout::updateComputedPos(float parentX, float parentY) {
     }
 }
 
-float Layout::computeSizeRequirements(FlexDirection dir) {
-    return (dir == FlexDirection::HORIZONTAL ? computedWidth : computedHeight);
-}
-
-float Layout::computeCrossSize(FlexDirection dir, float, float) {
-    return (dir == FlexDirection::HORIZONTAL ? computedHeight : computedWidth);
-}
-
 }

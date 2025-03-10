@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <limits>
 
 namespace alui {
 
@@ -31,9 +32,6 @@ void FlexBox::recomputeBounds(
     auto internalHeight = f.minHeight ? f.minHeight->compute(parentHeight) : parentHeight;
     internalHeight -= f.padding.getSizeForDimension(FlexDirection::VERTICAL);
 
-
-    std::cout << "Using mainSize == " << mainSize << std::endl;
-
     std::vector<FlexLine> lines;
 
     lines.reserve(children.size());
@@ -48,16 +46,15 @@ void FlexBox::recomputeBounds(
             auto& [component, flexBaseSize, hypotheticalMainSize, flexCrossSize, frozen] = dataWrapper;
 
             auto conf = component->getConfig();
-            if (auto* layout = dynamic_cast<Layout*>(component.get()); layout != nullptr) {
-                std::cout << "Invoked subtree" << std::endl;
-                layout->recomputeBounds(this,
-                    internalWidth, internalHeight
-                );
-            }
+            //if (auto* layout = dynamic_cast<Layout*>(component.get()); layout != nullptr) {
+                //std::cout << "Invoked subtree" << std::endl;
+                //layout->recomputeBounds(this,
+                    //internalWidth, internalHeight
+                //);
+            //}
 
             auto minAxialSize = component->computeSizeRequirements(this->dir);
             flexBaseSize = minAxialSize;
-            std::cout << "set flexBaseSize to " << minAxialSize << std::endl;
 
             hypotheticalMainSize = std::clamp(
                 flexBaseSize,
@@ -147,11 +144,10 @@ void FlexBox::recomputeBounds(
                 ),
                 (dir == FlexDirection::HORIZONTAL ? f.minHeight : f.minWidth).value_or(Size {0.f}).compute(maxCrossSize),
                 (dir == FlexDirection::HORIZONTAL ? f.maxHeight : f.maxWidth).value_or(Size {
-                    dir == FlexDirection::HORIZONTAL ? parentHeight : parentWidth
+                    dir == FlexDirection::HORIZONTAL ? internalHeight : internalWidth
                 }).compute(maxCrossSize)
             );
         }
-
 
         for (auto& item : components) {
             item.c->updateComputedPos(x, y);
@@ -161,6 +157,8 @@ void FlexBox::recomputeBounds(
             //std::cout << width << "," << height << std::endl;
 
             item.c->updateComputedSizes(width, height);
+
+            std::cout << "Updating element dims to " << width << "," << height << std::endl;
 
             // TODO: + gap
             (dir == FlexDirection::HORIZONTAL ? x : y) += item.flexAxialSize;
@@ -173,11 +171,13 @@ void FlexBox::recomputeBounds(
         maxX = std::max(x + f.padding.right, maxX);
     }
     // }}}
-
+    
     dirty = false;
     // TODO: sort out computedX/Y
     this->computedX = 0;
     this->computedY = 0;
+
+    std::cout << "Final maxX,y = " << maxX << "," << y << std::endl;
     // TODO: The compute params are probably wrong
     this->computedWidth = std::clamp(
         maxX + f.padding.right,
@@ -185,12 +185,33 @@ void FlexBox::recomputeBounds(
         f.maxWidth.value_or(Size {parentWidth}).compute(parentWidth)
     );
     this->computedHeight = std::clamp(
-        y,
+        this->f.y - y,
         f.minHeight.value_or(Size {0.0f}).compute(parentHeight),
         f.maxHeight.value_or(Size {parentHeight}).compute(parentHeight)
     );
     std::cout << "Resized flexbox to " << computedWidth << ", " << computedHeight << std::endl;
 
+}
+
+float FlexBox::computeSizeRequirements(FlexDirection dir) {
+    // The size is the minimum size of the padding of this component, and the minimum size of the biggest inner
+    // component.
+    // This basically treats the minimum size as being whatever the smallest column/row could be, depending on the
+    // direction, by treating it as if there are multiple rows/columns instead.
+    return Component::computeSizeRequirements(dir) // NOLINT
+        + (*std::max_element(children.begin(), children.end(), [this](const auto& a, const auto& b) {
+            return a->computeSizeRequirements(this->dir) < b->computeSizeRequirements(this->dir);
+        }))->computeSizeRequirements(this->dir);
+}
+
+float FlexBox::computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) {
+    recomputeBounds(
+        nullptr,
+        dir == FlexDirection::HORIZONTAL ? virtualMainSize : maxCrossSize, 
+        dir == FlexDirection::HORIZONTAL ? std::numeric_limits<float>::max() : virtualMainSize
+    );
+
+    return dir == FlexDirection::HORIZONTAL ? computedHeight : computedWidth;
 }
 
 }
