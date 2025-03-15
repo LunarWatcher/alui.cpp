@@ -49,6 +49,20 @@ public:
     }
     virtual void setFont(ALLEGRO_FONT* font) override;
 
+    virtual void pruneTree() {
+        std::erase_if(children, [](auto& child) {
+            return child->shouldRemove();
+        });
+
+        // Child components could contain child components that are scheduled to be killed; recurse deeper
+        for (auto& child : children) {
+            // Not all children in a layout are layouts themselves. 
+            if (auto* layout = dynamic_cast<Layout*>(child.get())) {
+                layout->pruneTree();
+            }
+        }
+    }
+
     const decltype(children)& getChildren() {
         return children;
     }

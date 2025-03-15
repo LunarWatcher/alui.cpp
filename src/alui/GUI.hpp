@@ -122,6 +122,8 @@ public:
         this->cfg.y = y;
     }
 
+    void pruneTree();
+
     ALLEGRO_FONT* getFont() { return cfg.font; }
 
     GUIConfig& getConfig() { return cfg; }

@@ -1,12 +1,10 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "Conf.hpp"
 #include "allegro5/color.h"
 #include "alui/Component.hpp"
 #include "alui/GUI.hpp"
 #include "alui/components/Text.hpp"
 #include "alui/layouts/FlexBox.hpp"
-#include <iostream>
 #include <util/Display.hpp>
 
 #include <allegro5/allegro_font.h>
@@ -216,5 +214,24 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
 
         REQUIRE(forcedSoftWrap->getComputedPositions().first == 0.f);
         REQUIRE(forcedSoftWrap->getComputedPositions().second == 198.f);
+    }
+}
+
+TEST_CASE("Complex layout rendering", "[Layout][FlexBox]") {
+
+    std::unique_ptr<ALLEGRO_FONT, decltype(&al_destroy_font)> font(
+        al_load_ttf_font("./dejavu.ttf", 36, 0),
+        &al_destroy_font
+    );
+
+    GUI g({
+        .font = font.get(),
+        .width = 1500,
+        .height = 1500,
+    });
+
+    SECTION("Double-column") {
+
+
     }
 }

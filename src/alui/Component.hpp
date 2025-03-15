@@ -194,6 +194,7 @@ protected:
     float computedX, computedY, computedWidth, computedHeight;
 
     bool dirty = true;
+    bool kill = false;
     bool focused = false;
 
     std::vector<ClickListener> clickListeners;
@@ -272,6 +273,7 @@ public:
         this->parent = newParent;
     }
 
+    virtual bool shouldRemove() { return kill; }
     virtual bool isDirty() { return dirty; }
     virtual void clearDirty() { dirty = false; }
     ComponentConfig& getConfig() { return f; }
@@ -315,6 +317,11 @@ public:
 
     std::pair<float, float> getComputedSize() {
         return {computedWidth, computedHeight};
+    }
+
+    virtual void destroy() {
+        kill = true;
+        dirty = true;
     }
 };
 

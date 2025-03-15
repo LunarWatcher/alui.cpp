@@ -14,13 +14,20 @@ GUI::GUI(const GUIConfig& cfg) : cfg(cfg) {
 
 void GUI::tick() {
     bool dirty = false;
-    for (auto& component : this->rootComponents) {
-        component->tick();
 
+
+    for (auto& component : rootComponents) {
+        if (component->kill) {
+            continue;
+        }
+
+        component->tick();
         dirty = dirty || component->isDirty();
     }
 
     if (dirty) {
+        pruneTree();
+
         auto* disp = al_get_current_display();
         auto displayWidth = (float) al_get_display_width(disp);
         auto displayHeight = (float) al_get_display_height(disp);
@@ -75,6 +82,22 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
     }
 
     return false;
+}
+
+void GUI::pruneTree() {
+    // TODO: This can be optimised by making sure each child contains a pointer to its root GUI, and adding a separate
+    // variable checking if there are any elements in the tree to kill. Not sure how much computation this saves, but
+    // it's a microsecond or two (at release optimisation)
+    std::erase_if(rootComponents, [](auto& component) {
+        return component->shouldRemove();
+    });
+    std::for_each(rootComponents.begin(), rootComponents.end(), [](auto& it) {
+        // TODO: should this be dynamic_cast? `rootComponents` should be guaranteed not to contain Components (limited
+        // by the construction methods), but an overriding implementation _could_ change this
+        if (auto* layout = static_cast<Layout*>(it.get())) {
+            layout->pruneTree();
+        }
+    });
 }
 
 void GUI::push(const std::shared_ptr<Layout>& component) {

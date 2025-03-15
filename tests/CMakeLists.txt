@@ -4,6 +4,8 @@ add_executable(tests
 
     src/util/Display.cpp
 
+    src/bench/Layouts.cpp
+
     src/Runner.cpp
 )
 

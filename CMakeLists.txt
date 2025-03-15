@@ -5,7 +5,7 @@ option(ALUI_ENABLE_DEMOS "WHether or not to build demos" OFF)
 option(ALUI_BUILD_TESTS "Whether or not to build tests. Forced ON if building standalone" OFF)
 option(ALUI_DOCS "Whether or not to build doxygen docs" OFF)
 option(ALUI_SANITISE "Whether or not to -fsanitise=undefined" OFF)
-option(ALUI_TEST_OPTIONS "Additional options passed to the test" "")
+option(ALUI_TEST_OPTIONS "Additional options passed to the test. Not required if directly running the test binary" "")
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     message (STATUS "alui: Running standalone")
@@ -135,9 +135,13 @@ if(ALUI_BUILD_TESTS)
     add_subdirectory(tests)
 
     add_custom_target(test
-        COMMAND tests ${ALUI_TEST_OPTIONS}
+        COMMAND tests ${ALUI_TEST_OPTIONS} --skip-benchmarks
         DEPENDS tests
         COMMENT "Test alui.cpp")
+    add_custom_target(benchmark
+        COMMAND tests ${ALUI_TEST_OPTIONS}
+        DEPENDS tests
+        COMMENT "Test alui.cpp with benchmarks")
 endif()
 
 if (ALUI_ENABLE_DEMOS)
