@@ -11,8 +11,7 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     message (STATUS "alui: Running standalone")
     set(ALUI_STANDALONE ON)
 
-    if (WIN32)
-    else()
+    if (NOT WIN32)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
     endif()
     set(ALUI_ENABLE_DEMOS ON)
@@ -135,7 +134,7 @@ if(ALUI_BUILD_TESTS)
     add_subdirectory(tests)
 
     add_custom_target(test
-        COMMAND tests ${ALUI_TEST_OPTIONS}
+        COMMAND tests $<$<BOOL:${ALUI_TEST_OPTIONS}>:${ALUI_TEST_OPTIONS}>
         DEPENDS tests
         COMMENT "Test alui.cpp")
 endif()
