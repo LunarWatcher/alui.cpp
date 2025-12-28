@@ -193,6 +193,20 @@ protected:
      */
     float computedX, computedY, computedWidth, computedHeight;
 
+    /**
+     * Scroll offset. Only respected if overflow is enabled and happening
+     */
+    float scrollX, scrollY;
+
+    /**
+     * Equivalent to computedWidth and computedHeight if and only if 
+     * 1. Overflow is disabled, or
+     * 2. Overflow is enabled and the container is small enough that no overflow is happening
+     *
+     * These are used to keep track of the inner dimensions
+     */
+    float computedInnerWidth, computedInnerHeight;
+
     bool dirty = true;
     bool focused = false;
 
