@@ -31,7 +31,7 @@ jobs:
           cd build
           # WANT_SHADERS_GL: Compat option for forcing this to build properly
           # ALUI_TEST_OPTIONS: Option disabling debugCapture; CI builds do not need human-accessible .bmp debug output files
-          cmake .. -DWANT_SHADERS_GL=on -DCMAKE_BUILD_TYPE=Release -DALUI_TEST_OPTIONS="--debugCapture=false"
+          cmake .. -DWANT_SHADERS_GL=on -DCMAKE_BUILD_TYPE=Release -DALUI_TEST_OPTIONS="--debugCapture=false" -DCMAKE_POLICY_VERSION_MINIMUM=3.5
           # --config Release is required for Windows; shouldn't do anything on Linux
           cmake --build . -j $(nproc) --config Release
       - name: Mock display (Ubuntu, xorg)
@@ -69,5 +69,5 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DALUI_LINT=ON -DLINT_WARNINGS_ARE_ERRORS=ON
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DALUI_LINT=ON -DLINT_WARNINGS_ARE_ERRORS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
           cmake --build . -j 2

@@ -3,7 +3,6 @@
 #include "allegro5/utf8.h"
 #include "alui/Component.hpp"
 #include "alui/GUI.hpp"
-#include <limits>
 #include <cmath>
 #include <stdexcept>
 #include <string>

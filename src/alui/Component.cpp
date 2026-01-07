@@ -5,8 +5,7 @@
 namespace alui {
 
 bool Component::onClick(float x, float y) {
-    bool intersects = x >= this->computedX && x <= this->computedX + computedWidth
-        && x >= this->computedY && y <= this->computedX + computedWidth;
+    bool intersects = this->contains(x, y);
 
     if (intersects) {
         for (auto& listener : clickListeners) {
@@ -71,6 +70,13 @@ float Component::computeCrossSize(FlexDirection dir, float, float) {
 bool Component::contains(float x, float y) {
     return x >= this->computedX && x <= this->computedX + this->computedWidth
         && y >= this->computedY && y <= this->computedY + this->computedHeight;
+}
+
+void Component::focus() {
+    focused = true;
+    for (auto& listener : focusListeners) {
+        listener(this);
+    }
 }
 
 } /* alui */

@@ -1,0 +1,11 @@
+## Known bugs
+
+* Hyphens overflow containers, because hyphen widths are ignored
+
+## Planned features
+
+* [ ] word break first, character break as a last resort (configurable)
+* [ ] 9patch support for elements
+    * I never understood the point with 9patches before, and I now do. They're actually pretty neat
+
+vim:ft=markdown

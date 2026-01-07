@@ -6,6 +6,7 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/display.h>
 
+#include "allegro5/color.h"
 #include "allegro5/events.h"
 #include "allegro5/timer.h"
 
@@ -59,43 +60,17 @@ int main() {
     });
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
-        .x = 0, .y = 0,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
-    });
-
-    auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
-        .flex{1},
+        .x = 150, .y = 90,
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
     });
-    //text->setDimensions(50, 100);
-    text->setTextColour(al_map_rgb(255, 255, 255));
 
-    rootLayout->push(text);
-
-    auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", alui::ComponentConfig {
-        .flex{1},
-        .padding = 15.0f,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
-    });
-    //text->setDimensions(50, 100);
-    text2->setTextColour(al_map_rgb(255, 255, 255));
-
-    rootLayout->push(text2);
-
-    auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
-        .flex{1},
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
-    });
-    testText->setFont(font);
-    testText->setTextColour(al_map_rgb(255, 255, 255));
-
-    rootLayout->push(testText);
 
     gui.push(rootLayout);
 
     // }}}
 
+    int mx, my;
     al_start_timer(timer);
     while(true) {
         al_wait_for_event(queue, &event);
@@ -108,6 +83,11 @@ int main() {
         case ALLEGRO_EVENT_DISPLAY_CLOSE:
             done = true;
             break;
+        case ALLEGRO_EVENT_MOUSE_WARPED:
+        case ALLEGRO_EVENT_MOUSE_AXES: {
+            mx = event.mouse.x;
+            my = event.mouse.y;
+        } break;
         case ALLEGRO_EVENT_DISPLAY_RESIZE:
             al_acknowledge_resize(disp);
             gui.resize(
@@ -129,6 +109,11 @@ int main() {
             gui.tick();
 
             gui.render();
+
+            al_draw_filled_circle(
+                (float) mx, (float) my, 10,
+                al_map_rgb(255, 50, 255)
+            );
 
             al_flip_display();
 

@@ -15,8 +15,8 @@ GUI::GUI(const GUIConfig& cfg) : cfg(cfg) {
 void GUI::tick() {
     bool dirty = false;
     for (auto& component : this->rootComponents) {
-        component->tick();
 
+        component->tick();
         dirty = dirty || component->isDirty();
     }
 
@@ -26,7 +26,6 @@ void GUI::tick() {
         auto displayHeight = (float) al_get_display_height(disp);
         resize(displayWidth, displayHeight);
     }
-
 }
 
 void GUI::render() {
@@ -43,11 +42,17 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
                 if (focused) {
                     focused->clearFocus();
                     focused = nullptr;
+                    return true;
                 }
             }
             // TODO
             break;
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
+        } break;
+        case ALLEGRO_EVENT_MOUSE_BUTTON_UP: // NOLINT
+            break;
+        case ALLEGRO_EVENT_MOUSE_AXES:
+        case ALLEGRO_EVENT_MOUSE_WARPED: {
             const auto* tf = al_get_current_transform();
             float x = (float) ev.mouse.x;
             float y = (float) ev.mouse.y;
@@ -60,18 +65,15 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
                 focused = nullptr;
             }
 
-            auto clickedElement = getClickedComponent(x, y);
+            auto clickedElement = getInterceptedComponent(x, y);
             if (clickedElement != nullptr) {
                 focused = clickedElement;
                 focused->focus();
+                return true;
             } else {
             }
+
         } break;
-        case ALLEGRO_EVENT_MOUSE_BUTTON_UP: // NOLINT
-            break;
-        case ALLEGRO_EVENT_MOUSE_AXES:
-        case ALLEGRO_EVENT_MOUSE_WARPED:
-            break;
     }
 
     return false;
@@ -104,16 +106,21 @@ void GUI::resize(float displayWidth, float displayHeight) {
     }
 }
 
-std::shared_ptr<Component> GUI::getClickedComponent(float x, float y) {
+std::shared_ptr<Component> GUI::getInterceptedComponent(float x, float y) {
+    // In the GUI, it's possible for two components to overlap
+    // When this happens, if begin()->end(), the bottom component will be given the event
+    // The render is begin()->end(), but this means the components rendered first will be in the back. 
+    //
+    // The intercepting check therefore has to iterate backwards, since the last component is the top component.
     auto it = std::find_if(
-        rootComponents.begin(),
-        rootComponents.end(),
+        rootComponents.rbegin(),
+        rootComponents.rend(),
         [&x, &y](const auto& ptr) {
             return ptr->contains(x, y);
         }
     );
 
-    if (it == rootComponents.end()) {
+    if (it == rootComponents.rend()) {
         return nullptr;
     }
     auto currIntersect = *it;

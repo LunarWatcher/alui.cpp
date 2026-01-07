@@ -5,8 +5,8 @@
 #include "alui/Layout.hpp"
 
 #include <allegro5/events.h>
-#include <deque>
 #include <memory>
+#include <deque>
 
 namespace alui {
 
@@ -58,7 +58,7 @@ protected:
     GUIConfig cfg;
     std::shared_ptr<Component> focused;
 
-    std::shared_ptr<Component> getClickedComponent(float x, float y);
+    std::shared_ptr<Component> getInterceptedComponent(float x, float y);
 
 public:
     /**
@@ -75,7 +75,7 @@ public:
      * \brief Processes input events.
      * \param ev    The event to process. The event does not need to be type-checked before being passed to this
      *              function, as function only handles certain specific events.
-     * \returns     whether or not the event was handled by the GUI. Can be treated as a consume flag in certain cases.
+     * \returns     whether or not the event was handled by the GUI. Can be treated as a consume flag.
      * \see         [Allegro's event documentation](https://liballeg.org/a5docs/trunk/events.html)
      *
      * ## Handled events

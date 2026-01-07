@@ -1,13 +1,11 @@
 #include "Layout.hpp"
 #include <algorithm>
-#include <iostream>
 
 namespace alui {
 
 void Layout::tick() {
 
 }
-
 
 void Layout::render(GUI& ctx) {
     Component::render(ctx);

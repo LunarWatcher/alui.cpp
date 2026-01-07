@@ -185,6 +185,7 @@ struct ComponentConfig {
 class Component {
 public:
     using ClickListener = std::function<bool(Component* c, float x, float y)>;
+    using FocusListener = std::function<bool(Component* c)>;
 
 protected:
     /**
@@ -211,7 +212,7 @@ protected:
     bool focused = false;
 
     std::vector<ClickListener> clickListeners;
-
+    std::vector<FocusListener> focusListeners;
 
     ALLEGRO_FONT* font = nullptr;
 
@@ -248,7 +249,7 @@ protected:
 
 private:
     void clearFocus() { focused = false; }
-    void focus() { focused = true; }
+    void focus();
     
 
     friend class GUI;
@@ -286,7 +287,7 @@ public:
         this->parent = newParent;
     }
 
-    virtual bool isDirty() { return dirty; }
+    virtual bool isDirty() const { return dirty; }
     virtual void clearDirty() { dirty = false; }
     ComponentConfig& getConfig() { return f; }
 
@@ -320,8 +321,12 @@ public:
     virtual void setFont(ALLEGRO_FONT* font) {
         this->font = font;
     }
-    virtual ALLEGRO_FONT* getFont() { return font; }
+    virtual ALLEGRO_FONT* getFont() const { return font; }
     virtual bool contains(float x, float y);
+
+    virtual void addClickListener(ClickListener l) {
+        this->clickListeners.push_back(std::move(l));
+    }
 
     std::pair<float, float> getComputedPositions() {
         return {computedX, computedY};

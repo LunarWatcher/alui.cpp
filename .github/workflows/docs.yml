@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DWANT_SHADERS_GL=on
+          cmake .. -DWANT_SHADERS_GL=on -DCMAKE_POLICY_VERSION_MINIMUM=3.5
           make doxygen
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
