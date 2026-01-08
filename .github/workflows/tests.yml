@@ -62,6 +62,8 @@ jobs:
     name: Run clang-tidy
     steps:
       - uses: actions/checkout@v4
+      - name: Install Conan
+        uses: conan-io/setup-conan@v1
       - name: Install deps
         run: |
           sudo apt-get update
