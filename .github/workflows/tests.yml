@@ -19,6 +19,8 @@ jobs:
     name: Build and test on ${{ matrix.os-config.os }} ${{ matrix.os-config.windowSystem }}
     steps:
       - uses: actions/checkout@v4
+      - name: Install Conan
+        uses: conan-io/setup-conan@v1
       - name: Install packages and set up mock display
         if: matrix.os-config.os == 'ubuntu-latest'
         run: |

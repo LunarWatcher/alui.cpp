@@ -16,6 +16,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+      # Not used for generating docs, but required due to how the conan setup is configured
+      # TODO: figure out if there's an easier way to check if we should include conan
+      - name: Install Conan
+        uses: conan-io/setup-conan@v1
       - name: Install doxygen
         run: |
           sudo apt-get update

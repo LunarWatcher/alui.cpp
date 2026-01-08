@@ -1,7 +1,16 @@
 cmake_minimum_required(VERSION 3.28)
+if ("${PROJECT_NAME}" STREQUAL "")
+    include(FetchContent)
+    FetchContent_Declare(conan
+        GIT_REPOSITORY https://github.com/conan-io/cmake-conan
+        GIT_TAG develop2
+    )
+    FetchContent_MakeAvailable(conan)
+    set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES ${conan_SOURCE_DIR}/conan_provider.cmake)
+endif()
 project(alui.cpp)
 
-option(ALUI_ENABLE_DEMOS "WHether or not to build demos" OFF)
+option(ALUI_ENABLE_DEMOS "Whether or not to build demos" OFF)
 option(ALUI_BUILD_TESTS "Whether or not to build tests. Forced ON if building standalone" OFF)
 option(ALUI_DOCS "Whether or not to build doxygen docs" OFF)
 option(ALUI_SANITISE "Whether or not to -fsanitise=undefined" OFF)
@@ -57,6 +66,10 @@ add_subdirectory(src)
 if (ALUI_BUILD_TESTS OR ALUI_ENABLE_DEMOS)
     configure_file(tests/3p/dejavu.ttf ${CMAKE_BINARY_DIR}/dejavu.ttf COPYONLY)
 
+    find_package(Freetype REQUIRED)
+    find_package(PNG REQUIRED)
+    find_package(ZLIB REQUIRED)
+
     set(WANT_SHADERS_GL ON CACHE STRING "" FORCE)
     set(WANT_MEMFILE OFF CACHE STRING "" FORCE)
     set(WANT_PHYSFS OFF CACHE STRING "" FORCE)
@@ -84,19 +97,6 @@ if (ALUI_BUILD_TESTS OR ALUI_ENABLE_DEMOS)
     FetchContent_Declare(allegro5-patch
         GIT_REPOSITORY https://github.com/LunarWatcher/allegro5-cmake
     )
-    FetchContent_Declare(Freetype
-        GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype
-        GIT_TAG VER-2-13-3
-        OVERRIDE_FIND_PACKAGE
-        EXCLUDE_FROM_ALL
-    )
-    FetchContent_MakeAvailable(
-        Freetype
-    )
-    set(FREETYPE_INCLUDE_DIRS ${freetype_SOURCE_DIR}/include/)
-    set(FREETYPE_LIBRARIES freetype)
-    set(FREETYPE_FOUND YES)
-    add_definitions(-DFT_FREETYPE_H=<freetype/freetype.h>)
 
     FetchContent_MakeAvailable(
         allegro5-patch
