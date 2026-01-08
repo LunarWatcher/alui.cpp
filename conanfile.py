@@ -15,4 +15,3 @@ class AluiTests(ConanFile):
         self.requires("freetype/2.13.3")
         self.requires("libpng/1.6.53")
         self.requires("zlib/1.3.1")
-        self.requires("doxygen/1.16.0")

@@ -143,7 +143,7 @@ if (ALUI_ENABLE_DEMOS)
 endif()
 
 if (ALUI_DOCS)
-    find_package(Doxygen)
+    find_package(Doxygen MODULE)
     if (DOXYGEN_FOUND)
         set(DOXYGEN_GENERATE_HTML YES)
         set(DOXYGEN_GENERATE_MAN NO)
