@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -CMAKE_BUILD_TYPE=Release
+          cmake .. -DCMAKE_BUILD_TYPE=Release
           make doxygen
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
