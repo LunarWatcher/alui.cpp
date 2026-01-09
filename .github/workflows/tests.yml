@@ -46,6 +46,8 @@ jobs:
           Xvfb :10 -ac -screen 0 1280x1024x24 & disown
           sleep 2 && DISPLAY=:10 matchbox-window-manager & disown
           echo "DISPLAY=:10" >> $GITHUB_ENV
+      - uses: pyvista/setup-headless-display-action@v3
+        if: matrix.os-config.os == 'windows-latest'
       - name: Test (Everything but Windows)
         if: matrix.os-config.os != 'windows-latest'
         run: |
@@ -74,4 +76,4 @@ jobs:
           mkdir build
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DALUI_LINT=ON -DLINT_WARNINGS_ARE_ERRORS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-          cmake --build . -j 2
+          cmake --build . -j $(nproc)
