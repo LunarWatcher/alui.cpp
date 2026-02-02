@@ -29,6 +29,7 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
             .id = 0,
             .padding{10},
             .minHeight = Size {300.0f},
+            .style = getDebugStyleSpec(),
         }
     );
 
@@ -39,6 +40,7 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
             .id = 1,
             .padding{10},
             .minHeight = Size {230.f},
+            .style = getDebugStyleSpec(),
         }
     );
 
@@ -49,7 +51,8 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
             .id = 2,
             .padding{10},
             .minWidth = Size {SizeUnit::ABSOLUTE, 500.0f},
-            .minHeight = Size {200.f}
+            .minHeight = Size {200.f},
+            .style = getDebugStyleSpec(),
         }
     );
     text->setTextColour(al_map_rgb_f(1.0, 1.0, 1.0));
