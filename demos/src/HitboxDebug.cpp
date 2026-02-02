@@ -14,6 +14,9 @@
 #include "alui/GUI.hpp"
 #include "alui/components/Text.hpp"
 #include "alui/layouts/FlexBox.hpp"
+#include "alui/style/BackgroundColourStyle.hpp"
+#include "alui/style/StyleStates.hpp"
+#include <alui/style/Style.hpp>
 
 int main() {
     // General allegro boilerplate {{{
@@ -58,11 +61,22 @@ int main() {
         .width = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
         .height = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
     });
+    std::shared_ptr<alui::StyleSpec> hoverableComponent = std::make_shared<alui::StyleSpec>(
+        alui::StyleStates {
+            .defaultState = std::make_shared<alui::BackgroundColourStyle>(
+                al_map_rgb(40, 40, 40)
+            ),
+            .focusedState = std::make_shared<alui::BackgroundColourStyle>(
+                al_map_rgb(255, 0, 0)
+            )
+        }
+    );
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
         .x = 150, .y = 90,
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
         .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .style = hoverableComponent
     });
 
 

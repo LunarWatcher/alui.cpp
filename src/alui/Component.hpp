@@ -5,6 +5,7 @@
 #include "allegro5/allegro_font.h"
 #include <allegro5/color.h>
 #include <functional>
+#include <memory>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -101,6 +102,7 @@ struct Size {
     }
 };
 
+struct StyleSpec;
 /**
  * \brief Meta struct defining how layouts flex.
  *
@@ -173,6 +175,13 @@ struct ComponentConfig {
     std::optional<Size> maxWidth = std::nullopt;
     std::optional<Size> maxHeight = std::nullopt;
 
+    /**
+     * Defines the general style of the component, such as the background style and border style. This does not include
+     * styling specific to each component, such as the text colour in the Text component, which is a per-component
+     * customisation.
+     */
+    std::shared_ptr<StyleSpec> style = nullptr;
+
     std::optional<Size> getMinAxialSize(FlexDirection dir) const {
         return dir == FlexDirection::HORIZONTAL ? minWidth : minHeight;
     }
@@ -200,7 +209,8 @@ protected:
     float scrollX, scrollY;
 
     /**
-     * Equivalent to computedWidth and computedHeight if and only if 
+     * Equivalent to computedWidth and computedHeight if and only if:
+     *
      * 1. Overflow is disabled, or
      * 2. Overflow is enabled and the container is small enough that no overflow is happening
      *
@@ -327,6 +337,13 @@ public:
     virtual void addClickListener(ClickListener l) {
         this->clickListeners.push_back(std::move(l));
     }
+
+    virtual bool isFocused() { return focused; }
+
+    float getComputedX() { return computedX; }
+    float getComputedY() { return computedY; }
+    float getComputedWidth() { return computedWidth; }
+    float getComputedHeight() { return computedHeight; }
 
     std::pair<float, float> getComputedPositions() {
         return {computedX, computedY};

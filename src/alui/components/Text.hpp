@@ -6,6 +6,10 @@
 
 namespace alui {
 
+struct TextStyle { // Not currently used, but kept until after the general background style refactor.
+    ALLEGRO_COLOR textColour;
+};
+
 class Text : public Component {
 protected:
     std::string content;

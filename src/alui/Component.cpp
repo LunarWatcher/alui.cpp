@@ -1,6 +1,7 @@
 #include "Component.hpp"
 #include "allegro5/allegro_primitives.h"
 #include "allegro5/color.h"
+#include "alui/style/Style.hpp"
 
 namespace alui {
 
@@ -17,37 +18,13 @@ bool Component::onClick(float x, float y) {
 }
 
 void Component::render(GUI&) {
-#ifdef ALUI_DEBUG_SHAPES
-    static ALLEGRO_COLOR colour = al_map_rgb(255, 135, 255);
-    if (focused) {
-        al_draw_filled_rectangle(
-            this->computedX, this->computedY,
-            this->computedX + this->computedWidth,
-            this->computedY + this->computedHeight,
-            al_map_rgb_f(0, 1, 0)
-        );
-    } else {
-        al_draw_rectangle(
-            this->computedX,
-            this->computedY,
-            this->computedX + this->computedWidth,
-            this->computedY + this->computedHeight,
-            colour,
-            1
-        );
+    if (f.style != nullptr) {
+        // TODO: We'll likely need more control over the rendering in other components, so not sure if it even makes
+        // sense to use it here. The border should probably be on top anyway? Not sure if it matters.
+        // If it doesn't, we'll probably want to merge the background and border styles.
+        f.style->backgroundStyle.render(this);
+        f.style->borderStyle.render(this);
     }
-
-    if (this->f.padding.bot != 0) {
-        al_draw_rectangle(
-            this->getContentX(),
-            this->getContentY(),
-            this->getContentX() + this->getInternalWidth(),
-            this->getContentY() + this->getInternalHeight(),
-            al_map_rgb(255, 158, 0), // orange
-            1
-        );
-    }
-#endif
 }
 
 float Component::computeSizeRequirements(FlexDirection dir) {
