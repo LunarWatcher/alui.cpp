@@ -63,6 +63,32 @@ float Text::computeCrossSize(FlexDirection dir, float virtualMainSize, float max
     }
 }
 
+float Text::computeSizeRequirements(FlexDirection dir) {
+    int max = 0;
+    processText(
+        [&](const auto&) {
+            max = std::max(
+                max,
+                al_get_text_width(this->font, this->content.c_str())
+            );
+        },
+        std::numeric_limits<float>::max(),
+        true
+    );
+
+
+    int lineCount = (int) computedLines.size();
+
+    if (dir == FlexDirection::HORIZONTAL) {
+        return max;
+    } else {
+        // TODO: cache somewhere?
+        auto lineHeight = al_get_font_line_height(font);
+        return (float) (lineCount * lineHeight) + f.padding.getCrossSizeForDimension(dir);
+    }
+
+}
+
 void Text::processText(const LineCallback& func, float maxWidth, bool bustCache) {
     if (bustCache || computedLines.empty()) {
         computedLines.clear();

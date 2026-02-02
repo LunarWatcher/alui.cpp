@@ -17,5 +17,6 @@ endfunction()
 demo_executable(all-widgets AllWidgets.cpp)
 demo_executable(component-hierarchy ComponentHierarchy.cpp)
 demo_executable(hitbox-debug HitboxDebug.cpp)
+demo_executable(game-menu GameMenu.cpp)
 
 # }}}

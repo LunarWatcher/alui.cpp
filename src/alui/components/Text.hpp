@@ -34,6 +34,7 @@ public:
     virtual void tick() override {}
 
     virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override;
+    virtual float computeSizeRequirements(FlexDirection dir) override;
     virtual void processText(
         const LineCallback& func,
         float maxWidth,

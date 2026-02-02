@@ -49,8 +49,22 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
             break;
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
         } break;
-        case ALLEGRO_EVENT_MOUSE_BUTTON_UP: // NOLINT
-            break;
+        case ALLEGRO_EVENT_MOUSE_BUTTON_UP: {
+            const auto* tf = al_get_current_transform();
+            float x = (float) ev.mouse.x;
+            float y = (float) ev.mouse.y;
+            if (tf != nullptr) {
+                al_transform_coordinates(tf, &x, &y);
+            }
+
+            auto clickedElement = getInterceptedComponent(x, y);
+            if (clickedElement != nullptr) {
+                focused = clickedElement;
+                focused->onClick(x, y);
+                return true;
+            }
+
+        } break;
         case ALLEGRO_EVENT_MOUSE_AXES:
         case ALLEGRO_EVENT_MOUSE_WARPED: {
             const auto* tf = al_get_current_transform();
@@ -70,7 +84,6 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
                 focused = clickedElement;
                 focused->focus();
                 return true;
-            } else {
             }
 
         } break;

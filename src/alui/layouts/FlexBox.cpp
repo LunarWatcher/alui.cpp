@@ -48,7 +48,7 @@ void FlexBox::recomputeBounds(
 
             hypotheticalMainSize = std::clamp(
                 flexBaseSize,
-                unwrap(conf.getMinAxialSize(dir), 0),
+                unwrap(conf.getMinAxialSize(dir), minAxialSize),
                 unwrap(conf.getMaxAxialSize(dir), mainSize)
             );
             // Negative size is not an option

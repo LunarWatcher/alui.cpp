@@ -33,7 +33,7 @@ enum class SizeUnit {
      * Used for sizing in absolute pixels. Width and/or height must be >= 0, depending on the containing layout.
      * The width or height can be 0 for it to be automatically determined by the layout.
      */
-    ABSOLUTE
+    ABSOLUTE,
 };
 
 /** @enum alui::FlexDirection
@@ -231,7 +231,7 @@ protected:
 
     Component(const ComponentConfig& cfg) : f(cfg) {}
 
-    virtual float unwrap(std::optional<Size> orig, float def) {
+    virtual inline float unwrap(std::optional<Size> orig, float def) {
         // TODO: This does not respect relative sizes 
         if (orig) {
             return orig->value;
