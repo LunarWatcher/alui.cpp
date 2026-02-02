@@ -16,8 +16,11 @@ add_library(alui STATIC
     alui/Layout.cpp
 
     alui/components/Text.cpp
-    alui/style/BackgroundColourStyle.cpp
+
     alui/layouts/FlexBox.cpp
+
+    alui/style/BackgroundColourStyle.cpp
+    alui/style/BorderStyle.cpp
 )
 
 target_include_directories(alui PUBLIC .)

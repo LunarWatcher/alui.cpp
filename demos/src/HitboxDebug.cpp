@@ -15,6 +15,7 @@
 #include "alui/components/Text.hpp"
 #include "alui/layouts/FlexBox.hpp"
 #include "alui/style/BackgroundColourStyle.hpp"
+#include "alui/style/BorderStyle.hpp"
 #include "alui/style/StyleStates.hpp"
 #include <alui/style/Style.hpp>
 
@@ -68,6 +69,16 @@ int main() {
             ),
             .focusedState = std::make_shared<alui::BackgroundColourStyle>(
                 al_map_rgb(255, 0, 0)
+            )
+        },
+        alui::StyleStates {
+            .defaultState = std::make_shared<alui::BorderStyle>(
+                al_map_rgb(140, 0, 140),
+                2
+            ),
+            .focusedState = std::make_shared<alui::BorderStyle>(
+                al_map_rgb(140, 0, 140),
+                6
             )
         }
     );
