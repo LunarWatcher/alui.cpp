@@ -6,6 +6,7 @@
 #include "alui/GUI.hpp"
 #include "alui/components/Text.hpp"
 #include "alui/layouts/FlexBox.hpp"
+#include "util/Style.hpp"
 #include <iostream>
 #include <util/Display.hpp>
 
@@ -136,7 +137,7 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
     }
 
     SECTION("Validate component size calculation functions") {
-        REQUIRE(text->computeSizeRequirements(FlexDirection::VERTICAL) == 200);
+        REQUIRE(text->computeSizeRequirements(FlexDirection::VERTICAL) == 62); // text height (ish)
         REQUIRE(text->computeCrossSize(FlexDirection::VERTICAL, 280, 560) == 560);
     }
 }
@@ -151,11 +152,14 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
         .x = 0, .y = 0,
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
         .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+        .style = getDebugStyleSpec(),
     });
 
     auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
         .flex{1},
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .maxWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .style = getDebugStyleSpec(),
     });
     //text->setDimensions(50, 100);
     text->setTextColour(al_map_rgb(255, 255, 255));
@@ -165,7 +169,8 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
     auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", alui::ComponentConfig {
         .flex{1},
         .padding = 15.0f,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .maxWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 340.f },
+        .style = getDebugStyleSpec(),
     });
     //text->setDimensions(50, 100);
     text2->setTextColour(al_map_rgb(255, 255, 255));
@@ -175,6 +180,7 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
     auto forcedSoftWrap = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
         .flex{1},
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .style = getDebugStyleSpec(),
     });
     forcedSoftWrap->setFont(font.get());
     forcedSoftWrap->setTextColour(al_map_rgb(255, 255, 255));
@@ -200,10 +206,10 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
         REQUIRE(rootLayout->getComputedSize().first == 640.0f);
         REQUIRE(rootLayout->getComputedSize().second == 480.0f);
 
-        REQUIRE(text->getComputedSize().first == 320.0f);
-        REQUIRE(text->getComputedSize().second == 198.0f);
-        REQUIRE(text2->getComputedSize().first == 320.0f);
-        REQUIRE(text2->getComputedSize().second == 198.0f);
+        REQUIRE(text->getComputedSize().first == 300.0f);
+        REQUIRE(text->getComputedSize().second == 156.0f);
+        REQUIRE(text2->getComputedSize().first == 340.0f);
+        REQUIRE(text2->getComputedSize().second == 156.0f);
 
         REQUIRE(forcedSoftWrap->getComputedSize().first == 640.0f);
         REQUIRE(forcedSoftWrap->getComputedSize().second == 252.0f);
@@ -211,10 +217,10 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
         REQUIRE(text->getComputedPositions().first == 0.f);
         REQUIRE(text->getComputedPositions().second == 0.f);
 
-        REQUIRE(text2->getComputedPositions().first == 320.f);
+        REQUIRE(text2->getComputedPositions().first == 300.f);
         REQUIRE(text2->getComputedPositions().second == 0.f);
 
         REQUIRE(forcedSoftWrap->getComputedPositions().first == 0.f);
-        REQUIRE(forcedSoftWrap->getComputedPositions().second == 198.f);
+        REQUIRE(forcedSoftWrap->getComputedPositions().second == 156.f);
     }
 }

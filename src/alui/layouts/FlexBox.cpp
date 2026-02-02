@@ -80,9 +80,16 @@ void FlexBox::recomputeBounds(
                 currLine.maxCrossSize
             );
 
-            // inflexible elements will not change sizes
-            if (conf.flex.grow == 0 && conf.flex.shrink == 0) {
-               frozen = true;
+            if (
+                // inflexible elements will not change sizes
+                (conf.flex.grow == 0 && conf.flex.shrink == 0)
+                // Elements already at max size cannot grow further
+                || unwrap(
+                    conf.getMaxAxialSize(dir),
+                    std::numeric_limits<float>::max()
+                ) <= hypotheticalMainSize
+            ) {
+                frozen = true; 
             } else {
                 currLine.factorPool += component->getConfig().flex.grow;
             }
@@ -116,11 +123,10 @@ void FlexBox::recomputeBounds(
 
         float localMaxCrossSize = 0;
         for (auto& item : components) {
-            if (item.frozen) {
-                continue;
+            if (!item.frozen) {
+                // Allocate remaining free space and compute cross size
+                item.flexAxialSize += freeSpace * (item.c->getConfig().flex.grow / factorPool);
             }
-            // Allocate remaining free space and compute cross size
-            item.flexAxialSize += freeSpace * (item.c->getConfig().flex.grow / factorPool);
                 
             item.flexCrossSize = std::clamp(
                 item.c->computeCrossSize(
