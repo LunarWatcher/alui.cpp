@@ -1,5 +1,5 @@
 #include "FlexBox.hpp"
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 #include <algorithm>
 #include <cassert>
 #include <iostream>

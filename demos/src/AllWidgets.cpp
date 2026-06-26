@@ -10,7 +10,7 @@
 #include "allegro5/events.h"
 #include "allegro5/timer.h"
 
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 #include "alui/GUI.hpp"
 #include "alui/components/Text.hpp"
 #include "alui/components/ImageComponent.hpp"

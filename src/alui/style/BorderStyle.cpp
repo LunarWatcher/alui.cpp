@@ -1,6 +1,6 @@
 #include "BorderStyle.hpp"
 #include "allegro5/allegro_primitives.h"
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 
 namespace alui {
 

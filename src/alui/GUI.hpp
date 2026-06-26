@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Component.hpp"
+#include "alui/component/Component.hpp"
 #include "allegro5/allegro_font.h"
 #include "alui/Layout.hpp"
 

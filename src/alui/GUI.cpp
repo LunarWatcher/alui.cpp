@@ -2,7 +2,7 @@
 #include "allegro5/display.h"
 #include "allegro5/events.h"
 #include "allegro5/transformations.h"
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 #include "alui/Layout.hpp"
 #include <algorithm>
 #include <memory>

@@ -2,7 +2,7 @@
 
 #include "Conf.hpp"
 #include "allegro5/color.h"
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 #include "alui/GUI.hpp"
 #include "alui/components/Text.hpp"
 #include "alui/layouts/FlexBox.hpp"

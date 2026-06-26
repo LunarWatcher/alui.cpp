@@ -1,4 +1,4 @@
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 #include <catch2/catch_test_macros.hpp>
 
 using namespace alui;

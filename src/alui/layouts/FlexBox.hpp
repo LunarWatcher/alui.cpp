@@ -1,6 +1,6 @@
 #pragma once
 
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 #include "alui/Layout.hpp"
 #include <vector>
 

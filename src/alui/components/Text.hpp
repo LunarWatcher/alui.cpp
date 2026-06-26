@@ -1,7 +1,7 @@
 #pragma once
 
 #include "allegro5/color.h"
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 #include <string>
 
 namespace alui {
@@ -29,6 +29,8 @@ protected:
 public:
     using LineCallback = std::function<void(const std::string& line)>;
     Text(const std::string& str, const ComponentConfig& cfg);
+
+    virtual ~Text() = default;
 
     virtual void render(GUI& ctx) override;
     virtual void tick() override {}

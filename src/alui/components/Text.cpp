@@ -1,7 +1,7 @@
 #include "Text.hpp"
 #include "allegro5/allegro_font.h"
 #include "allegro5/utf8.h"
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 #include "alui/GUI.hpp"
 #include <cmath>
 #include <stdexcept>

@@ -5,7 +5,7 @@
  * \brief Layouts are special components that can contain other components, and that do various types of alignments and sizing
  */
 
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 #include <vector>
 #include <memory>
 
@@ -26,9 +26,6 @@ protected:
     std::vector<std::shared_ptr<Component>> children;
 
     virtual void updateComputedPos(float x, float y) override;
-
-    virtual float computeSizeRequirements(FlexDirection dir) override = 0;
-    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override = 0;
 
 public:
     Layout(const ComponentConfig& cfg) : Component(cfg) {}
@@ -52,6 +49,9 @@ public:
     const decltype(children)& getChildren() {
         return children;
     }
+
+    virtual float computeSizeRequirements(FlexDirection dir) override = 0;
+    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override = 0;
 
     friend class GUI;
 

@@ -12,8 +12,9 @@ endif()
 
 add_library(alui STATIC
     alui/GUI.cpp
-    alui/Component.cpp
     alui/Layout.cpp
+
+    alui/component/Component.cpp
 
     alui/components/Text.cpp
     alui/components/ImageComponent.cpp

@@ -4,14 +4,13 @@
 #include "allegro5/bitmap_draw.h"
 namespace alui {
 
-// TODO: this entire class and all use of it will need to be redesigned for 9-patch support. 9-patches are just so
-// special that I don't entirely know how to approach it right now. It all depends on the interface to the components
-// that accept 9-patch images, since there's nothing wrong with taking an Image as-is, with an additional 9-patch
-// parameter for doing the actual slicing.
-// I also want to keep the Images reusable separately, which that approach would support. But it is mildly more annoying
-// downstream, since I don't think we can give a raw image in at that point. At some point, we probably need a pointer
-// if we want to abstract the actual rendering away to a generic `Image` class (not to be confused with the current
-// implementation style) or whatever
+/*
+ * Redesign notes:
+ * * I don't know if keeping slices reusable makes sense. It does for standard slices, but it doesn't for 9-slices,
+ *   since 9-slices may need to be cached as a bitmap.
+ *   It _could_ be drawn on-demand, but that's 9 draw calls per component
+ * * I think it might be worth hooking 9-slices into the resize cycle, so a cached ALLEGRO_BITMAP can be made.
+ */
 
 /**
  * Contains raw information about an image. Applications providing images are required to keep the ALLEGRO_BITMAP valid

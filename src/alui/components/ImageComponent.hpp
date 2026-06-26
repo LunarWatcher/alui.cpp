@@ -1,7 +1,7 @@
 #pragma once
 
 #include "allegro5/bitmap.h"
-#include "alui/Component.hpp"
+#include "alui/component/Component.hpp"
 #include "alui/images/Image.hpp"
 
 namespace alui {
