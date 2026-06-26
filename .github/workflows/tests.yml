@@ -60,7 +60,7 @@ jobs:
         run: |
           cd build
           cmake --build . --target test
-      - name: Test (Windows)
+      - name: Test (Microslop Windows)
         if: matrix.os-config.os == 'windows-latest'
         run: |
           cd build
@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Run clang-tidy
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Conan
         uses: conan-io/setup-conan@v1
       - name: Install deps
