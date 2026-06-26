@@ -43,7 +43,11 @@ void FlexBox::recomputeBounds(
             auto& [component, flexBaseSize, hypotheticalMainSize, flexCrossSize, frozen] = dataWrapper;
 
             auto conf = component->getConfig();
-            auto minAxialSize = component->computeSizeRequirements(this->dir);
+            auto minAxialSize = std::clamp(
+                component->computeSizeRequirements(this->dir),
+                conf.getMinAxialSize(dir).value_or(Size{0.f}).compute(parentDimension),
+                conf.getMaxAxialSize(dir).value_or(Size{parentDimension}).compute(parentDimension)
+            );
             flexBaseSize = minAxialSize;
 
             {

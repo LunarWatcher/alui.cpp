@@ -7,7 +7,6 @@
 #include "alui/components/Text.hpp"
 #include "alui/layouts/FlexBox.hpp"
 #include "util/Style.hpp"
-#include <iostream>
 #include <util/Display.hpp>
 
 #include <allegro5/allegro_font.h>
@@ -198,6 +197,12 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
 
     SECTION("Validate sizing and resizing") {
         Display disp(1000, 1500);
+        disp.captureRender(
+            "FlexBoxTests-VerifyTextSizingInHorizontalPreResize.bmp",
+            [&]() {
+                g.render();
+            }
+        );
         g.resize(640, 480);
         disp.captureRender(
             "FlexBoxTests-VerifyTextSizingInHorizontal.bmp",
