@@ -45,7 +45,7 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
     );
 
     std::shared_ptr<Text> text = std::make_shared<Text>(
-        "Choo choo", 
+        "Choo choo",
         ComponentConfig {
             .flex = 0,
             .id = 2,

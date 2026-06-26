@@ -20,7 +20,7 @@ void FlexBox::recomputeBounds(
     //
     // §9b2: determine available space (modified)
     auto parentDimension = dir == FlexDirection::HORIZONTAL ? parentWidth : parentHeight;
-    auto mainSize = f.getMinAxialSize(dir) ? this->f.getMinAxialSize(dir)->compute(parentDimension)
+    auto mainSize = f.getMinAxialSize(dir).has_value() ? this->f.getMinAxialSize(dir)->compute(parentDimension)
         // Padding is internal, and also an offset on the position (with the right padding, but all of that is a future
         // me problem)
         - this->f.padding.getSizeForDimension(this->dir)
@@ -46,11 +46,15 @@ void FlexBox::recomputeBounds(
             auto minAxialSize = component->computeSizeRequirements(this->dir);
             flexBaseSize = minAxialSize;
 
-            hypotheticalMainSize = std::clamp(
-                flexBaseSize,
-                unwrap(conf.getMinAxialSize(dir), minAxialSize),
-                unwrap(conf.getMaxAxialSize(dir), mainSize)
-            );
+            {
+                auto lo = unwrap(conf.getMinAxialSize(dir), minAxialSize);
+                auto hi = unwrap(conf.getMaxAxialSize(dir), mainSize);
+                hypotheticalMainSize = std::clamp(
+                    flexBaseSize,
+                    std::min(lo, hi),
+                    std::max(lo, hi)
+                );
+            }
             // Negative size is not an option
             if (hypotheticalMainSize < 0) { hypotheticalMainSize = 0; }
 
@@ -127,17 +131,23 @@ void FlexBox::recomputeBounds(
                 // Allocate remaining free space and compute cross size
                 item.flexAxialSize += freeSpace * (item.c->getConfig().flex.grow / factorPool);
             }
-                
+
+            auto lo = (dir == FlexDirection::HORIZONTAL ? item.c->getConfig().minHeight : item.c->getConfig().minWidth)
+                .value_or(Size {
+                        0.f
+                    }).compute(maxCrossSize);
+            auto hi = (dir == FlexDirection::HORIZONTAL ? item.c->getConfig().maxHeight : item.c->getConfig().maxWidth)
+                .value_or(Size {
+                        dir == FlexDirection::HORIZONTAL ? internalHeight : internalWidth
+                    }).compute(maxCrossSize);
             item.flexCrossSize = std::clamp(
                 item.c->computeCrossSize(
                     dir,
                     item.flexAxialSize,
                     maxCrossSize
                 ),
-                (dir == FlexDirection::HORIZONTAL ? item.c->getConfig().minHeight : item.c->getConfig().minWidth).value_or(Size {0.f}).compute(maxCrossSize),
-                (dir == FlexDirection::HORIZONTAL ? item.c->getConfig().maxHeight : item.c->getConfig().maxWidth).value_or(Size {
-                    dir == FlexDirection::HORIZONTAL ? internalHeight : internalWidth
-                }).compute(maxCrossSize)
+                std::min(lo, hi),
+                std::max(lo, hi)
             );
 
             localMaxCrossSize = std::max(localMaxCrossSize, item.flexCrossSize);

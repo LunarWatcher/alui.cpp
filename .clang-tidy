@@ -5,7 +5,6 @@
 #       clangd's extra pendantic check. The compiler does the bulk of the useful checks with -Wall
 # - clang-diagnostic-unused-private-field: Maybe useful eventually, but not right now.
 Checks: >
-  -*,
   bugprone-*,
   clang-*,
   misc-*,
@@ -26,7 +25,8 @@ Checks: >
   -performance-avoid-endl,
   -performance-enum-size,
   -readability-*,
-  -clang-analyzer-cplusplus.NewDeleteLeaks
+  -clang-analyzer-cplusplus.NewDeleteLeaks,
+  -portability-avoid-pragma-once
 
 # Windows does not like to cooperate with the correct type of path slashes
 HeaderFilterRegex: ".*\\/src\\/alui\\/.*"
