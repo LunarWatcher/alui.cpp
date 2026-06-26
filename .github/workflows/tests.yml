@@ -23,7 +23,7 @@ jobs:
           #- os: ubuntu-latest
             #windowSystem: libwayland-dev
     runs-on: ${{matrix.os-config.os}}
-    name: Build and test on ${{ matrix.os-config.os }} ${{ matrix.os-config.windowSystem }}
+    name: Build and test on ${{ matrix.os-config.os }} ${{ matrix.os-config.windowSystem }} (${{ matrix.os-config.type }} build)
     steps:
       - uses: actions/checkout@v7
       - name: Install Conan
