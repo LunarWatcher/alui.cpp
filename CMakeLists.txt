@@ -65,6 +65,7 @@ add_subdirectory(src)
 
 if (ALUI_BUILD_TESTS OR ALUI_ENABLE_DEMOS)
     configure_file(tests/3p/dejavu.ttf ${CMAKE_BINARY_DIR}/dejavu.ttf COPYONLY)
+    add_subdirectory(assets)
 
     find_package(Freetype REQUIRED)
     find_package(PNG REQUIRED)

@@ -5,6 +5,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/display.h>
+#include <allegro5/allegro_image.h>
 
 #include "allegro5/events.h"
 #include "allegro5/timer.h"
@@ -12,6 +13,7 @@
 #include "alui/Component.hpp"
 #include "alui/GUI.hpp"
 #include "alui/components/Text.hpp"
+#include "alui/components/ImageComponent.hpp"
 #include "alui/layouts/FlexBox.hpp"
 
 int main() {
@@ -26,9 +28,15 @@ int main() {
     al_init_font_addon();
     al_init_ttf_addon();
     al_init_primitives_addon();
+    al_init_image_addon();
 
     al_install_keyboard();
     al_install_mouse();
+
+    ALLEGRO_BITMAP* eepyfox = al_load_bitmap("./assets/eepyfox.png");
+    if (eepyfox == nullptr) {
+        throw std::runtime_error("Failed to load eepyfox");
+    }
 
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
@@ -91,6 +99,20 @@ int main() {
     testText->setTextColour(al_map_rgb(255, 255, 255));
 
     rootLayout->push(testText);
+
+    auto testImage = std::make_shared<alui::ImageComponent>(
+        std::make_shared<alui::ImageSlice>(
+            eepyfox,
+            0, 0, 256, 256
+        ),
+        alui::ComponentConfig {
+            .minWidth = alui::Size { 256.f },
+            .minHeight = alui::Size { 256.f },
+            .maxWidth = alui::Size { 256.f },
+            .maxHeight = alui::Size { 256.f },
+        }
+    );
+    rootLayout->push(testImage);
 
     gui.push(rootLayout);
 

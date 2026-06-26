@@ -16,6 +16,7 @@ add_library(alui STATIC
     alui/Layout.cpp
 
     alui/components/Text.cpp
+    alui/components/ImageComponent.cpp
 
     alui/layouts/FlexBox.cpp
 
@@ -30,6 +31,7 @@ target_link_libraries(alui PUBLIC
     allegro_primitives
     allegro_font
     allegro_color
+    allegro_image
 )
 
 # vim:ft=cmake
