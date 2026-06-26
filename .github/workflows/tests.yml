@@ -64,8 +64,7 @@ jobs:
         if: matrix.os-config.os == 'windows-latest'
         run: |
           cd build
-          cmake --build . --target tests --config Release
-          .\bin\Release\tests.exe
+          cmake --build . --target test --config ${{ matrix.os-config.type }}
   lint:
     runs-on: ubuntu-latest
     name: Run clang-tidy
