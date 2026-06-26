@@ -11,14 +11,21 @@ jobs:
       matrix:
         os-config: 
           - os: windows-latest
+            type: Debug
           - os: ubuntu-latest
             windowSystem: libx11-dev
+            type: Debug
+          - os: windows-latest
+            type: Release
+          - os: ubuntu-latest
+            windowSystem: libx11-dev
+            type: Release
           #- os: ubuntu-latest
             #windowSystem: libwayland-dev
     runs-on: ${{matrix.os-config.os}}
     name: Build and test on ${{ matrix.os-config.os }} ${{ matrix.os-config.windowSystem }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Conan
         uses: conan-io/setup-conan@v1
       - name: Install packages and set up mock display
@@ -33,9 +40,9 @@ jobs:
           cd build
           # WANT_SHADERS_GL: Compat option for forcing this to build properly
           # ALUI_TEST_OPTIONS: Option disabling debugCapture; CI builds do not need human-accessible .bmp debug output files
-          cmake .. -DWANT_SHADERS_GL=on -DCMAKE_BUILD_TYPE=Release -DALUI_TEST_OPTIONS="--debugCapture=false" -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          cmake .. -DWANT_SHADERS_GL=on -DCMAKE_BUILD_TYPE="${{ matrix.os-config.type }}" -DALUI_TEST_OPTIONS="--debugCapture=false" -DCMAKE_POLICY_VERSION_MINIMUM=3.5
           # --config Release is required for Windows; shouldn't do anything on Linux
-          cmake --build . -j $(nproc) --config Release
+          cmake --build . -j $(nproc) --config "${{ matrix.os-config.type }}"
       - name: Mock display (Ubuntu, xorg)
         if: matrix.os-config.os == 'ubuntu-latest' && matrix.os-config.windowSystem == 'libx11-dev'
         run: |
