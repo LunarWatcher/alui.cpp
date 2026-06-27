@@ -180,6 +180,8 @@ void FlexBox::recomputeBounds(
     
     dirty = false;
     // This will not work as expected if this isn't the root-level layout, but I think I'll just... ignore that c:
+    // ... the fuck were you on about, past me? Why would this be wrong? The parent layout would override the computed
+    // position anyway
     this->computedX = computedX;
     this->computedY = computedY;
 
@@ -190,7 +192,7 @@ void FlexBox::recomputeBounds(
         f.maxWidth.value_or(Scalar {parentWidth}).compute(parentWidth)
     );
     this->computedHeight = std::clamp(
-        y - computedY,
+        y + f.padding.bot - computedY,
         f.minHeight.value_or(Scalar {0.0f}).compute(parentHeight),
         f.maxHeight.value_or(Scalar {parentHeight}).compute(parentHeight)
     );

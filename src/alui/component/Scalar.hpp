@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdexcept>
+#include <utility>
 #include "ScalarType.hpp"
 
 namespace alui {
@@ -29,6 +29,12 @@ struct Scalar {
         case ScalarType::Absolute:
             return value;
         }
+        // TODO: Why the fuck is this required?
+        // GCC whines if this isn't here because ConTRoL FlOW REacHES eND OF FunCtion - no it fucking doesn't
+        // Maybe if the type is serialized via an int and ends up being set to an invalid  type, but that's always UB,
+        // isn't it? Why do I need to bump to C++23 and `std::unreachable()` this function? Just segfault if someone
+        // does something that dumb, idfc
+        std::unreachable();
     }
 };
 
