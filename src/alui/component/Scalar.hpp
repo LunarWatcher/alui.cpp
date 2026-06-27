@@ -29,9 +29,6 @@ struct Scalar {
         case ScalarType::Absolute:
             return value;
         }
-        [[unlikely]]
-        // .c_str(): Fuck you windows
-        throw std::runtime_error((std::string("Fatal: unknown size type: ") + std::to_string(static_cast<int>(type))).c_str());
     }
 };
 
