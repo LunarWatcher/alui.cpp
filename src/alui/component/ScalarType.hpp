@@ -4,11 +4,11 @@
 
 namespace alui {
 
-/** @enum alui::SizeUnit
+/** @enum alui::ScalarType
  *
  * @brief determines how sizes are interpreted. 
  */
-enum class SizeUnit {
+enum class ScalarType {
     /**
      * Used for percentage-based layouts that can shrink or grow depending on how much space is free. Note that if no
      * space is free, the elements will be hidden - try to avoid this :)

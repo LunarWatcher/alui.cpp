@@ -50,42 +50,42 @@ int main() {
     // alui {{{
     alui::GUI gui({
         .font = font,
-        .width = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .height = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+        .width = alui::Scalar { alui::ScalarType::ABSOLUTE, 640.f },
+        .height = alui::Scalar { alui::ScalarType::ABSOLUTE, 480.f },
     });
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::VERTICAL, alui::ComponentConfig {
         .x = 0, .y = 0,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 640.f },
+        .minHeight = alui::Scalar { alui::ScalarType::ABSOLUTE, 480.f },
     });
 
     auto n1 = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
         .x = 0, .y = 0,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 140.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 640.f },
+        .minHeight = alui::Scalar { alui::ScalarType::ABSOLUTE, 140.f },
     });
     auto n2 = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
         .x = 0, .y = 0,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 140.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 640.f },
+        .minHeight = alui::Scalar { alui::ScalarType::ABSOLUTE, 140.f },
     });
 
     auto t1 = std::make_shared<alui::Text>("Hewwo x3 (L1)", alui::ComponentConfig {
         .flex{1},
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
     });
     auto t2 = std::make_shared<alui::Text>("Hewwo x3 (L2)", alui::ComponentConfig {
         .flex{1},
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
     });
     auto t3 = std::make_shared<alui::Text>("Hewwo x3 (L2, P2)", alui::ComponentConfig {
         .flex{1},
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
     });
     auto t4 = std::make_shared<alui::Text>("Root container text", alui::ComponentConfig {
         .flex{1},
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
     });
 
     t1->setTextColour(al_map_rgb(255, 255, 255));

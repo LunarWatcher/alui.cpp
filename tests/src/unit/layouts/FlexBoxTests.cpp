@@ -25,7 +25,7 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
             .flex = 1,
             .id = 0,
             .padding{10},
-            .minHeight = alui::Size {300.0f},
+            .minHeight = alui::Scalar {300.0f},
             .style = test::getDebugStyleSpec(),
         }
     );
@@ -36,7 +36,7 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
             .flex = 1,
             .id = 1,
             .padding{10},
-            .minHeight = alui::Size {230.f},
+            .minHeight = alui::Scalar {230.f},
             .style = test::getDebugStyleSpec(),
         }
     );
@@ -47,8 +47,8 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
             .flex = 0,
             .id = 2,
             .padding{10},
-            .minWidth = alui::Size {alui::SizeUnit::ABSOLUTE, 500.0f},
-            .minHeight = alui::Size {200.f},
+            .minWidth = alui::Scalar {alui::ScalarType::ABSOLUTE, 500.0f},
+            .minHeight = alui::Scalar {200.f},
             .style = test::getDebugStyleSpec(),
         }
     );
@@ -150,15 +150,15 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[alui::FlexBox][Layout]"
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
         .x = 0, .y = 0,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 640.f },
+        .minHeight = alui::Scalar { alui::ScalarType::ABSOLUTE, 480.f },
         .style = test::getDebugStyleSpec(),
     });
 
     auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
         .flex{1},
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
-        .maxWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
+        .maxWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
         .style = test::getDebugStyleSpec(),
     });
     //text->setDimensions(50, 100);
@@ -169,7 +169,7 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[alui::FlexBox][Layout]"
     auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", alui::ComponentConfig {
         .flex{1},
         .padding = 15.0f,
-        .maxWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 340.f },
+        .maxWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 340.f },
         .style = test::getDebugStyleSpec(),
     });
     //text->setDimensions(50, 100);
@@ -179,7 +179,7 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[alui::FlexBox][Layout]"
 
     auto forcedSoftWrap = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
         .flex{1},
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
         .style = test::getDebugStyleSpec(),
     });
     forcedSoftWrap->setFont(*font);

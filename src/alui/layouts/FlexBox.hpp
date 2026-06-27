@@ -53,9 +53,6 @@ protected:
     float flexGap;
     FlexDirection dir;
 
-    virtual float computeSizeRequirements(FlexDirection dir) override;
-    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override;
-
 public:
     FlexBox(FlexDirection layoutDirection, const ComponentConfig& cfg);
 
@@ -65,7 +62,8 @@ public:
     ) override;
     virtual void setFlexGap(float flexGap) { this->flexGap = flexGap; }
 
-    //virtual Flex computeSizeRequirements(FlexDirection dir) override;
+    virtual float computeSizeRequirements(FlexDirection dir) override;
+    virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override;
 };
 
 }

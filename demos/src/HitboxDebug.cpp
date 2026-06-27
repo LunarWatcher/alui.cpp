@@ -59,8 +59,8 @@ int main() {
     // alui {{{
     alui::GUI gui({
         .font = font,
-        .width = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .height = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+        .width = alui::Scalar { alui::ScalarType::ABSOLUTE, 640.f },
+        .height = alui::Scalar { alui::ScalarType::ABSOLUTE, 480.f },
     });
     std::shared_ptr<alui::StyleSpec> hoverableComponent = std::make_shared<alui::StyleSpec>(
         alui::StyleStates {
@@ -85,8 +85,8 @@ int main() {
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
         .x = 150, .y = 90,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
-        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
+        .minHeight = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
         .style = hoverableComponent
     });
 

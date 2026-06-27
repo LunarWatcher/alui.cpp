@@ -20,6 +20,7 @@ void FlexBox::recomputeBounds(
     //
     // §9b2: determine available space (modified)
     auto parentDimension = dir == FlexDirection::HORIZONTAL ? parentWidth : parentHeight;
+    // NOLINTNEXTLINE(bugprone-unchecked-optional-access): The fuck are you on about clang-tidy, it is very clearly checked. There's theoretically a race condition here, but like, that applies everywhere
     auto mainSize = f.getMinAxialSize(dir).has_value() ? this->f.getMinAxialSize(dir)->compute(parentDimension)
         // Padding is internal, and also an offset on the position (with the right padding, but all of that is a future
         // me problem)
@@ -45,8 +46,8 @@ void FlexBox::recomputeBounds(
             auto conf = component->getConfig();
             auto minAxialSize = std::clamp(
                 component->computeSizeRequirements(this->dir),
-                conf.getMinAxialSize(dir).value_or(Size{0.f}).compute(parentDimension),
-                conf.getMaxAxialSize(dir).value_or(Size{parentDimension}).compute(parentDimension)
+                conf.getMinAxialSize(dir).value_or(Scalar{0.f}).compute(parentDimension),
+                conf.getMaxAxialSize(dir).value_or(Scalar{parentDimension}).compute(parentDimension)
             );
             flexBaseSize = minAxialSize;
 
@@ -139,11 +140,11 @@ void FlexBox::recomputeBounds(
             }
 
             auto lo = (dir == FlexDirection::HORIZONTAL ? item.c->getConfig().minHeight : item.c->getConfig().minWidth)
-                .value_or(Size {
+                .value_or(Scalar {
                         0.f
                     }).compute(maxCrossSize);
             auto hi = (dir == FlexDirection::HORIZONTAL ? item.c->getConfig().maxHeight : item.c->getConfig().maxWidth)
-                .value_or(Size {
+                .value_or(Scalar {
                         dir == FlexDirection::HORIZONTAL ? internalHeight : internalWidth
                     }).compute(maxCrossSize);
             item.flexCrossSize = std::clamp(
@@ -161,7 +162,7 @@ void FlexBox::recomputeBounds(
 
         for (auto& item : components) {
             item.c->updateComputedPos(x, y);
-            // TODO: allow for either item.crossSize or maxCrossSize
+            // TODO: allow for either item.crossScalar or maxCrossSize
             auto width = dir == FlexDirection::HORIZONTAL ? item.flexAxialSize : internalWidth;
             auto height = dir == FlexDirection::HORIZONTAL ? localMaxCrossSize : item.flexAxialSize;
 
@@ -185,13 +186,13 @@ void FlexBox::recomputeBounds(
     // TODO: The compute params are probably wrong
     this->computedWidth = std::clamp(
         maxX + f.padding.right - computedX,
-        f.minWidth.value_or(Size {0.0f}).compute(parentWidth),
-        f.maxWidth.value_or(Size {parentWidth}).compute(parentWidth)
+        f.minWidth.value_or(Scalar {0.0f}).compute(parentWidth),
+        f.maxWidth.value_or(Scalar {parentWidth}).compute(parentWidth)
     );
     this->computedHeight = std::clamp(
         y - computedY,
-        f.minHeight.value_or(Size {0.0f}).compute(parentHeight),
-        f.maxHeight.value_or(Size {parentHeight}).compute(parentHeight)
+        f.minHeight.value_or(Scalar {0.0f}).compute(parentHeight),
+        f.maxHeight.value_or(Scalar {parentHeight}).compute(parentHeight)
     );
 }
 

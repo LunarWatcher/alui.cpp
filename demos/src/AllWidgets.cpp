@@ -62,19 +62,19 @@ int main() {
     // alui {{{
     alui::GUI gui({
         .font = font,
-        .width = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .height = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+        .width = alui::Scalar { alui::ScalarType::ABSOLUTE, 640.f },
+        .height = alui::Scalar { alui::ScalarType::ABSOLUTE, 480.f },
     });
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
         .x = 0, .y = 0,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
-        .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 640.f },
+        .minHeight = alui::Scalar { alui::ScalarType::ABSOLUTE, 480.f },
     });
 
     auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
         .flex{1},
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
     });
     //text->setDimensions(50, 100);
     text->setTextColour(al_map_rgb(255, 255, 255));
@@ -84,7 +84,7 @@ int main() {
     auto text2 = std::make_shared<alui::Text>("x3 Hewwo x3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", alui::ComponentConfig {
         .flex{1},
         .padding = 15.0f,
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
     });
     //text->setDimensions(50, 100);
     text2->setTextColour(al_map_rgb(255, 255, 255));
@@ -93,7 +93,7 @@ int main() {
 
     auto testText = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
         .flex{1},
-        .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
     });
     testText->setFont(font);
     testText->setTextColour(al_map_rgb(255, 255, 255));
@@ -106,10 +106,10 @@ int main() {
             0, 0, 256, 256
         ),
         alui::ComponentConfig {
-            .minWidth = alui::Size { 256.f },
-            .minHeight = alui::Size { 256.f },
-            .maxWidth = alui::Size { 256.f },
-            .maxHeight = alui::Size { 256.f },
+            .minWidth = alui::Scalar { 256.f },
+            .minHeight = alui::Scalar { 256.f },
+            .maxWidth = alui::Scalar { 256.f },
+            .maxHeight = alui::Scalar { 256.f },
         }
     );
     rootLayout->push(testImage);

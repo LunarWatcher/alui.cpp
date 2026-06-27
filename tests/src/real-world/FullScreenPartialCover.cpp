@@ -1,10 +1,10 @@
-#include "alui/component/SizeUnit.hpp"
+#include "alui/component/ScalarType.hpp"
 #include "fixtures/Font.hpp"
 #include "util/Display.hpp"
 #include <catch2/catch_test_macros.hpp>
 
 #include "alui/GUI.hpp"
-#include "alui/component/Size.hpp"
+#include "alui/component/Scalar.hpp"
 
 namespace {
 /**
@@ -19,12 +19,12 @@ TEST_CASE("100% GUI with partial screen coverage") {
     alui::GUI g(
         {
             .font = *font,
-            .width = alui::Size {
-                alui::SizeUnit::RELATIVE,
+            .width = alui::Scalar {
+                alui::ScalarType::RELATIVE,
                 1.f
             },
-            .height = alui::Size {
-                alui::SizeUnit::RELATIVE,
+            .height = alui::Scalar {
+                alui::ScalarType::RELATIVE,
                 1.f
             }
         }

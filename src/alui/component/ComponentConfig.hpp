@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "FlexDirection.hpp"
-#include "Size.hpp"
+#include "Scalar.hpp"
 #include "Sizing.hpp"
 
 namespace alui {
@@ -65,21 +65,21 @@ struct ComponentConfig {
      *
      * \see [Positioning](docs/Positioning.md)
      */
-    Size x = 0;
+    Scalar x = 0;
 
     /**
      * \brief Y position; only respected for layouts
      *
      * \see [Positioning](docs/Positioning.md)
      */
-    Size y = 0;
+    Scalar y = 0;
 
     Sizing padding{0}, margin{0};
 
-    std::optional<Size> minWidth = std::nullopt;
-    std::optional<Size> minHeight = std::nullopt;
-    std::optional<Size> maxWidth = std::nullopt;
-    std::optional<Size> maxHeight = std::nullopt;
+    std::optional<Scalar> minWidth = std::nullopt;
+    std::optional<Scalar> minHeight = std::nullopt;
+    std::optional<Scalar> maxWidth = std::nullopt;
+    std::optional<Scalar> maxHeight = std::nullopt;
 
     /**
      * Defines the general style of the component, such as the background style and border style. This does not include
@@ -88,11 +88,11 @@ struct ComponentConfig {
      */
     std::shared_ptr<StyleSpec> style = nullptr;
 
-    std::optional<Size> getMinAxialSize(FlexDirection dir) const {
+    std::optional<Scalar> getMinAxialSize(FlexDirection dir) const {
         return dir == FlexDirection::HORIZONTAL ? minWidth : minHeight;
     }
 
-    std::optional<Size> getMaxAxialSize(FlexDirection dir) const {
+    std::optional<Scalar> getMaxAxialSize(FlexDirection dir) const {
         return dir == FlexDirection::HORIZONTAL ? maxWidth : maxHeight;
     }
 };
