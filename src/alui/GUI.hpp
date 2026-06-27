@@ -13,7 +13,7 @@ namespace alui {
 struct GUIConfig {
     ALLEGRO_FONT* font;
 
-    Scalar width, height;
+    Magnitude width, height;
     float x = 0;
     float y = 0;
 };

@@ -52,7 +52,7 @@ protected:
 
     Component(const ComponentConfig& cfg) : f(cfg) {}
 
-    virtual inline float unwrap(std::optional<Scalar> orig, float def) {
+    virtual inline float unwrap(std::optional<Magnitude> orig, float def) {
         // TODO: This does not respect relative sizes 
         if (orig) {
             return orig->value;
@@ -122,17 +122,17 @@ public:
     virtual void clearDirty() { dirty = false; }
     ComponentConfig& getConfig() { return f; }
 
-    virtual void setMinDimensions(Scalar width, Scalar height) {
+    virtual void setMinDimensions(Magnitude width, Magnitude height) {
         f.minWidth = width;
         f.minHeight = height;
     }
 
-    virtual void setMaxDimensions(Scalar width, Scalar height) {
+    virtual void setMaxDimensions(Magnitude width, Magnitude height) {
         f.maxWidth = width;
         f.maxHeight = height;
     }
 
-    virtual void setDimensions(Scalar width, Scalar height) {
+    virtual void setDimensions(Magnitude width, Magnitude height) {
         f.minWidth = width;
         f.maxWidth = width;
 

@@ -1,5 +1,5 @@
 #include "alui/component/FlexDirection.hpp"
-#include "alui/component/ScalarType.hpp"
+
 #include "alui/components/Button.hpp"
 #include "alui/layouts/FlexBox.hpp"
 #include "fixtures/Font.hpp"
@@ -7,7 +7,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "alui/GUI.hpp"
-#include "alui/component/Scalar.hpp"
+#include "alui/component/Magnitude.hpp"
 #include "util/Style.hpp"
 
 namespace {
@@ -25,14 +25,8 @@ TEST_CASE("100% GUI with partial screen coverage") {
     alui::GUI g(
         {
             .font = *font,
-            .width = alui::Scalar {
-                alui::ScalarType::Relative,
-                1.f
-            },
-            .height = alui::Scalar {
-                alui::ScalarType::Relative,
-                1.f
-            }
+            .width = alui::Magnitude::Relative(1.f),
+            .height = alui::Magnitude::Relative(1.f)
         }
     );
 
@@ -53,25 +47,13 @@ TEST_CASE("100% GUI with partial screen coverage") {
             alui::ComponentConfig {
                 .flex = 1,
                 .id = 0,
-                .x = alui::Scalar {
-                    alui::ScalarType::Relative,
-                    0.3
-                },
-                .y = alui::Scalar {
-                    alui::ScalarType::Absolute,
-                    100
-                },
+                .x = alui::Magnitude::Relative(0.3),
+                .y = alui::Magnitude::Absolute(100),
                 .padding {
                     10
                 },
-                .minWidth = alui::Scalar {
-                    alui::ScalarType::Relative,
-                    0.4
-                },
-                .maxWidth = alui::Scalar {
-                    alui::ScalarType::Relative,
-                    0.4
-                },
+                .minWidth = alui::Magnitude::Relative(0.4),
+                .maxWidth = alui::Magnitude::Relative(0.4),
                 .style = test::getDebugStyleSpec(),
             }
         );

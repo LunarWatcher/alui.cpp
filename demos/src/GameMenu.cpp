@@ -60,8 +60,8 @@ int main() {
     // alui {{{
     alui::GUI gui({
         .font = font,
-        .width = alui::Scalar { alui::ScalarType::Absolute, 640.f },
-        .height = alui::Scalar { alui::ScalarType::Absolute, 480.f },
+        .width = alui::Magnitude::Absolute(640.f),
+        .height = alui::Magnitude::Absolute(480.f),
     });
     std::shared_ptr<alui::StyleSpec> buttonStyle = std::make_shared<alui::StyleSpec>(
         alui::StyleStates {
@@ -82,8 +82,8 @@ int main() {
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::Vertical, alui::ComponentConfig {
         .x = 150, .y = 90,
-        .minWidth = alui::Scalar { alui::ScalarType::Absolute, 300.f },
-        .minHeight = alui::Scalar { alui::ScalarType::Absolute, 300.f },
+        .minWidth = alui::Magnitude::Absolute(300.f),
+        .minHeight = alui::Magnitude::Absolute(300.f),
     });
 
     auto playBtn = std::make_shared<alui::Button>("Play", alui::ComponentConfig {
@@ -102,7 +102,7 @@ int main() {
     //     "A button with an unreasonably long text label that may or may not need to wrap",
     //     alui::ComponentConfig {
     //         .flex = { 1, 1 },
-    //         .maxWidth = alui::Scalar { alui::ScalarType::RELATIVE, 1.f },
+    //         .maxWidth = alui::Magnitude::RELATIVE(1.f),
     //         .style = buttonStyle
     //     }
     // );

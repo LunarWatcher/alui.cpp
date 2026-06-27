@@ -44,10 +44,16 @@ void FlexBox::recomputeBounds(
             auto& [component, flexBaseSize, hypotheticalMainSize, flexCrossSize, frozen] = dataWrapper;
 
             auto conf = component->getConfig();
+            auto lo = conf.getMinAxialSize(dir).value_or(
+                Magnitude{0.f}
+            ).compute(parentDimension);
+            auto hi = conf.getMaxAxialSize(dir).value_or(
+                Magnitude{ parentDimension }
+            ).compute(parentDimension);
             auto minAxialSize = std::clamp(
                 component->computeSizeRequirements(this->dir),
-                conf.getMinAxialSize(dir).value_or(Scalar{0.f}).compute(parentDimension),
-                conf.getMaxAxialSize(dir).value_or(Scalar{parentDimension}).compute(parentDimension)
+                std::min(lo, hi),
+                std::max(lo, hi)
             );
             flexBaseSize = minAxialSize;
 
@@ -98,7 +104,7 @@ void FlexBox::recomputeBounds(
                     std::numeric_limits<float>::max()
                 ) <= hypotheticalMainSize
             ) {
-                frozen = true; 
+                frozen = true;
             } else {
                 currLine.factorPool += component->getConfig().flex.grow;
             }
@@ -140,11 +146,11 @@ void FlexBox::recomputeBounds(
             }
 
             auto lo = (dir == FlexDirection::Horizontal ? item.c->getConfig().minHeight : item.c->getConfig().minWidth)
-                .value_or(Scalar {
+                .value_or(Magnitude {
                         0.f
                     }).compute(maxCrossSize);
             auto hi = (dir == FlexDirection::Horizontal ? item.c->getConfig().maxHeight : item.c->getConfig().maxWidth)
-                .value_or(Scalar {
+                .value_or(Magnitude {
                         dir == FlexDirection::Horizontal ? internalHeight : internalWidth
                     }).compute(maxCrossSize);
             item.flexCrossSize = std::clamp(
@@ -188,13 +194,13 @@ void FlexBox::recomputeBounds(
     // TODO: The compute params are probably wrong
     this->computedWidth = std::clamp(
         maxX + f.padding.right - computedX,
-        f.minWidth.value_or(Scalar {0.0f}).compute(parentWidth),
-        f.maxWidth.value_or(Scalar {parentWidth}).compute(parentWidth)
+        f.minWidth.value_or(Magnitude {0.0f}).compute(parentWidth),
+        f.maxWidth.value_or(Magnitude {parentWidth}).compute(parentWidth)
     );
     this->computedHeight = std::clamp(
         y + f.padding.bot - computedY,
-        f.minHeight.value_or(Scalar {0.0f}).compute(parentHeight),
-        f.maxHeight.value_or(Scalar {parentHeight}).compute(parentHeight)
+        f.minHeight.value_or(Magnitude {0.0f}).compute(parentHeight),
+        f.maxHeight.value_or(Magnitude {parentHeight}).compute(parentHeight)
     );
 }
 
