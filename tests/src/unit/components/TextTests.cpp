@@ -7,6 +7,8 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro5.h>
 
+namespace {
+
 TEST_CASE("Verify text measuring and wrapping", "[Unit][Text]") {
     test::Font font;
     SECTION("Soft wrap") {
@@ -54,4 +56,6 @@ TEST_CASE("Verify text measuring and wrapping", "[Unit][Text]") {
         REQUIRE(computedLines.at(1) == " 여우");
 
     }
+}
+
 }

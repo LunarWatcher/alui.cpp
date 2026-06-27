@@ -60,8 +60,8 @@ int main() {
     // alui {{{
     alui::GUI gui({
         .font = font,
-        .width = alui::Scalar { alui::ScalarType::ABSOLUTE, 640.f },
-        .height = alui::Scalar { alui::ScalarType::ABSOLUTE, 480.f },
+        .width = alui::Scalar { alui::ScalarType::Absolute, 640.f },
+        .height = alui::Scalar { alui::ScalarType::Absolute, 480.f },
     });
     std::shared_ptr<alui::StyleSpec> buttonStyle = std::make_shared<alui::StyleSpec>(
         alui::StyleStates {
@@ -82,8 +82,8 @@ int main() {
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::VERTICAL, alui::ComponentConfig {
         .x = 150, .y = 90,
-        .minWidth = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
-        .minHeight = alui::Scalar { alui::ScalarType::ABSOLUTE, 300.f },
+        .minWidth = alui::Scalar { alui::ScalarType::Absolute, 300.f },
+        .minHeight = alui::Scalar { alui::ScalarType::Absolute, 300.f },
     });
 
     auto playBtn = std::make_shared<alui::Button>("Play", alui::ComponentConfig {

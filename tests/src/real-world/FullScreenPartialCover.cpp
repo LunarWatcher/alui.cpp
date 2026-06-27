@@ -20,11 +20,11 @@ TEST_CASE("100% GUI with partial screen coverage") {
         {
             .font = *font,
             .width = alui::Scalar {
-                alui::ScalarType::RELATIVE,
+                alui::ScalarType::Relative,
                 1.f
             },
             .height = alui::Scalar {
-                alui::ScalarType::RELATIVE,
+                alui::ScalarType::Relative,
                 1.f
             }
         }

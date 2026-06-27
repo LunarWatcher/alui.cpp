@@ -19,14 +19,14 @@ struct Scalar {
     float value;
 
     Scalar() = delete;
-    Scalar(float v) : type(ScalarType::ABSOLUTE), value(v) {}
+    Scalar(float v) : type(ScalarType::Absolute), value(v) {}
     Scalar(ScalarType type, float value) : type(type), value(value) {}
 
     float compute(float parentScalar) {
         switch(type) {
-        case ScalarType::RELATIVE:
+        case ScalarType::Relative:
             return parentScalar * value;
-        case ScalarType::ABSOLUTE:
+        case ScalarType::Absolute:
             return value;
         }
         [[unlikely]]

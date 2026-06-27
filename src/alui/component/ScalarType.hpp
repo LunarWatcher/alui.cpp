@@ -18,12 +18,12 @@ enum class ScalarType {
      *
      * [^1]: At the time of writing c:
      */
-    RELATIVE,
+    Relative,
     /**
      * Used for sizing in absolute pixels. Width and/or height must be >= 0, depending on the containing layout.
      * The width or height can be 0 for it to be automatically determined by the layout.
      */
-    ABSOLUTE,
+    Absolute,
 };
 
 }
