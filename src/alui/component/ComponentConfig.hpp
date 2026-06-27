@@ -89,11 +89,11 @@ struct ComponentConfig {
     std::shared_ptr<StyleSpec> style = nullptr;
 
     std::optional<Scalar> getMinAxialSize(FlexDirection dir) const {
-        return dir == FlexDirection::HORIZONTAL ? minWidth : minHeight;
+        return dir == FlexDirection::Horizontal ? minWidth : minHeight;
     }
 
     std::optional<Scalar> getMaxAxialSize(FlexDirection dir) const {
-        return dir == FlexDirection::HORIZONTAL ? maxWidth : maxHeight;
+        return dir == FlexDirection::Horizontal ? maxWidth : maxHeight;
     }
 };
 

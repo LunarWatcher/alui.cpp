@@ -63,11 +63,11 @@ protected:
     /**
      * \brief Utility function that returns the computed width minus padding, i.e. the usable internal width
      */
-    virtual float getInternalWidth() { return computedWidth - f.padding.getSizeForDimension(FlexDirection::HORIZONTAL); }
+    virtual float getInternalWidth() { return computedWidth - f.padding.getSizeForDimension(FlexDirection::Horizontal); }
     /**
      * \brief Utility function that returns the computed height minus padding, i.e. the usable internal height
      */
-    virtual float getInternalHeight() { return computedHeight - f.padding.getSizeForDimension(FlexDirection::VERTICAL); }
+    virtual float getInternalHeight() { return computedHeight - f.padding.getSizeForDimension(FlexDirection::Vertical); }
 
     /**
      * \brief Utility function that returns the component's x position offset by padding

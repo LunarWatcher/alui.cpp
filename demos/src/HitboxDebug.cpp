@@ -83,7 +83,7 @@ int main() {
         }
     );
 
-    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
+    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::Horizontal, alui::ComponentConfig {
         .x = 150, .y = 90,
         .minWidth = alui::Scalar { alui::ScalarType::Absolute, 300.f },
         .minHeight = alui::Scalar { alui::ScalarType::Absolute, 300.f },

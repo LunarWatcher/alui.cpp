@@ -20,7 +20,7 @@ namespace {
 TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
     test::Font font;
     auto fb = std::make_shared<alui::FlexBox>(
-        alui::FlexDirection::HORIZONTAL,
+        alui::FlexDirection::Horizontal,
         alui::ComponentConfig {
             .flex = 1,
             .id = 0,
@@ -31,7 +31,7 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
     );
 
     auto inner = std::make_shared<alui::FlexBox>(
-        alui::FlexDirection::VERTICAL,
+        alui::FlexDirection::Vertical,
         alui::ComponentConfig {
             .flex = 1,
             .id = 1,
@@ -134,21 +134,21 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
     }
 
     SECTION("Validate initial state") {
-        REQUIRE(text->getConfig().getMinAxialSize(alui::FlexDirection::VERTICAL).has_value());
+        REQUIRE(text->getConfig().getMinAxialSize(alui::FlexDirection::Vertical).has_value());
         // NOLINTNEXTLINE(bugprone-unchecked-optional-access): it is checked on the previous line
-        REQUIRE(text->getConfig().getMinAxialSize(alui::FlexDirection::VERTICAL).value().value == 200);
+        REQUIRE(text->getConfig().getMinAxialSize(alui::FlexDirection::Vertical).value().value == 200);
     }
 
     SECTION("Validate component size calculation functions") {
-        REQUIRE(text->computeSizeRequirements(alui::FlexDirection::VERTICAL) == 62); // text height (ish)
-        REQUIRE(text->computeCrossSize(alui::FlexDirection::VERTICAL, 280, 560) == 560);
+        REQUIRE(text->computeSizeRequirements(alui::FlexDirection::Vertical) == 62); // text height (ish)
+        REQUIRE(text->computeCrossSize(alui::FlexDirection::Vertical, 280, 560) == 560);
     }
 }
 
 TEST_CASE("Layout wrapping, single horizontal layout", "[alui::FlexBox][Layout]") {
     test::Font font;
 
-    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
+    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::Horizontal, alui::ComponentConfig {
         .x = 0, .y = 0,
         .minWidth = alui::Scalar { alui::ScalarType::Absolute, 640.f },
         .minHeight = alui::Scalar { alui::ScalarType::Absolute, 480.f },

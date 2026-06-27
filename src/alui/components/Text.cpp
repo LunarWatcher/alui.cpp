@@ -43,14 +43,14 @@ void Text::render(GUI& ctx) {
 float Text::computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) {
     assert(font != nullptr);
     // TODO: figure out a better solution for when FlexDirection::VERTICAL
-    auto maxWidth = dir == FlexDirection::HORIZONTAL 
+    auto maxWidth = dir == FlexDirection::Horizontal 
         ? virtualMainSize - this->f.padding.getSizeForDimension(dir) 
         : unwrap(f.maxWidth, std::numeric_limits<float>::max());
     processText([&](const auto&) {}, maxWidth, true);
 
     int lineCount = (int) computedLines.size();
 
-    if (dir == FlexDirection::HORIZONTAL) {
+    if (dir == FlexDirection::Horizontal) {
         // Horizontal rows: cross size is height
 
         // TODO: cache somewhere?
@@ -79,7 +79,7 @@ float Text::computeSizeRequirements(FlexDirection dir) {
 
     int lineCount = (int) computedLines.size();
 
-    if (dir == FlexDirection::HORIZONTAL) {
+    if (dir == FlexDirection::Horizontal) {
         return max;
     } else {
         // TODO: cache somewhere?

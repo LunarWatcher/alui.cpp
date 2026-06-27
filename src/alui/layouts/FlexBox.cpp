@@ -19,7 +19,7 @@ void FlexBox::recomputeBounds(
     // (This will also crash if minHeight is undefined, which is just stupid)
     //
     // §9b2: determine available space (modified)
-    auto parentDimension = dir == FlexDirection::HORIZONTAL ? parentWidth : parentHeight;
+    auto parentDimension = dir == FlexDirection::Horizontal ? parentWidth : parentHeight;
     // NOLINTNEXTLINE(bugprone-unchecked-optional-access): The fuck are you on about clang-tidy, it is very clearly checked. There's theoretically a race condition here, but like, that applies everywhere
     auto mainSize = f.getMinAxialSize(dir).has_value() ? this->f.getMinAxialSize(dir)->compute(parentDimension)
         // Padding is internal, and also an offset on the position (with the right padding, but all of that is a future
@@ -28,9 +28,9 @@ void FlexBox::recomputeBounds(
         : parentDimension - this->f.padding.getSizeForDimension(dir);
 
     auto internalWidth = f.minWidth ? f.minWidth->compute(parentWidth) : parentWidth;
-    internalWidth -= f.padding.getSizeForDimension(FlexDirection::HORIZONTAL);
+    internalWidth -= f.padding.getSizeForDimension(FlexDirection::Horizontal);
     auto internalHeight = f.minHeight ? f.minHeight->compute(parentHeight) : parentHeight;
-    internalHeight -= f.padding.getSizeForDimension(FlexDirection::VERTICAL);
+    internalHeight -= f.padding.getSizeForDimension(FlexDirection::Vertical);
 
     std::vector<FlexLine> lines;
 
@@ -65,7 +65,7 @@ void FlexBox::recomputeBounds(
 
             if (
                 // Vertical lines do not support multiple lines in HTML, so this doesn't either
-                dir == FlexDirection::VERTICAL
+                dir == FlexDirection::Vertical
                 // Otherwise, check if the main size so far plus the size of the next elements exceeds the total size
                 // for the row
                 || currLine.runningMainSize + hypotheticalMainSize <= mainSize) {
@@ -82,7 +82,7 @@ void FlexBox::recomputeBounds(
             flexCrossSize = component->computeCrossSize(
                 dir,
                 hypotheticalMainSize,
-                dir == FlexDirection::HORIZONTAL ? internalHeight : internalWidth
+                dir == FlexDirection::Horizontal ? internalHeight : internalWidth
             );
             currLine.maxCrossSize = std::max(
                 flexCrossSize,
@@ -139,13 +139,13 @@ void FlexBox::recomputeBounds(
                 item.flexAxialSize += freeSpace * (item.c->getConfig().flex.grow / factorPool);
             }
 
-            auto lo = (dir == FlexDirection::HORIZONTAL ? item.c->getConfig().minHeight : item.c->getConfig().minWidth)
+            auto lo = (dir == FlexDirection::Horizontal ? item.c->getConfig().minHeight : item.c->getConfig().minWidth)
                 .value_or(Scalar {
                         0.f
                     }).compute(maxCrossSize);
-            auto hi = (dir == FlexDirection::HORIZONTAL ? item.c->getConfig().maxHeight : item.c->getConfig().maxWidth)
+            auto hi = (dir == FlexDirection::Horizontal ? item.c->getConfig().maxHeight : item.c->getConfig().maxWidth)
                 .value_or(Scalar {
-                        dir == FlexDirection::HORIZONTAL ? internalHeight : internalWidth
+                        dir == FlexDirection::Horizontal ? internalHeight : internalWidth
                     }).compute(maxCrossSize);
             item.flexCrossSize = std::clamp(
                 item.c->computeCrossSize(
@@ -163,16 +163,16 @@ void FlexBox::recomputeBounds(
         for (auto& item : components) {
             item.c->updateComputedPos(x, y);
             // TODO: allow for either item.crossScalar or maxCrossSize
-            auto width = dir == FlexDirection::HORIZONTAL ? item.flexAxialSize : internalWidth;
-            auto height = dir == FlexDirection::HORIZONTAL ? localMaxCrossSize : item.flexAxialSize;
+            auto width = dir == FlexDirection::Horizontal ? item.flexAxialSize : internalWidth;
+            auto height = dir == FlexDirection::Horizontal ? localMaxCrossSize : item.flexAxialSize;
 
             item.c->updateComputedSizes(width, height);
 
             // TODO: + gap
-            (dir == FlexDirection::HORIZONTAL ? x : y) += item.flexAxialSize;
+            (dir == FlexDirection::Horizontal ? x : y) += item.flexAxialSize;
         }
         // TODO: + gap
-        (dir == FlexDirection::HORIZONTAL ? y : x) += maxCrossSize;
+        (dir == FlexDirection::Horizontal ? y : x) += maxCrossSize;
 
         maxX = std::max(x + f.padding.right, maxX);
     }
@@ -210,11 +210,11 @@ float FlexBox::computeSizeRequirements(FlexDirection dir) {
 float FlexBox::computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) {
     recomputeBounds(
         nullptr,
-        dir == FlexDirection::HORIZONTAL ? virtualMainSize : maxCrossSize, 
-        dir == FlexDirection::HORIZONTAL ? std::numeric_limits<float>::max() : virtualMainSize
+        dir == FlexDirection::Horizontal ? virtualMainSize : maxCrossSize, 
+        dir == FlexDirection::Horizontal ? std::numeric_limits<float>::max() : virtualMainSize
     );
 
-    return dir == FlexDirection::HORIZONTAL ? computedHeight : computedWidth;
+    return dir == FlexDirection::Horizontal ? computedHeight : computedWidth;
 }
 
 }

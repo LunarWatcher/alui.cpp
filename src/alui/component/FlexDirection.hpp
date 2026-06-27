@@ -10,8 +10,8 @@ namespace alui {
  *
  */
 enum class FlexDirection {
-    HORIZONTAL,
-    VERTICAL
+    Horizontal,
+    Vertical
 };
 
 }

@@ -66,7 +66,7 @@ int main() {
         .height = alui::Scalar { alui::ScalarType::Absolute, 480.f },
     });
 
-    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
+    auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::Horizontal, alui::ComponentConfig {
         .x = 0, .y = 0,
         .minWidth = alui::Scalar { alui::ScalarType::Absolute, 640.f },
         .minHeight = alui::Scalar { alui::ScalarType::Absolute, 480.f },
