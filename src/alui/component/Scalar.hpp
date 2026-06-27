@@ -22,10 +22,10 @@ struct Scalar {
     Scalar(float v) : type(ScalarType::Absolute), value(v) {}
     Scalar(ScalarType type, float value) : type(type), value(value) {}
 
-    float compute(float parentScalar) {
+    float compute(float parentSize) {
         switch(type) {
         case ScalarType::Relative:
-            return parentScalar * value;
+            return parentSize * value;
         case ScalarType::Absolute:
             return value;
         }

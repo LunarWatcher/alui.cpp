@@ -162,7 +162,7 @@ void FlexBox::recomputeBounds(
 
         for (auto& item : components) {
             item.c->updateComputedPos(x, y);
-            // TODO: allow for either item.crossScalar or maxCrossSize
+            // TODO: allow for either item.crossSize or maxCrossSize
             auto width = dir == FlexDirection::Horizontal ? item.flexAxialSize : internalWidth;
             auto height = dir == FlexDirection::Horizontal ? localMaxCrossSize : item.flexAxialSize;
 
