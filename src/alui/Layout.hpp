@@ -25,8 +25,6 @@ protected:
 
     std::vector<std::shared_ptr<Component>> children;
 
-    virtual void updateComputedPos(float x, float y) override;
-
 public:
     Layout(const ComponentConfig& cfg) : Component(cfg) {}
 
@@ -50,6 +48,7 @@ public:
         return children;
     }
 
+    virtual void updateComputedPos(float x, float y) override;
     virtual float computeSizeRequirements(FlexDirection dir) override = 0;
     virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override = 0;
 

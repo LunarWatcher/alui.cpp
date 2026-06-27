@@ -65,14 +65,14 @@ struct ComponentConfig {
      *
      * \see [Positioning](docs/Positioning.md)
      */
-    float x = 0;
+    Size x = 0;
 
     /**
      * \brief Y position; only respected for layouts
      *
      * \see [Positioning](docs/Positioning.md)
      */
-    float y = 0;
+    Size y = 0;
 
     Sizing padding{0}, margin{0};
 

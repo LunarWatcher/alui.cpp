@@ -123,10 +123,12 @@ void FlexBox::recomputeBounds(
     // 3. Size inflexible items: mostly done already for 9b3
     // 4. same as  runningMainSize at this time, not sure if that's right
     // This loop only needs to happen if caring about min-max violations which, for now, I don't
-    float y = this->f.y + this->f.padding.top;
+    auto computedX = this->f.x.compute(parentWidth);
+    auto computedY = this->f.y.compute(parentHeight);
+    float y = computedY + this->f.padding.top;
     float maxX = 0;
     for (auto& [components, runningMainSize, maxCrossSize, factorPool] : lines) {
-        float x = this->f.x + f.padding.left;
+        float x = computedX + f.padding.left;
         auto freeSpace = mainSize - runningMainSize;
 
         float localMaxCrossSize = 0;
@@ -177,8 +179,8 @@ void FlexBox::recomputeBounds(
     
     dirty = false;
     // This will not work as expected if this isn't the root-level layout, but I think I'll just... ignore that c:
-    this->computedX = this->f.x;
-    this->computedY = this->f.y;
+    this->computedX = computedX;
+    this->computedY = computedY;
 
     // TODO: The compute params are probably wrong
     this->computedWidth = std::clamp(

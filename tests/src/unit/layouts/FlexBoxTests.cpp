@@ -96,9 +96,11 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
     }
 
     SECTION("Validate sizes in non-zero root element positions") {
+        const auto X_OFFSET = 10.f;
+        const auto Y_OFFSET = 10.f;
 
-        fb->getConfig().x = 10;
-        fb->getConfig().y = 10;
+        fb->getConfig().x = X_OFFSET;
+        fb->getConfig().y = Y_OFFSET;
 
         test::Display disp(1000, 1500);
         g.resize(1000, 1500);
@@ -112,15 +114,15 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
 #define POSITION(elementPos, rootPos) elementPos + rootPos
 
         // Verify positions
-        REQUIRE(fb->getComputedPositions().first == POSITION(0.0f, fb->getConfig().x));
-        REQUIRE(fb->getComputedPositions().second == POSITION(0.0f, fb->getConfig().y));
+        REQUIRE(fb->getComputedPositions().first == POSITION(0.0f, X_OFFSET));
+        REQUIRE(fb->getComputedPositions().second == POSITION(0.0f, Y_OFFSET));
         // Inner is first + first.padding
-        REQUIRE(inner->getComputedPositions().first == POSITION(10.0f, fb->getConfig().x));
-        REQUIRE(inner->getComputedPositions().second == POSITION(10.0f, fb->getConfig().y));
+        REQUIRE(inner->getComputedPositions().first == POSITION(10.0f, X_OFFSET));
+        REQUIRE(inner->getComputedPositions().second == POSITION(10.0f, Y_OFFSET));
 
         // Text is inner + inner.padding
-        REQUIRE(text->getComputedPositions().first == POSITION(20.0f, fb->getConfig().x));
-        REQUIRE(text->getComputedPositions().second == POSITION(20.0f, fb->getConfig().y));
+        REQUIRE(text->getComputedPositions().first == POSITION(20.0f, X_OFFSET));
+        REQUIRE(text->getComputedPositions().second == POSITION(20.0f, Y_OFFSET));
 
 
         REQUIRE(fb->getComputedSize().first == 600.0f);
@@ -133,6 +135,7 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
 
     SECTION("Validate initial state") {
         REQUIRE(text->getConfig().getMinAxialSize(alui::FlexDirection::VERTICAL).has_value());
+        // NOLINTNEXTLINE(bugprone-unchecked-optional-access): it is checked on the previous line
         REQUIRE(text->getConfig().getMinAxialSize(alui::FlexDirection::VERTICAL).value().value == 200);
     }
 

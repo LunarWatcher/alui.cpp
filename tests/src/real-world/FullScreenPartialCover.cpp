@@ -30,7 +30,7 @@ TEST_CASE("100% GUI with partial screen coverage") {
         }
     );
 
-    SECTION("GUI with no content should scale to 1280x720") {
+    SECTION("Relative GUI with no content should scale to 1280x720") {
         g.resize(1280, 720);
 
         REQUIRE(
