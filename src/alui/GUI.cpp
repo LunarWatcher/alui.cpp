@@ -98,24 +98,25 @@ void GUI::push(const std::shared_ptr<Layout>& component) {
     // overlap anyway)
     this->rootComponents.push_back(component);
     component->setFont(this->cfg.font);
-}  
+}
 
 void GUI::pushBack(const std::shared_ptr<Layout>& component) {
     this->rootComponents.push_front(component);
     component->setFont(this->cfg.font);
-}  
+}
 
 void GUI::resize(float displayWidth, float displayHeight) {
-    // GUI is not a container, so defer resizing to the child components.
-    for (auto& component : this->rootComponents) {
+    this->computedWidth = cfg.width.compute(displayWidth);
+    this->computedHeight = cfg.height.compute(displayHeight);
 
+    for (auto& component : this->rootComponents) {
         if (auto* l = static_cast<Layout*>(component.get())) {
             l->recomputeBounds(
                 nullptr,
-                cfg.width.compute(displayWidth), cfg.height.compute(displayHeight)
+                computedWidth,
+                computedHeight
             );
         }
-
     }
 }
 
@@ -146,14 +147,14 @@ std::shared_ptr<Component> GUI::getInterceptedComponent(float x, float y) {
             break;
         }
 
-        // If the component is a layout, iterate further to try 
+        // If the component is a layout, iterate further to try
         for (const auto& item : layoutPtr->getChildren()) {
             if (item->contains(x, y)) {
                 currIntersect = item;
                 goto continueOuter;
             }
         }
-    
+
         // No inner matches found; break
         break;
 continueOuter:;

@@ -13,45 +13,43 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro5.h>
 
-using namespace alui;
+#include "fixtures/Font.hpp"
 
-TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
-    std::unique_ptr<ALLEGRO_FONT, decltype(&al_destroy_font)> font(
-        al_load_ttf_font("./dejavu.ttf", 36, 0),
-        &al_destroy_font
-    );
-    REQUIRE(font != nullptr);
-    std::shared_ptr<FlexBox> fb = std::make_shared<FlexBox>(
-        FlexDirection::HORIZONTAL,
-        ComponentConfig {
+namespace {
+
+TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
+    test::Font font;
+    auto fb = std::make_shared<alui::FlexBox>(
+        alui::FlexDirection::HORIZONTAL,
+        alui::ComponentConfig {
             .flex = 1,
             .id = 0,
             .padding{10},
-            .minHeight = Size {300.0f},
-            .style = getDebugStyleSpec(),
+            .minHeight = alui::Size {300.0f},
+            .style = test::getDebugStyleSpec(),
         }
     );
 
-    std::shared_ptr<FlexBox> inner = std::make_shared<FlexBox>(
-        FlexDirection::VERTICAL,
-        ComponentConfig {
+    auto inner = std::make_shared<alui::FlexBox>(
+        alui::FlexDirection::VERTICAL,
+        alui::ComponentConfig {
             .flex = 1,
             .id = 1,
             .padding{10},
-            .minHeight = Size {230.f},
-            .style = getDebugStyleSpec(),
+            .minHeight = alui::Size {230.f},
+            .style = test::getDebugStyleSpec(),
         }
     );
 
-    std::shared_ptr<Text> text = std::make_shared<Text>(
+    auto text = std::make_shared<alui::Text>(
         "Choo choo",
-        ComponentConfig {
+        alui::ComponentConfig {
             .flex = 0,
             .id = 2,
             .padding{10},
-            .minWidth = Size {SizeUnit::ABSOLUTE, 500.0f},
-            .minHeight = Size {200.f},
-            .style = getDebugStyleSpec(),
+            .minWidth = alui::Size {alui::SizeUnit::ABSOLUTE, 500.0f},
+            .minHeight = alui::Size {200.f},
+            .style = test::getDebugStyleSpec(),
         }
     );
     text->setTextColour(al_map_rgb_f(1.0, 1.0, 1.0));
@@ -59,8 +57,8 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
     fb->push(inner);
     inner->push(text);
 
-    GUI g({
-        .font = font.get(),
+    alui::GUI g({
+        .font = *font,
         .width = 600,
         .height = 900,
     });
@@ -69,10 +67,10 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
     REQUIRE(text->getFont() != nullptr);
 
     SECTION("Validate sizing and resizing") {
-        Display disp(1000, 1500);
+        test::Display disp(1000, 1500);
         g.resize(1000, 1500);
         disp.captureRender(
-            "FlexBoxTests-VerifyNestedSizingLogic.bmp",
+            "alui::FlexBoxTests-VerifyNestedSizingLogic.bmp",
             [&]() {
                 g.render();
             }
@@ -102,10 +100,10 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
         fb->getConfig().x = 10;
         fb->getConfig().y = 10;
 
-        Display disp(1000, 1500);
+        test::Display disp(1000, 1500);
         g.resize(1000, 1500);
         disp.captureRender(
-            "FlexBoxTests-VerifySizingLogicWithOffsetXY.bmp",
+            "alui::FlexBoxTests-VerifySizingLogicWithOffsetXY.bmp",
             [&]() {
                 g.render();
             }
@@ -134,34 +132,31 @@ TEST_CASE("Verify nested sizing logic", "[FlexBox][Layout]") {
     }
 
     SECTION("Validate initial state") {
-        REQUIRE(text->getConfig().getMinAxialSize(FlexDirection::VERTICAL).has_value());
-        REQUIRE(text->getConfig().getMinAxialSize(FlexDirection::VERTICAL).value().value == 200);
+        REQUIRE(text->getConfig().getMinAxialSize(alui::FlexDirection::VERTICAL).has_value());
+        REQUIRE(text->getConfig().getMinAxialSize(alui::FlexDirection::VERTICAL).value().value == 200);
     }
 
     SECTION("Validate component size calculation functions") {
-        REQUIRE(text->computeSizeRequirements(FlexDirection::VERTICAL) == 62); // text height (ish)
-        REQUIRE(text->computeCrossSize(FlexDirection::VERTICAL, 280, 560) == 560);
+        REQUIRE(text->computeSizeRequirements(alui::FlexDirection::VERTICAL) == 62); // text height (ish)
+        REQUIRE(text->computeCrossSize(alui::FlexDirection::VERTICAL, 280, 560) == 560);
     }
 }
 
-TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
-    std::unique_ptr<ALLEGRO_FONT, decltype(&al_destroy_font)> font(
-        al_load_ttf_font("./dejavu.ttf", 36, 0),
-        &al_destroy_font
-    );
+TEST_CASE("Layout wrapping, single horizontal layout", "[alui::FlexBox][Layout]") {
+    test::Font font;
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::HORIZONTAL, alui::ComponentConfig {
         .x = 0, .y = 0,
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 640.f },
         .minHeight = alui::Size { alui::SizeUnit::ABSOLUTE, 480.f },
-        .style = getDebugStyleSpec(),
+        .style = test::getDebugStyleSpec(),
     });
 
     auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
         .flex{1},
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
         .maxWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
-        .style = getDebugStyleSpec(),
+        .style = test::getDebugStyleSpec(),
     });
     //text->setDimensions(50, 100);
     text->setTextColour(al_map_rgb(255, 255, 255));
@@ -172,7 +167,7 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
         .flex{1},
         .padding = 15.0f,
         .maxWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 340.f },
-        .style = getDebugStyleSpec(),
+        .style = test::getDebugStyleSpec(),
     });
     //text->setDimensions(50, 100);
     text2->setTextColour(al_map_rgb(255, 255, 255));
@@ -182,21 +177,21 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
     auto forcedSoftWrap = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
         .flex{1},
         .minWidth = alui::Size { alui::SizeUnit::ABSOLUTE, 300.f },
-        .style = getDebugStyleSpec(),
+        .style = test::getDebugStyleSpec(),
     });
-    forcedSoftWrap->setFont(font.get());
+    forcedSoftWrap->setFont(*font);
     forcedSoftWrap->setTextColour(al_map_rgb(255, 255, 255));
 
     rootLayout->push(forcedSoftWrap);
-    GUI g({
-        .font = font.get(),
+    alui::GUI g({
+        .font = *font,
         .width = 640,
         .height = 480,
     });
     g.push(rootLayout);
 
     SECTION("Validate sizing and resizing") {
-        Display disp(1000, 1500);
+        test::Display disp(1000, 1500);
         disp.captureRender(
             "FlexBoxTests-VerifyTextSizingInHorizontalPreResize.bmp",
             [&]() {
@@ -231,4 +226,6 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[FlexBox][Layout]") {
         REQUIRE(forcedSoftWrap->getComputedPositions().first == 0.f);
         REQUIRE(forcedSoftWrap->getComputedPositions().second == 156.f);
     }
+}
+
 }

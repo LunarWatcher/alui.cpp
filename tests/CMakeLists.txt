@@ -1,9 +1,13 @@
 add_executable(tests
+    src/real-world/FullScreenPartialCover.cpp
+    
+    src/unit/Initialisers.cpp
+
     src/unit/components/TextTests.cpp
+
     src/unit/layouts/FlexBoxTests.cpp
 
     src/util/Display.cpp
-
     src/Runner.cpp
 )
 

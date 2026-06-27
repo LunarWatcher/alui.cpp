@@ -2,19 +2,17 @@
 #include "alui/components/Text.hpp"
 #include <catch2/catch_test_macros.hpp>
 
+#include "fixtures/Font.hpp"
+
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro5.h>
 
 TEST_CASE("Verify text measuring and wrapping", "[Unit][Text]") {
-    std::unique_ptr<ALLEGRO_FONT, decltype(&al_destroy_font)> font(
-        al_load_ttf_font("./dejavu.ttf", 36, 0),
-        &al_destroy_font
-    );
-    REQUIRE(font != nullptr);
+    test::Font font;
     SECTION("Soft wrap") {
         alui::Text a("Long wordsssssssssssssssss", {});
 
-        a.setFont(font.get());
+        a.setFont(*font);
         std::vector<std::string> computedLines;
         a.processText([&](const auto& line){
             computedLines.push_back(line);
@@ -32,7 +30,7 @@ TEST_CASE("Verify text measuring and wrapping", "[Unit][Text]") {
     SECTION("Hard wrap") {
         alui::Text a("Long\nword", {});
 
-        a.setFont(font.get());
+        a.setFont(*font);
         std::vector<std::string> computedLines;
         a.processText([&](const auto& line){
             computedLines.push_back(line);
@@ -45,7 +43,7 @@ TEST_CASE("Verify text measuring and wrapping", "[Unit][Text]") {
 
     SECTION("Soft wrap, non-english multi-byte chars") {
         alui::Text a("여우 여우 여우", {});
-        a.setFont(font.get());
+        a.setFont(*font);
         std::vector<std::string> computedLines;
         a.processText([&](const auto& line){
             computedLines.push_back(line);

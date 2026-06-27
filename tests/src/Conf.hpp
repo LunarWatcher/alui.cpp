@@ -1,6 +1,6 @@
 #pragma once
 
-namespace alui::tests {
+namespace test {
 
 inline bool captureDebugRenders = true;
 

@@ -3,6 +3,8 @@
 #include "alui/style/BorderStyle.hpp"
 #include "alui/style/Style.hpp"
 
+namespace test {
+
 inline std::shared_ptr<alui::StyleSpec> getDebugStyleSpec() {
     return std::make_shared<alui::StyleSpec>(
         alui::StyleStates {},
@@ -14,4 +16,6 @@ inline std::shared_ptr<alui::StyleSpec> getDebugStyleSpec() {
         }
 
     );
+}
+
 }

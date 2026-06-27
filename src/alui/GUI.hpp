@@ -60,6 +60,8 @@ protected:
 
     std::shared_ptr<Component> getInterceptedComponent(float x, float y);
 
+    float computedWidth = 0,
+        computedHeight = 0;
 public:
     /**
      * \param font          The default font to use for all child components. The font is set automatically when new
@@ -126,6 +128,12 @@ public:
 
     GUIConfig& getConfig() { return cfg; }
 
+    float getComputedWidth() {
+        return computedWidth;
+    }
+    float getComputedHeight() {
+        return computedHeight;
+    }
 };
 
 }

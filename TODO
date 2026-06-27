@@ -1,11 +1,14 @@
 ## Known bugs
 
-* Hyphens overflow containers, because hyphen widths are ignored
+* [ ] Hyphens overflow containers, because hyphen widths are ignored
+  * Didn't I fix this?
+* [ ] alui::GUI is incorrectly sized before an initial `.resize`. This should not be necessary to manually add. Should be possible to work around by taking an `ALLEGRO_DISPLAY` as an argument and using it for a one-off initial `.resize`.
+  * How do we currently deal with adding children here? Won't adding a child also necessitate a resize that we don't currently handle? Or is it handled right if a render happens?
 
 ## Planned features
 
 * [ ] word break first, character break as a last resort (configurable)
 * [ ] 9patch support for elements
-    * I never understood the point with 9patches before, and I now do. They're actually pretty neat
+  * I never understood the point with 9patches before, and I now do. They're actually pretty neat
 
 vim:ft=markdown

@@ -5,7 +5,7 @@
 #include <functional>
 #include <thread>
 
-namespace alui {
+namespace test {
 
 class Display {
 private:
@@ -19,7 +19,7 @@ public:
     bool running = true;
 
     Display(int width = 600, int height = 900);
-    Display(GUI& g);
+    Display(alui::GUI& g);
     ~Display();
 
     Display(Display&& src) noexcept;

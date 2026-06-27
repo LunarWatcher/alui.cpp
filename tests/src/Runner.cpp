@@ -27,8 +27,8 @@ int main(int argc, const char* argv[]) {
 
     auto sess = Catch::Session();
 
-    auto cli = sess.cli() 
-        | Catch::Clara::Opt(alui::tests::captureDebugRenders, "debugCapture")
+    auto cli = sess.cli()
+        | Catch::Clara::Opt(test::captureDebugRenders, "debugCapture")
             ["--debugCapture"]
             ("Whether or not to output debug renders from test cases to a bitmap");
 
@@ -40,7 +40,7 @@ int main(int argc, const char* argv[]) {
 
     std::cout << "Running with custom configuration:\n"
         << std::boolalpha
-        << "\tdebugCapture = " << alui::tests::captureDebugRenders << "\n"
+        << "\tdebugCapture = " << test::captureDebugRenders << "\n"
         << std::endl;
 
     return sess.run();

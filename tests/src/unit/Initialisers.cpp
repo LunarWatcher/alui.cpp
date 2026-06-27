@@ -1,11 +1,10 @@
-#include "alui/component/Component.hpp"
+#include "alui/component/Sizing.hpp"
 #include <catch2/catch_test_macros.hpp>
 
-using namespace alui;
 
 TEST_CASE("Sizing", "[Initialisers]") {
     SECTION("All sides equal") {
-        Sizing s{10};
+        alui::Sizing s{10};
         REQUIRE(s.bot == 10);
         REQUIRE(s.top == 10);
         REQUIRE(s.left == 10);

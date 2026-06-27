@@ -7,7 +7,7 @@
 
 #include <stdexcept>
 
-namespace alui {
+namespace test {
 
 Display::Display(int width, int height) 
     : display(al_create_display(width, height)),
@@ -21,7 +21,7 @@ Display::Display(int width, int height)
     al_register_event_source(queue, al_get_display_event_source(display));
 }
 
-Display::Display(GUI& g) : Display((int) g.getConfig().width.value, (int) g.getConfig().height.value) {}
+Display::Display(alui::GUI& g) : Display((int) g.getConfig().width.value, (int) g.getConfig().height.value) {}
 
 Display::~Display() {
     if (display != nullptr) {
@@ -40,7 +40,7 @@ Display::Display(Display&& src) noexcept : display(src.display), queue(src.queue
 void Display::captureRender(const char* name, const std::function<void()>& renderFunc) {
     if (renderFunc == nullptr) {
         throw std::runtime_error("renderFunc in Display::render cannot be nullptr");
-    } else if (!alui::tests::captureDebugRenders) {
+    } else if (!test::captureDebugRenders) {
         return;
     }
 
