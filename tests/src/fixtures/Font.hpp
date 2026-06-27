@@ -2,7 +2,6 @@
 
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_ttf.h"
-#include "allegro5/allegro.h"
 #include "catch2/catch_test_macros.hpp"
 
 #include <memory>
