@@ -29,6 +29,14 @@ struct ImageSlice {
         float h
     ) : bmp(bmp), x(x), y(y), w(w), h(h) {}
 
+    float computeHeight(float containerWidth) {
+        return h / w * containerWidth;
+    }
+
+    float computeWidth(float containerHeight) {
+        return w / h * containerHeight;
+    }
+
     /**
      * Renders the image at the given location, with the parameters dx, dy, dw, and dh representing the target
      * location's position.

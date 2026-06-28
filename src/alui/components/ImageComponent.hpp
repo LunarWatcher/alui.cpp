@@ -2,6 +2,7 @@
 
 #include "allegro5/bitmap.h"
 #include "alui/component/Component.hpp"
+#include "alui/component/FlexDirection.hpp"
 #include "alui/images/Image.hpp"
 
 namespace alui {
@@ -16,6 +17,8 @@ public:
     );
     virtual void render(GUI& ctx) override;
     virtual void tick() override {}
+
+    float computeCrossSize(FlexDirection dir, float virtualMainSize, float) override;
 };
 
 }

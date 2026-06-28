@@ -156,7 +156,7 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[alui::FlexBox][Layout]"
     });
 
     auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
-        .flex{1},
+        .flex{1, true},
         .minWidth = alui::Magnitude::Absolute(300.f),
         .maxWidth = alui::Magnitude::Absolute(300.f),
         .style = test::getDebugStyleSpec(),
@@ -195,12 +195,6 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[alui::FlexBox][Layout]"
 
     SECTION("Validate sizing and resizing") {
         test::Display disp(1000, 1500);
-        disp.captureRender(
-            "FlexBoxTests-VerifyTextSizingInHorizontalPreResize.bmp",
-            [&]() {
-                g.render();
-            }
-        );
         g.resize(640, 480);
         disp.captureRender(
             "FlexBoxTests-VerifyTextSizingInHorizontal.bmp",

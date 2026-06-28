@@ -71,6 +71,8 @@ void FlexBox::recomputeBounds(
 
             if (
                 // Vertical lines do not support multiple lines in HTML, so this doesn't either
+                // TODO: The above comment is wrong, so we need to deal with it
+                // It's only a thing when the height is contrained though, which it normally isn't
                 dir == FlexDirection::Vertical
                 // Otherwise, check if the main size so far plus the size of the next elements exceeds the total size
                 // for the row
@@ -170,7 +172,9 @@ void FlexBox::recomputeBounds(
             item.c->updateComputedPos(x, y);
             // TODO: allow for either item.crossSize or maxCrossSize
             auto width = dir == FlexDirection::Horizontal ? item.flexAxialSize : internalWidth;
-            auto height = dir == FlexDirection::Horizontal ? localMaxCrossSize : item.flexAxialSize;
+            auto height = dir == FlexDirection::Horizontal ? (
+                item.c->getConfig().flex.expandCrossSize ? localMaxCrossSize : item.flexCrossSize
+            ) : item.flexAxialSize;
 
             item.c->updateComputedSizes(width, height);
 

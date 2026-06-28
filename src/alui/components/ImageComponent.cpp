@@ -1,4 +1,5 @@
 #include "ImageComponent.hpp"
+#include <iostream>
 
 namespace alui {
 
@@ -14,6 +15,18 @@ void ImageComponent::render(GUI&) {
         this->computedWidth,
         this->computedHeight
     );
+}
+
+float ImageComponent::computeCrossSize(
+    FlexDirection dir,
+    float virtualMainSize,
+    float
+) {
+    if (dir == FlexDirection::Horizontal) {
+        return imageSlice->computeHeight(virtualMainSize);
+    } else {
+        return imageSlice->computeWidth(virtualMainSize);
+    }
 }
 
 }

@@ -36,10 +36,15 @@ struct ComponentConfig {
          */
         float basis = 0;
 
+        bool expandCrossSize = false;
+
         Flex() : grow(1), shrink(1), basis(0) {}
         Flex(float f) : grow(f), shrink(f) {}
+        explicit Flex(float f, bool expandCrossSize) : grow(f), shrink(f), expandCrossSize(expandCrossSize) {}
         Flex(float g, float s) : grow(g), shrink(s) {}
         Flex(float g, float s, float basis) : grow(g), shrink(s), basis(basis) {}
+        Flex(float g, float s, float basis, bool expandCrossSize)
+            : grow(g), shrink(s), basis(basis), expandCrossSize(expandCrossSize) {}
     } flex{1};
 
     /**
