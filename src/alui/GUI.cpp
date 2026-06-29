@@ -35,58 +35,59 @@ void GUI::render() {
 }
 
 bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
+    // TODO: There's no reason _not_ to hook the resize event in here
     switch (ev.type) { // NOLINT
-        case ALLEGRO_EVENT_KEY_CHAR:
-        case ALLEGRO_EVENT_KEY_UP:
-            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
-                if (focused) {
-                    focused->clearFocus();
-                    focused = nullptr;
-                    return true;
-                }
-            }
-            // TODO
-            break;
-        case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
-        } break;
-        case ALLEGRO_EVENT_MOUSE_BUTTON_UP: {
-            const auto* tf = al_get_current_transform();
-            float x = (float) ev.mouse.x;
-            float y = (float) ev.mouse.y;
-            if (tf != nullptr) {
-                al_transform_coordinates(tf, &x, &y);
-            }
-
-            auto clickedElement = getInterceptedComponent(x, y);
-            if (clickedElement != nullptr) {
-                focused = clickedElement;
-                focused->onClick(x, y);
-                return true;
-            }
-
-        } break;
-        case ALLEGRO_EVENT_MOUSE_AXES:
-        case ALLEGRO_EVENT_MOUSE_WARPED: {
-            const auto* tf = al_get_current_transform();
-            float x = (float) ev.mouse.x;
-            float y = (float) ev.mouse.y;
-            if (tf != nullptr) {
-                al_transform_coordinates(tf, &x, &y);
-            }
-            // Force clear the focused element
-            if (focused != nullptr) {
+    case ALLEGRO_EVENT_KEY_CHAR:
+    case ALLEGRO_EVENT_KEY_UP:
+        if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+            if (focused) {
                 focused->clearFocus();
                 focused = nullptr;
-            }
-
-            auto clickedElement = getInterceptedComponent(x, y);
-            if (clickedElement != nullptr) {
-                focused = clickedElement;
-                focused->focus();
                 return true;
             }
+        }
+        // TODO
+        break;
+    case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN: {
+    } break;
+    case ALLEGRO_EVENT_MOUSE_BUTTON_UP: {
+        const auto* tf = al_get_current_transform();
+        float x = (float) ev.mouse.x;
+        float y = (float) ev.mouse.y;
+        if (tf != nullptr) {
+            al_transform_coordinates(tf, &x, &y);
+        }
 
-        } break;
+        auto clickedElement = getInterceptedComponent(x, y);
+        if (clickedElement != nullptr) {
+            focused = clickedElement;
+            focused->onClick(x, y);
+            return true;
+        }
+
+    } break;
+    case ALLEGRO_EVENT_MOUSE_AXES:
+    case ALLEGRO_EVENT_MOUSE_WARPED: {
+        const auto* tf = al_get_current_transform();
+        float x = (float) ev.mouse.x;
+        float y = (float) ev.mouse.y;
+        if (tf != nullptr) {
+            al_transform_coordinates(tf, &x, &y);
+        }
+        // Force clear the focused element
+        if (focused != nullptr) {
+            focused->clearFocus();
+            focused = nullptr;
+        }
+
+        auto clickedElement = getInterceptedComponent(x, y);
+        if (clickedElement != nullptr) {
+            focused = clickedElement;
+            focused->focus();
+            return true;
+        }
+
+    } break;
     }
 
     return false;

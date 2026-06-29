@@ -45,7 +45,7 @@ struct ComponentConfig {
         Flex(float g, float s, float basis) : grow(g), shrink(s), basis(basis) {}
         Flex(float g, float s, float basis, bool expandCrossSize)
             : grow(g), shrink(s), basis(basis), expandCrossSize(expandCrossSize) {}
-    } flex{1};
+    } flex { 1 };
 
     /**
      * \brief Optional component ID
