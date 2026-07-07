@@ -1,10 +1,10 @@
 #pragma once
 
-#include <memory>
 #include "StyleStates.hpp"
 
 namespace alui {
 
+// TODO: this is a shit name
 struct StyleSpec {
     StyleStates backgroundStyle;
     StyleStates borderStyle;

@@ -87,7 +87,7 @@ int main() {
     });
 
     auto playBtn = std::make_shared<alui::Button>("Play", alui::ComponentConfig {
-        .flex = { 0, 0 },
+            .flex = { 0.f, 0.f },
         .style = buttonStyle
     });
     playBtn->setTextColour(al_map_rgb_f(1, 1, 1));
@@ -110,7 +110,7 @@ int main() {
     // rootLayout->push(veryLongBtn);
 
     auto settingsBtn = std::make_shared<alui::Button>("Settings", alui::ComponentConfig {
-        .flex = { 0, 0 },
+        .flex = { 0.f, 0.f },
         .style = buttonStyle
     });
     settingsBtn->setTextColour(al_map_rgb_f(1, 1, 1));
