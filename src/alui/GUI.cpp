@@ -25,7 +25,7 @@ void GUI::tick() {
         auto* disp = al_get_current_display();
         auto displayWidth = (float) al_get_display_width(disp);
         auto displayHeight = (float) al_get_display_height(disp);
-        resize(displayWidth, displayHeight);
+        signalResize(displayWidth, displayHeight);
 
         for (auto& component : this->rootComponents) {
             if (auto* l = static_cast<Layout*>(component.get())) {
@@ -113,7 +113,7 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
 
     } break;
     case ALLEGRO_EVENT_DISPLAY_RESIZE: {
-        resize(ev.display.width, ev.display.height);
+        signalResize(ev.display.width, ev.display.height);
     } break;
     }
 
@@ -133,7 +133,7 @@ void GUI::pushBack(const std::shared_ptr<Layout>& component) {
     component->setFont(this->cfg.font);
 }
 
-void GUI::resize(float displayWidth, float displayHeight) {
+void GUI::signalResize(float displayWidth, float displayHeight) {
     this->computedWidth = cfg.width.compute(displayWidth);
     this->computedHeight = cfg.height.compute(displayHeight);
     this->resized = true;

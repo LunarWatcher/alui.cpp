@@ -65,7 +65,7 @@ protected:
         computedHeight = 0;
     bool resized = true;
 
-    void resize(float screenWidth, float screenHeight);
+    void signalResize(float screenWidth, float screenHeight);
 public:
     /**
      * \param font          The default font to use for all child components. The font is set automatically when new
