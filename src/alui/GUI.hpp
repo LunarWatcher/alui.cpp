@@ -65,7 +65,10 @@ protected:
         computedHeight = 0;
     bool resized = true;
 
-    void signalResize(float screenWidth, float screenHeight);
+    /**
+     * Signal that a resize should take place on the next call to the tick method  
+     */
+    void signalResize();
 public:
     /**
      * \param font          The default font to use for all child components. The font is set automatically when new
