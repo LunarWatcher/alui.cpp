@@ -162,10 +162,6 @@ Vivamus laoreet semper augue, id eleifend arcu commodo ac. Interdum et malesuada
             break;
         case ALLEGRO_EVENT_DISPLAY_RESIZE:
             al_acknowledge_resize(disp);
-            gui.resize(
-                (float) event.display.width,
-                (float) event.display.height
-            );
             break;
         }
 

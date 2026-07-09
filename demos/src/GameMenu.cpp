@@ -143,10 +143,6 @@ int main() {
         } break;
         case ALLEGRO_EVENT_DISPLAY_RESIZE:
             al_acknowledge_resize(disp);
-            gui.resize(
-                (float) event.display.width,
-                (float) event.display.height
-            );
             break;
         }
 

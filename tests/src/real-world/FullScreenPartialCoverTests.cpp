@@ -31,7 +31,7 @@ TEST_CASE("100% GUI with partial screen coverage") {
     );
 
     SECTION("Relative GUI with no content should scale to 1280x720") {
-        g.resize(width, height);
+        g.tick();
 
         REQUIRE(
             g.getComputedWidth() == width
@@ -70,7 +70,7 @@ TEST_CASE("100% GUI with partial screen coverage") {
         );
         g.push(layout);
 
-        g.resize(width, height);
+        g.tick();
 
         d.captureRender("FullScreenPartialCover-40PercentCentered.bmp", [&]() {
             g.render();

@@ -68,7 +68,7 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
 
     SECTION("Validate sizing and resizing") {
         test::Display disp(1000, 1500);
-        g.resize(1000, 1500);
+        g.tick();
         disp.captureRender(
             "alui::FlexBoxTests-VerifyNestedSizingLogic.bmp",
             [&]() {
@@ -103,7 +103,7 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
         fb->getConfig().y = Y_OFFSET;
 
         test::Display disp(1000, 1500);
-        g.resize(1000, 1500);
+        g.tick();
         disp.captureRender(
             "alui::FlexBoxTests-VerifySizingLogicWithOffsetXY.bmp",
             [&]() {
@@ -195,7 +195,7 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[alui::FlexBox][Layout]"
 
     SECTION("Validate sizing and resizing") {
         test::Display disp(1000, 1500);
-        g.resize(640, 480);
+        g.tick();
         disp.captureRender(
             "FlexBoxTests-VerifyTextSizingInHorizontal.bmp",
             [&]() {

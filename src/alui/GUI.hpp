@@ -63,6 +63,9 @@ protected:
 
     float computedWidth = 0,
         computedHeight = 0;
+    bool resized = true;
+
+    void resize(float screenWidth, float screenHeight);
 public:
     /**
      * \param font          The default font to use for all child components. The font is set automatically when new
@@ -117,8 +120,6 @@ public:
      *
      */
     void pushBack(const std::shared_ptr<Layout>& component);
-
-    void resize(float screenWidth, float screenHeight);
 
     void setPosition(float x, float y) {
         this->cfg.x = x;

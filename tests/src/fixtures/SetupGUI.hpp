@@ -43,14 +43,6 @@ struct SetupGUI {
     int width() { return conf.displayWidth; }
     int height() { return conf.displayHeight; }
 
-    void resize() {
-        gui.resize(width(), height());
-    }
-
-    void resize(int width, int height) {
-        gui.resize(width, height);
-    }
-
     void autoCapture(
         const std::string& filename
     ) {

@@ -36,7 +36,7 @@ TEST_CASE("Test layout sizing of dynamic landscape image with no expanding eleme
 
             setup.gui.push(layout);
 
-            setup.resize();
+            setup->tick();
             setup.autoCapture(
                 std::format("LandscapeImageHorizontalLayout-ScaleFactor{}.bmp", mult)
             );
@@ -90,7 +90,7 @@ TEST_CASE("Test layout sizing of landscape and portrait images") {
 
             setup.gui.push(layout);
 
-            setup.resize();
+            setup->tick();
             setup.autoCapture(
                 std::format("BothImages-ScaleFactor{}.bmp", mult)
             );

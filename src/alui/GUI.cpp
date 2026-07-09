@@ -14,7 +14,7 @@ GUI::GUI(const GUIConfig& cfg) : cfg(cfg) {
 }
 
 void GUI::tick() {
-    bool dirty = false;
+    bool dirty = this->resized;
     for (auto& component : this->rootComponents) {
 
         component->tick();
@@ -26,6 +26,17 @@ void GUI::tick() {
         auto displayWidth = (float) al_get_display_width(disp);
         auto displayHeight = (float) al_get_display_height(disp);
         resize(displayWidth, displayHeight);
+
+        for (auto& component : this->rootComponents) {
+            if (auto* l = static_cast<Layout*>(component.get())) {
+                l->recomputeBounds(
+                    nullptr,
+                    computedWidth,
+                    computedHeight
+                );
+            }
+        }
+        this->resized = false;
     }
 }
 
@@ -82,26 +93,28 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
         }
 
         auto closestLayout = getInterceptedLayout(x, y);
-        // std::cout << ev.mouse.dx << " "
-        //           << ev.mouse.dy << " "
-        //           << ev.mouse.dz << " "
-        //           << ev.mouse.dw << " ";
+        // Scrollwheel handling
         if (closestLayout != nullptr && ev.mouse.dz != 0) {
+            // ev.mouse.dz is a small integer (seems to be the number of like mouse steps), so the app needs to
+            // implement actual scrolling mechanics
+            // Can't be bothered doing smooth scroll, but 10% scrolled of the screen height per wheel tick feels good
             closestLayout->scrollY(
                 ev.mouse.dz * 0.1f * this->computedHeight
             );
         }
 
-        auto clickedElement = getInterceptedComponent(x, y);
-        if (clickedElement != nullptr) {
-            focused = clickedElement;
+        auto focusedElement = getInterceptedComponent(x, y);
+        if (focusedElement != nullptr) {
+            focused = focusedElement;
             focused->focus();
 
             return true;
         }
 
     } break;
-        
+    case ALLEGRO_EVENT_DISPLAY_RESIZE: {
+        resize(ev.display.width, ev.display.height);
+    } break;
     }
 
     return false;
@@ -123,16 +136,7 @@ void GUI::pushBack(const std::shared_ptr<Layout>& component) {
 void GUI::resize(float displayWidth, float displayHeight) {
     this->computedWidth = cfg.width.compute(displayWidth);
     this->computedHeight = cfg.height.compute(displayHeight);
-
-    for (auto& component : this->rootComponents) {
-        if (auto* l = static_cast<Layout*>(component.get())) {
-            l->recomputeBounds(
-                nullptr,
-                computedWidth,
-                computedHeight
-            );
-        }
-    }
+    this->resized = true;
 }
 
 std::shared_ptr<Component> GUI::getInterceptedComponent(float x, float y) {
