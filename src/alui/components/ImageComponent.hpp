@@ -15,7 +15,7 @@ public:
         const std::shared_ptr<ImageSlice>& imageSlice,
         const ComponentConfig& cfg
     );
-    virtual void render(GUI& ctx) override;
+    virtual void render(GUI& ctx, float scrollX, float scrollY) override;
     virtual void tick() override {}
 
     float computeCrossSize(FlexDirection dir, float virtualMainSize, float) override;

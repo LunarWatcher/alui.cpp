@@ -87,9 +87,8 @@ private:
 public:
     virtual ~Component() = default;
 
-    virtual void render(GUI& ctx);
+    virtual void render(GUI& ctx, float scrollX, float scrollY);
     virtual void tick() = 0;
-
 
     /**
      * @return Whether or not the component consumed the delay. If true, the event will be considered consumed.

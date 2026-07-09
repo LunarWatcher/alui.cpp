@@ -7,11 +7,13 @@
 #include <allegro5/display.h>
 #include <allegro5/allegro_image.h>
 
+#include "allegro5/color.h"
 #include "allegro5/events.h"
 #include "allegro5/timer.h"
 
 #include "alui/component/Component.hpp"
 #include "alui/GUI.hpp"
+#include "alui/component/FlexDirection.hpp"
 #include "alui/components/Text.hpp"
 #include "alui/components/ImageComponent.hpp"
 #include "alui/layouts/FlexBox.hpp"
@@ -62,14 +64,16 @@ int main() {
     // alui {{{
     alui::GUI gui({
         .font = font,
-        .width = alui::Magnitude::Absolute(640.f),
-        .height = alui::Magnitude::Absolute(480.f),
+        .width = alui::Magnitude::Relative(1.f),
+        .height = alui::Magnitude::Relative(1.f),
     });
 
     auto rootLayout = std::make_shared<alui::FlexBox>(alui::FlexDirection::Horizontal, alui::ComponentConfig {
         .x = 0, .y = 0,
-        .minWidth = alui::Magnitude::Absolute(640.f),
-        .minHeight = alui::Magnitude::Absolute(480.f),
+        .minWidth = alui::Magnitude::Relative(1.f),
+        .minHeight = alui::Magnitude::Relative(1.f),
+        .maxWidth = alui::Magnitude::Relative(1.f),
+        .maxHeight = alui::Magnitude::Relative(1.f),
     });
 
     auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
@@ -113,6 +117,32 @@ int main() {
         }
     );
     rootLayout->push(testImage);
+
+    auto overflowLayout = std::make_shared<alui::FlexBox>(
+        alui::FlexDirection::Horizontal,
+        alui::ComponentConfig {
+            .flex { 1 }
+        }
+    );
+    auto overflowTextContent = std::make_shared<alui::Text>(
+        R"(Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque tincidunt eu neque vel tempus. Aliquam lacinia lectus velit, at auctor augue tincidunt vel. Aenean porttitor turpis nibh, id placerat nibh semper eu. Donec arcu augue, pulvinar non mi et, accumsan porta tellus. Quisque sem dui, gravida non est eu, sodales volutpat turpis. Aenean ex quam, ornare nec vulputate in, ultrices posuere justo. Aliquam aliquet velit in justo congue viverra. Integer eu sapien nisi. Sed eu fringilla odio, id mattis metus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris non nibh magna. Nunc id egestas erat, in sagittis nunc. Donec condimentum leo dolor, et eleifend elit mollis consequat. Cras a nisl at nulla aliquet vulputate. Nulla vel porta lectus.
+
+Integer mattis est posuere lacus tempus hendrerit. Pellentesque vitae ligula leo. Phasellus ut lacus et lacus semper volutpat. Donec euismod enim ornare urna elementum, quis tempor leo placerat. Quisque a semper diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut a ex congue nulla placerat venenatis. Phasellus pharetra magna non eleifend tempor.
+
+Mauris non imperdiet orci, sit amet convallis arcu. Quisque semper nisl nec sagittis congue. Suspendisse nec egestas justo, nec viverra erat. In maximus porta venenatis. Morbi consectetur, magna id sollicitudin placerat, lectus nisi elementum ligula, eget ornare massa erat sed tellus. Integer ullamcorper leo in ligula sagittis, et eleifend enim consectetur. Praesent quis quam ac elit molestie tincidunt sit amet sit amet massa.
+
+Sed tempus sollicitudin sem quis tristique. Fusce congue ligula auctor sem elementum eleifend. Vestibulum vestibulum porta leo in tristique. Curabitur tellus massa, egestas nec quam in, feugiat vehicula orci. Nulla et libero ex. Aliquam ut dui in dolor eleifend porta id eu erat. Vestibulum mattis massa vel quam faucibus, id iaculis tellus consectetur. Ut a ligula tincidunt, mattis massa sed, iaculis sapien.
+
+Vivamus laoreet semper augue, id eleifend arcu commodo ac. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus magna velit, sagittis et molestie eu, cursus a orci. Pellentesque vulputate cursus ex, vel pharetra ipsum ullamcorper sit amet. Fusce varius molestie diam eget dapibus. Nullam consequat, tortor a aliquam venenatis, ipsum massa tristique tellus, nec auctor urna nulla vel sem. In hac habitasse platea dictumst. Nullam feugiat posuere est, quis consectetur est bibendum nec. Fusce facilisis commodo tellus, et varius ex aliquet non. Etiam feugiat ut nisi ac laoreet. In id massa ut nisl consequat varius quis faucibus nibh.)",
+        alui::ComponentConfig {
+            .flex = { 1 },
+            .minWidth = alui::Magnitude::Relative(1.f),
+            .minHeight = alui::Magnitude::Absolute(300.f),
+        }
+    );
+    overflowTextContent->setTextColour(al_map_rgb_f(1, 1, 1));
+    overflowLayout->push(overflowTextContent);
+    rootLayout->push(overflowLayout);
 
     gui.push(rootLayout);
 

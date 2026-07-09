@@ -13,7 +13,6 @@
 #include "alui/component/Component.hpp"
 #include "alui/GUI.hpp"
 #include "alui/components/Button.hpp"
-#include "alui/components/Text.hpp"
 #include "alui/layouts/FlexBox.hpp"
 #include "alui/style/BackgroundColourStyle.hpp"
 #include "alui/style/BorderStyle.hpp"
@@ -87,7 +86,7 @@ int main() {
     });
 
     auto playBtn = std::make_shared<alui::Button>("Play", alui::ComponentConfig {
-            .flex = { 0.f, 0.f },
+        .flex = { 0.f, 0.f },
         .style = buttonStyle
     });
     playBtn->setTextColour(al_map_rgb_f(1, 1, 1));

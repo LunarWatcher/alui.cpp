@@ -4,12 +4,12 @@
 
 namespace alui {
 
-void BackgroundColourStyle::render(Component* component) {
+void BackgroundColourStyle::render(Component* component, float scrollX, float scrollY) {
     al_draw_filled_rectangle(
-        component->getComputedX(),
-        component->getComputedY(),
-        component->getComputedX() + component->getComputedWidth(),
-        component->getComputedY() + component->getComputedHeight(),
+        scrollX + component->getComputedX(),
+        scrollY + component->getComputedY(),
+        scrollX + component->getComputedX() + component->getComputedWidth(),
+        scrollY + component->getComputedY() + component->getComputedHeight(),
         this->backgroundColour
     );
 }

@@ -8,10 +8,10 @@ ImageComponent::ImageComponent(
     const ComponentConfig& cfg
 ) : Component(cfg), imageSlice(imageSlice) {}
 
-void ImageComponent::render(GUI&) {
+void ImageComponent::render(GUI&, float scrollX, float scrollY) {
     imageSlice->render(
-        this->computedX,
-        this->computedY,
+        this->computedX + scrollX,
+        this->computedY + scrollY,
         this->computedWidth,
         this->computedHeight
     );

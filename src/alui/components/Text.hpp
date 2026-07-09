@@ -32,7 +32,7 @@ public:
 
     virtual ~Text() = default;
 
-    virtual void render(GUI& ctx) override;
+    virtual void render(GUI& ctx, float scrollX, float scrollY) override;
     virtual void tick() override {}
 
     virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override;

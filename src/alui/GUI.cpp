@@ -5,6 +5,7 @@
 #include "alui/component/Component.hpp"
 #include "alui/Layout.hpp"
 #include <algorithm>
+#include <iostream>
 #include <memory>
 
 namespace alui {
@@ -30,7 +31,7 @@ void GUI::tick() {
 
 void GUI::render() {
     for (auto& component : this->rootComponents) {
-        component->render(*this);
+        component->render(*this, 0.f, 0.f);
     }
 }
 
@@ -80,14 +81,27 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
             focused = nullptr;
         }
 
+        auto closestLayout = getInterceptedLayout(x, y);
+        // std::cout << ev.mouse.dx << " "
+        //           << ev.mouse.dy << " "
+        //           << ev.mouse.dz << " "
+        //           << ev.mouse.dw << " ";
+        if (closestLayout != nullptr && ev.mouse.dz != 0) {
+            closestLayout->scrollY(
+                ev.mouse.dz * 0.1f * this->computedHeight
+            );
+        }
+
         auto clickedElement = getInterceptedComponent(x, y);
         if (clickedElement != nullptr) {
             focused = clickedElement;
             focused->focus();
+
             return true;
         }
 
     } break;
+        
     }
 
     return false;
@@ -163,6 +177,54 @@ continueOuter:;
 
     // Whatever component was last intersected is considered clicked
     return currIntersect;
+}
+
+std::shared_ptr<Layout> GUI::getInterceptedLayout(float x, float y) {
+    // In the GUI, it's possible for two components to overlap
+    // When this happens, if begin()->end(), the bottom component will be given the event
+    // The render is begin()->end(), but this means the components rendered first will be in the back. 
+    //
+    // The intercepting check therefore has to iterate backwards, since the last component is the top component.
+    auto it = std::find_if(
+        rootComponents.rbegin(),
+        rootComponents.rend(),
+        [&x, &y](const auto& ptr) {
+            return ptr->contains(x, y);
+        }
+    );
+
+    if (it == rootComponents.rend()) {
+        return nullptr;
+    }
+    auto currIntersect = *it;
+    Layout* layoutPtr = dynamic_cast<Layout*>(currIntersect.get());
+
+    // If not a layout, there are no root-level layouts in the position
+    if (layoutPtr == nullptr) {
+        return nullptr;
+    }
+
+    while (true) {
+
+        for (const auto& item : layoutPtr->getChildren()) {
+            // This method only returns layouts, so we don't care about layouts. We're trying to find the deepest nested
+            // layout
+            layoutPtr = dynamic_cast<Layout*>(item.get());
+            if (layoutPtr == nullptr) {
+                continue;
+            }
+            if (item->contains(x, y)) {
+                currIntersect = item;
+                goto continueOuter;
+            }
+        }
+
+        // No inner matches found; break
+        break;
+continueOuter:;
+    }
+
+    return std::static_pointer_cast<alui::Layout>(currIntersect);
 }
 
 }

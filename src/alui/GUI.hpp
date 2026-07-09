@@ -59,6 +59,7 @@ protected:
     std::shared_ptr<Component> focused;
 
     std::shared_ptr<Component> getInterceptedComponent(float x, float y);
+    std::shared_ptr<Layout> getInterceptedLayout(float x, float y);
 
     float computedWidth = 0,
         computedHeight = 0;

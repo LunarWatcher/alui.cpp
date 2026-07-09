@@ -13,7 +13,7 @@ struct BackgroundColourStyle : public AbstractStyle {
     BackgroundColourStyle(const ALLEGRO_COLOR& colour)
         : backgroundColour(colour) {}
 
-    virtual void render(Component*) override;
+    virtual void render(Component*, float scrollX, float scrollY) override;
 };
 
 }

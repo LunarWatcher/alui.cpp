@@ -16,8 +16,8 @@ Text::Text(const std::string& str, const ComponentConfig& cfg) : Component(cfg),
 
 }
 
-void Text::render(GUI& ctx) {
-    Component::render(ctx);
+void Text::render(GUI& ctx, float scrollX, float scrollY) {
+    Component::render(ctx, scrollX, scrollY);
     //al_set_clipping_rectangle(
         //std::floor(getContentX()),
         //std::floor(getContentY()),
@@ -30,8 +30,8 @@ void Text::render(GUI& ctx) {
         al_draw_text(
             font,
             textColour,
-            getContentX(),
-            getContentY() + (float) (al_get_font_line_height(font) * lineNum++),
+            getContentX() + scrollX,
+            getContentY() + (float) (al_get_font_line_height(font) * lineNum++) + scrollY,
             0, line.c_str()
         );
     }, getInternalWidth());

@@ -8,11 +8,11 @@ namespace alui {
 struct BorderStyle : public AbstractStyle {
     ALLEGRO_COLOR colour;
     float thickness;
-    
-    BorderStyle(ALLEGRO_COLOR colour, float thickness = 2) 
+
+    BorderStyle(ALLEGRO_COLOR colour, float thickness = 2)
         : colour(colour), thickness(thickness) {}
 
-    virtual void render(Component*) override;
+    virtual void render(Component*, float scrollX, float scrollY) override;
 };
 
 }

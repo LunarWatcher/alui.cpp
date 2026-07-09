@@ -17,13 +17,13 @@ bool Component::onClick(float x, float y) {
     return intersects;
 }
 
-void Component::render(GUI&) {
+void Component::render(GUI&, float scrollX, float scrollY) {
     if (f.style != nullptr) {
         // TODO: We'll likely need more control over the rendering in other components, so not sure if it even makes
         // sense to use it here. The border should probably be on top anyway? Not sure if it matters.
         // If it doesn't, we'll probably want to merge the background and border styles.
-        f.style->backgroundStyle.render(this);
-        f.style->borderStyle.render(this);
+        f.style->backgroundStyle.render(this, scrollX, scrollY);
+        f.style->borderStyle.render(this, scrollX, scrollY);
     }
 }
 

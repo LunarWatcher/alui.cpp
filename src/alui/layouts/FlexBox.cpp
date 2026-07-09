@@ -189,9 +189,7 @@ void FlexBox::recomputeBounds(
     // }}}
     
     dirty = false;
-    // This will not work as expected if this isn't the root-level layout, but I think I'll just... ignore that c:
-    // ... the fuck were you on about, past me? Why would this be wrong? The parent layout would override the computed
-    // position anyway
+
     this->computedX = computedX;
     this->computedY = computedY;
 
@@ -205,6 +203,13 @@ void FlexBox::recomputeBounds(
         y + f.padding.bot - computedY,
         f.minHeight.value_or(Magnitude {0.0f}).compute(parentHeight),
         f.maxHeight.value_or(Magnitude {parentHeight}).compute(parentHeight)
+    );
+
+    this->verticalScroll->resizeParentContainer(
+        y,
+        maxX,
+        computedWidth,
+        computedHeight
     );
 }
 
@@ -222,7 +227,7 @@ float FlexBox::computeSizeRequirements(FlexDirection dir) {
 float FlexBox::computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) {
     recomputeBounds(
         nullptr,
-        dir == FlexDirection::Horizontal ? virtualMainSize : maxCrossSize, 
+        dir == FlexDirection::Horizontal ? virtualMainSize : maxCrossSize,
         dir == FlexDirection::Horizontal ? std::numeric_limits<float>::max() : virtualMainSize
     );
 

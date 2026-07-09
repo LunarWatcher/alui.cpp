@@ -1,5 +1,8 @@
 #include "Layout.hpp"
+#include "allegro5/bitmap.h"
 #include <algorithm>
+
+#include <allegro5/allegro.h>
 
 namespace alui {
 
@@ -7,12 +10,23 @@ void Layout::tick() {
 
 }
 
-void Layout::render(GUI& ctx) {
-    Component::render(ctx);
+void Layout::render(GUI& ctx, float scrollX, float scrollY) {
+    Component::render(ctx, scrollX, scrollY);
 
+    float srcScrollX = scrollX;
+    float srcScrollY = scrollY;
+
+    this->verticalScroll->applyOffset(scrollX, scrollY);
     for (auto& child : children) {
-        child->render(ctx);
+        al_set_clipping_rectangle(
+            srcScrollX + this->computedX,
+            srcScrollY + this->computedY,
+            this->computedWidth,
+            this->computedHeight
+        );
+        child->render(ctx, scrollX, scrollY);
     }
+    al_reset_clipping_rectangle();
 }
 
 bool Layout::onClick(float x, float y) {
@@ -60,4 +74,7 @@ void Layout::updateComputedPos(float parentX, float parentY) {
     }
 }
 
+void Layout::scrollY(float delta) {
+    verticalScroll->scroll(delta);
+}
 }

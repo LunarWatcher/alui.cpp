@@ -6,6 +6,7 @@
  */
 
 #include "alui/component/Component.hpp"
+#include "alui/components/sub/Scrollbar.hpp"
 #include <vector>
 #include <memory>
 
@@ -21,15 +22,19 @@ protected:
     /**
      * \brief Whether or not to show a scrollbar
      */
-    bool showOverflow;
+    bool showOverflow = true;
 
     std::vector<std::shared_ptr<Component>> children;
 
+    // TODO: make customizable
+    std::shared_ptr<Scrollbar> verticalScroll = std::make_shared<Scrollbar>(
+        FlexDirection::Vertical
+    );
 public:
     Layout(const ComponentConfig& cfg) : Component(cfg) {}
 
     virtual void tick() override;
-    virtual void render(GUI& ctx) override;
+    virtual void render(GUI& ctx, float scrollX, float scrollY) override;
 
     virtual bool onClick(float x, float y) override;
 
@@ -51,6 +56,8 @@ public:
     virtual void updateComputedPos(float x, float y) override;
     virtual float computeSizeRequirements(FlexDirection dir) override = 0;
     virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override = 0;
+
+    virtual void scrollY(float delta);
 
     friend class GUI;
 

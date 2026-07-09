@@ -31,7 +31,7 @@ namespace alui {
  * implementations, as the goal isn't a 100% compliant flexbox implementation.
  *
  */
-class FlexBox : public Layout  {
+class FlexBox : public Layout {
 protected:
     struct FlexAlgoData {
         std::shared_ptr<Component> c;
