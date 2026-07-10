@@ -67,7 +67,7 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
     REQUIRE(text->getFont() != nullptr);
 
     SECTION("Validate sizing and resizing") {
-        test::Display disp(1000, 1500);
+        test::Display disp(600, 900);
         g.tick();
         disp.captureRender(
             "alui::FlexBoxTests-VerifyNestedSizingLogic.bmp",
@@ -102,7 +102,7 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
         fb->getConfig().x = X_OFFSET;
         fb->getConfig().y = Y_OFFSET;
 
-        test::Display disp(1000, 1500);
+        test::Display disp(600, 900);
         g.tick();
         disp.captureRender(
             "alui::FlexBoxTests-VerifySizingLogicWithOffsetXY.bmp",
