@@ -91,13 +91,14 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
             focused = nullptr;
         }
 
-        auto closestLayout = getInterceptedLayout(x, y);
-        // Scrollwheel handling
-        if (closestLayout != nullptr && ev.mouse.dz != 0) {
+
+        if (ev.mouse.dz != 0) {
             // ev.mouse.dz is a small integer (seems to be the number of like mouse steps), so the app needs to
             // implement actual scrolling mechanics
             // Can't be bothered doing smooth scroll, but 10% scrolled of the screen height per wheel tick feels good
-            closestLayout->scrollY(
+            recursiveScrollLayout(
+                ev.mouse.x,
+                ev.mouse.y,
                 ev.mouse.dz * 0.1f * this->computedHeight
             );
         }
@@ -180,52 +181,74 @@ continueOuter:;
     return currIntersect;
 }
 
-std::shared_ptr<Layout> GUI::getInterceptedLayout(float x, float y) {
+bool GUI::recursiveScrollLayout(
+    float x,
+    float y,
+    float delta,
+    Layout* currLayout,
+    float sx,
+    float sy
+) {
     // In the GUI, it's possible for two components to overlap
     // When this happens, if begin()->end(), the bottom component will be given the event
     // The render is begin()->end(), but this means the components rendered first will be in the back. 
     //
     // The intercepting check therefore has to iterate backwards, since the last component is the top component.
-    auto it = std::find_if(
-        rootComponents.rbegin(),
-        rootComponents.rend(),
-        [&x, &y](const auto& ptr) {
-            return ptr->contains(x, y);
-        }
-    );
-
-    if (it == rootComponents.rend()) {
-        return nullptr;
-    }
-    auto currIntersect = *it;
-    Layout* layoutPtr = dynamic_cast<Layout*>(currIntersect.get());
-
-    // If not a layout, there are no root-level layouts in the position
-    if (layoutPtr == nullptr) {
-        return nullptr;
-    }
-
-    while (true) {
-
-        for (const auto& item : layoutPtr->getChildren()) {
-            // This method only returns layouts, so we don't care about layouts. We're trying to find the deepest nested
-            // layout
-            layoutPtr = dynamic_cast<Layout*>(item.get());
-            if (layoutPtr == nullptr) {
-                continue;
+    if (currLayout == nullptr) {
+        auto it = std::find_if(
+            rootComponents.rbegin(),
+            rootComponents.rend(),
+            [&x, &y](const auto& ptr) {
+                return ptr->contains(x, y);
             }
-            if (item->contains(x, y)) {
-                currIntersect = item;
-                goto continueOuter;
-            }
-        }
+        );
 
-        // No inner matches found; break
-        break;
-continueOuter:;
+        if (it == rootComponents.rend()) {
+            return false;
+        }
+        auto& currIntersect = *it;
+        Layout* layoutPtr = dynamic_cast<Layout*>(currIntersect.get());
+
+        // If not a layout, there are no root-level layouts in the position
+        if (layoutPtr == nullptr) {
+            return false;
+        }
+        return recursiveScrollLayout(
+            x,
+            y,
+            delta,
+            layoutPtr
+        );
     }
 
-    return std::static_pointer_cast<alui::Layout>(currIntersect);
+    sx += currLayout->getScrollX();
+    sy += currLayout->getScrollY();
+
+    for (const auto& item : currLayout->getChildren()) {
+        // This method only returns layouts, so we don't care about layouts. We're trying to find the deepest nested
+        // layout
+        auto nextLayout = dynamic_cast<Layout*>(item.get());
+        if (nextLayout == nullptr) {
+            continue;
+        }
+        if (item->contains(
+                x + sx,
+                y + sy
+            )
+        ) {
+            if(!recursiveScrollLayout(
+                x, y, delta,
+                nextLayout,
+                sx, sy
+            )) {
+                if (!nextLayout->scrollY(delta)) {
+                    break;
+                }
+            }
+            return true;
+        }
+    }
+    return currLayout->scrollY(delta);
 }
 
 }

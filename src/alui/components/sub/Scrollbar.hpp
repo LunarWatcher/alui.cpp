@@ -4,6 +4,7 @@
 #include "alui/component/ComponentConfig.hpp"
 #include "alui/component/FlexDirection.hpp"
 #include <algorithm>
+#include <iostream>
 
 namespace alui {
 
@@ -29,7 +30,7 @@ public:
 
     virtual void tick() override {}
 
-    virtual int getOffset() {
+    virtual float getOffset() {
         return offset;
     }
 
@@ -77,12 +78,18 @@ public:
         }
     }
 
-    virtual void scroll(float delta) {
+    virtual bool scroll(float delta) {
+        if ((offset == 0 && delta > 0)
+            || (offset == overflowHeight && delta < 0)) {
+            // If we can't scroll, return false
+            return false;
+        }
         offset = std::clamp<float>(
             offset - delta,
             0,
             overflowHeight
         );
+        return true;
     }
 };
 

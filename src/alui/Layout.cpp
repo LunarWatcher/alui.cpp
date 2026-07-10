@@ -74,7 +74,15 @@ void Layout::updateComputedPos(float parentX, float parentY) {
     }
 }
 
-void Layout::scrollY(float delta) {
-    verticalScroll->scroll(delta);
+bool Layout::scrollY(float delta) {
+    return verticalScroll->scroll(delta);
+}
+
+float Layout::getScrollX() {
+    // TODO: not implemented yet
+    return 0.f;
+}
+float Layout::getScrollY() {
+    return verticalScroll->getOffset();
 }
 }

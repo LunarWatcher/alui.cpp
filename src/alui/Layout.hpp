@@ -57,7 +57,10 @@ public:
     virtual float computeSizeRequirements(FlexDirection dir) override = 0;
     virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) override = 0;
 
-    virtual void scrollY(float delta);
+    virtual bool scrollY(float delta);
+
+    virtual float getScrollX();
+    virtual float getScrollY();
 
     friend class GUI;
 

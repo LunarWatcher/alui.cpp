@@ -59,14 +59,22 @@ protected:
     std::shared_ptr<Component> focused;
 
     std::shared_ptr<Component> getInterceptedComponent(float x, float y);
-    std::shared_ptr<Layout> getInterceptedLayout(float x, float y);
+
+    bool recursiveScrollLayout(
+        float x,
+        float y,
+        float delta,
+        Layout* currLayout = nullptr,
+        float sx = 0.f,
+        float sy = 0.f
+    );
 
     float computedWidth = 0,
         computedHeight = 0;
     bool resized = true;
 
     /**
-     * Signal that a resize should take place on the next call to the tick method  
+     * Signal that a resize should take place on the next call to the tick method
      */
     void signalResize();
 public:
@@ -88,6 +96,10 @@ public:
      * \see         [Allegro's event documentation](https://liballeg.org/a5docs/trunk/events.html)
      *
      * ## Handled events
+     *
+     * ### Resize events
+     *
+     * Resize events are automagically handled, so they do not need to be manually processed to resize the GUI.
      *
      * ### Mouse events
      *
