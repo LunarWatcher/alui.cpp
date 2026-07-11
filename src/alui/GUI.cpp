@@ -91,11 +91,13 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
             focused = nullptr;
         }
 
-
         if (ev.mouse.dz != 0) {
             // ev.mouse.dz is a small integer (seems to be the number of like mouse steps), so the app needs to
             // implement actual scrolling mechanics
             // Can't be bothered doing smooth scroll, but 10% scrolled of the screen height per wheel tick feels good
+            // TODO: 0.1f here means the scroll amount is dependent on the size of the window. 0.1f * parentHeight in
+            // Scrollbar.hpp means it's dependent on the size of the container, so small containers with overflow would
+            // scroll incredibly slowly. This should probably be tied to a constant instead, like the text size
             recursiveScrollLayout(
                 ev.mouse.x,
                 ev.mouse.y,

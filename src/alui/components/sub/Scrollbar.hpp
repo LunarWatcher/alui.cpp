@@ -79,15 +79,17 @@ public:
     }
 
     virtual bool scroll(float delta) {
+        // TODO: this doesn't allow for horizontal scroll
         if ((offset == 0 && delta > 0)
-            || (offset == overflowHeight && delta < 0)) {
+            || (offset == overflowHeight - this->parentHeight && delta < 0)) {
             // If we can't scroll, return false
             return false;
         }
+        // std::cout << this->parentHeight << "," << this->overflowHeight << std::endl;
         offset = std::clamp<float>(
             offset - delta,
             0,
-            overflowHeight
+            overflowHeight - this->parentHeight
         );
         return true;
     }

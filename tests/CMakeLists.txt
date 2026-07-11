@@ -1,6 +1,7 @@
 add_executable(tests
     src/real-world/FullScreenPartialCoverTests.cpp
     src/real-world/ImageInContainerTests.cpp
+    src/real-world/ScrollTests.cpp
     
     src/unit/Initialisers.cpp
 

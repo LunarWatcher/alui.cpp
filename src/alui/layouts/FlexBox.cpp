@@ -152,24 +152,31 @@ void FlexBox::recomputeBounds(
                 item.flexAxialSize += freeSpace * (item.c->getConfig().flex.grow / factorPool);
             }
 
-            auto lo = (dir == FlexDirection::Horizontal ? item.c->getConfig().minHeight : item.c->getConfig().minWidth)
-                .value_or(Magnitude {
-                        0.f
-                    }).compute(maxCrossSize);
-            auto hi = (dir == FlexDirection::Horizontal ? item.c->getConfig().maxHeight : item.c->getConfig().maxWidth)
-                .value_or(Magnitude {
-                        dir == FlexDirection::Horizontal ? internalHeight : internalWidth
-                    }).compute(maxCrossSize);
-            item.flexCrossSize = std::clamp(
-                item.c->computeCrossSize(
-                    dir,
-                    item.flexAxialSize,
-                    maxCrossSize
-                ),
-                std::min(lo, hi),
-                std::max(lo, hi)
+            // Note to self: clamping the cross size here makes for weird shit with overflow
+            // To be more specific, clamping to the min and max constraints of the container means we do not have a
+            // concept of internal content size, since it cannot differ from the container.
+            // This, interestingly enough, doesn't actually seem to affect scroll, aside the clamping being incorrect.
+            // Basically, our flexCrossSizes need to be where overflow goes for any of this to make sense. This way, the
+            // `y` value can also properly respect the size of overflow content
+            //
+            // Since the layouts do clipping now, there's technically no consequence to this anyway.
+            // In theory, if overflow is disabled, we can then clamp it, since this also disables the scroll mechanics.
+            //
+            // Also TODO: can we make overflowSize - containerSize > 0 the metric of when to enable scrolling?
+            // 
+            // auto lo = (dir == FlexDirection::Horizontal ? item.c->getConfig().minHeight : item.c->getConfig().minWidth)
+            //     .value_or(Magnitude {
+            //             0.f
+            //         }).compute(maxCrossSize);
+            // auto hi = (dir == FlexDirection::Horizontal ? item.c->getConfig().maxHeight : item.c->getConfig().maxWidth)
+            //     .value_or(Magnitude {
+            //             dir == FlexDirection::Horizontal ? internalHeight : internalWidth
+            //         }).compute(maxCrossSize);
+            item.flexCrossSize = item.c->computeCrossSize(
+                dir,
+                item.flexAxialSize,
+                maxCrossSize
             );
-
             localMaxCrossSize = std::max(localMaxCrossSize, item.flexCrossSize);
         }
 
@@ -212,10 +219,10 @@ void FlexBox::recomputeBounds(
     );
 
     this->verticalScroll->resizeParentContainer(
-        maxY,
+        this->computedWidth,
+        this->computedHeight,
         maxX,
-        computedWidth,
-        computedHeight
+        maxY
     );
 }
 

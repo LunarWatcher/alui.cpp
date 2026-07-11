@@ -118,10 +118,13 @@ int main() {
     );
     rootLayout->push(testImage);
 
+    // The overflowLayout is constrained to 300px so we can have two independent scrollable boxes
+    // Without this constraint, it scrolls with its parent, since the overflow would only happen in the root layout
     auto overflowLayout = std::make_shared<alui::FlexBox>(
         alui::FlexDirection::Horizontal,
         alui::ComponentConfig {
-            .flex { 1 }
+            .flex { 1 },
+            .maxHeight = alui::Magnitude::Absolute(300.f)
         }
     );
     auto overflowTextContent = std::make_shared<alui::Text>(

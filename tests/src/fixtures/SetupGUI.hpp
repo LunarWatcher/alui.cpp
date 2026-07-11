@@ -46,6 +46,7 @@ struct SetupGUI {
     void autoCapture(
         const std::string& filename
     ) {
+        gui.tick();
         display.captureRender(
             filename.c_str(), [this]() {
                 gui.render();
