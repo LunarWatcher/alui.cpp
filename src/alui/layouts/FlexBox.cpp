@@ -136,6 +136,7 @@ void FlexBox::recomputeBounds(
     auto computedY = this->f.y.compute(parentHeight);
     float y = computedY + this->f.padding.top;
     float maxX = 0;
+    float maxY = y;
     for (auto& [components, runningMainSize, maxCrossSize, factorPool] : lines) {
         float x = computedX + f.padding.left;
         auto freeSpace = mainSize - runningMainSize;
@@ -182,9 +183,10 @@ void FlexBox::recomputeBounds(
             (dir == FlexDirection::Horizontal ? x : y) += item.flexAxialSize;
         }
         // TODO: + gap
-        (dir == FlexDirection::Horizontal ? y : x) += maxCrossSize;
+        (dir == FlexDirection::Horizontal ? y : x) += localMaxCrossSize;
 
         maxX = std::max(x + f.padding.right, maxX);
+        maxY = std::max(y, maxY);
     }
     // }}}
     
@@ -200,13 +202,13 @@ void FlexBox::recomputeBounds(
         f.maxWidth.value_or(Magnitude {parentWidth}).compute(parentWidth)
     );
     this->computedHeight = std::clamp(
-        y + f.padding.bot - computedY,
+        maxY + f.padding.bot - computedY,
         f.minHeight.value_or(Magnitude {0.0f}).compute(parentHeight),
         f.maxHeight.value_or(Magnitude {parentHeight}).compute(parentHeight)
     );
 
     this->verticalScroll->resizeParentContainer(
-        y,
+        maxY,
         maxX,
         computedWidth,
         computedHeight

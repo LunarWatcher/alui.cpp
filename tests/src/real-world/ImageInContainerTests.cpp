@@ -46,6 +46,9 @@ TEST_CASE("Test layout sizing of dynamic landscape image with no expanding eleme
 
             REQUIRE(img->getComputedWidth() == 256 * mult);
             REQUIRE(img->getComputedHeight() == 128 * mult);
+
+            REQUIRE(layout->getComputedWidth() == img->getComputedWidth());
+            REQUIRE(layout->getComputedHeight() == img->getComputedHeight());
         }
     };
 
@@ -108,6 +111,12 @@ TEST_CASE("Test layout sizing of landscape and portrait images") {
             // of the container. That that width happens to line up with the width of this particular image is
             // coincidental
             REQUIRE(portraitImg->getComputedHeight() == 256 * mult);
+
+            REQUIRE(layout->getComputedWidth() == (landscapeImg->getComputedWidth() + portraitImg->getComputedWidth()));
+            // portraitImg will always be the biggest image, so we can check exclusively against its height
+            // The layout is horizontal, so only the width needs to care about the combined size of the two child
+            // components
+            REQUIRE(layout->getComputedHeight() == portraitImg->getComputedHeight());
         }
     };
 
