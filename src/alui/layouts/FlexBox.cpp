@@ -136,6 +136,10 @@ void FlexBox::recomputeBounds(
     auto computedY = this->f.y.compute(parentHeight);
     float y = computedY + this->f.padding.top;
     float maxX = 0;
+    // This currently isn't fully used, since the current implementation doesn't support vertical flex lines
+    // (i.e. lines that go vertically rather than horizontally). This means that y will never backtrack, so after the
+    // iteration, $maxY == y \forall \text{FlexDirections}$ - but max(x, y) is so cheap to compute that it might as well
+    // be added here for when vertical lines are supported.
     float maxY = y;
     for (auto& [components, runningMainSize, maxCrossSize, factorPool] : lines) {
         float x = computedX + f.padding.left;
