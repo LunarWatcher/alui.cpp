@@ -124,6 +124,7 @@ TEST_CASE("Scrolling an inner layout in an outer scrollable layout") {
     text->setTextColour(al_map_rgb(255, 255, 255));
     rootLayout->push(text);
 
+
     // The nested layout is constrained in the same way the root layout is, but with a smaller height. This is to allow
     // both layout levels to be visible at the same time
     auto nestedLayout = std::make_shared<alui::FlexBox>(
