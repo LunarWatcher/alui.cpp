@@ -70,7 +70,7 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
 
         auto clickedElement = getInterceptedComponent(x, y);
         if (clickedElement != nullptr) {
-            focused = clickedElement;
+            focused = std::move(clickedElement);
             focused->onClick(x, y);
             return true;
         }
@@ -106,7 +106,7 @@ bool GUI::handleEvent(const ALLEGRO_EVENT& ev) {
 
         auto focusedElement = getInterceptedComponent(x, y);
         if (focusedElement != nullptr) {
-            focused = focusedElement;
+            focused = std::move(focusedElement);
             focused->focus();
 
             return true;
