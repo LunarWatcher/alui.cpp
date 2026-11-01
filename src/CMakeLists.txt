@@ -19,6 +19,8 @@ add_library(alui STATIC
     alui/components/Text.cpp
     alui/components/ImageComponent.cpp
 
+    alui/components/sub/Scrollbar.cpp
+
     alui/layouts/FlexBox.cpp
 
     alui/style/BackgroundColourStyle.cpp

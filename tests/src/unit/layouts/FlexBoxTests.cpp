@@ -40,6 +40,8 @@ TEST_CASE("Verify nested sizing logic", "[alui::FlexBox][Layout]") {
             .style = test::getDebugStyleSpec(),
         }
     );
+    fb->setShowOverflow(false);
+    inner->setShowOverflow(false);
 
     auto text = std::make_shared<alui::Text>(
         "Choo choo",
@@ -154,7 +156,8 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[alui::FlexBox][Layout]"
         .minHeight = alui::Magnitude::Absolute(480.f),
         .style = test::getDebugStyleSpec(),
     });
-
+    rootLayout->setShowOverflow(false);
+    
     auto text = std::make_shared<alui::Text>("Hewwo x3", alui::ComponentConfig {
         .flex{1, true},
         .minWidth = alui::Magnitude::Absolute(300.f),
@@ -176,6 +179,7 @@ TEST_CASE("Layout wrapping, single horizontal layout", "[alui::FlexBox][Layout]"
     text2->setTextColour(al_map_rgb(255, 255, 255));
 
     rootLayout->push(text2);
+    rootLayout->setShowOverflow(false);
 
     auto forcedSoftWrap = std::make_shared<alui::Text>("1\n2\n3\n4\n5555555555555555555555555555555", alui::ComponentConfig {
         .flex{1},

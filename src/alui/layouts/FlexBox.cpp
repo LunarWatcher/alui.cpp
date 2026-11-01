@@ -1,4 +1,5 @@
 #include "FlexBox.hpp"
+#include "allegro5/transformations.h"
 #include "alui/component/Component.hpp"
 #include <algorithm>
 #include <cassert>
@@ -26,11 +27,16 @@ void FlexBox::recomputeBounds(
         - this->f.padding.getSizeForDimension(this->dir)
         : parentDimension - this->f.padding.getSizeForDimension(dir);
 
+
     auto internalWidth = f.minWidth ? f.minWidth->compute(parentWidth) : parentWidth;
     internalWidth -= f.padding.getSizeForDimension(FlexDirection::Horizontal);
     auto internalHeight = f.minHeight ? f.minHeight->compute(parentHeight) : parentHeight;
     internalHeight -= f.padding.getSizeForDimension(FlexDirection::Vertical);
 
+    if (dir == FlexDirection::Horizontal && showOverflow) {
+        mainSize -= this->verticalScroll->getThickness();
+        internalWidth -= this->verticalScroll->getThickness();
+    }
     std::vector<FlexLine> lines;
 
     lines.reserve(children.size());
@@ -231,9 +237,18 @@ float FlexBox::computeSizeRequirements(FlexDirection dir) {
     // This basically treats the minimum size as being whatever the smallest column/row could be, depending on the
     // direction, by treating it as if there are multiple rows/columns instead.
     return Component::computeSizeRequirements(dir) // NOLINT
-        + (*std::max_element(children.begin(), children.end(), [this](const auto& a, const auto& b) {
-            return a->computeSizeRequirements(this->dir) < b->computeSizeRequirements(this->dir);
-        }))->computeSizeRequirements(this->dir);
+        + (
+            *std::max_element(
+                children.begin(),
+                children.end(),
+                [this](const auto& a, const auto& b) {
+                    return a->computeSizeRequirements(this->dir) < b->computeSizeRequirements(this->dir);
+                }
+            )
+        )->computeSizeRequirements(this->dir)
+        + (
+            dir == FlexDirection::Horizontal && showOverflow ? verticalScroll->getThickness() : 0
+        );
 }
 
 float FlexBox::computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize) {

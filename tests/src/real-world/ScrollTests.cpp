@@ -35,7 +35,7 @@ TEST_CASE("Test basic scroll functionality") {
     );
 
     REQUIRE(text->getComputedHeight() > 500);
-    REQUIRE(text->getComputedWidth() == 500);
+    REQUIRE(text->getComputedWidth() == 490);
     REQUIRE(layout->getScrollY() == 0);
 
     SECTION("Scroll down") {
@@ -151,9 +151,9 @@ TEST_CASE("Scrolling an inner layout in an outer scrollable layout") {
     );
 
     REQUIRE(text->getComputedHeight() > 500);
-    REQUIRE(text->getComputedWidth() == 500);
+    REQUIRE(text->getComputedWidth() == 490);
     REQUIRE(nestedText->getComputedHeight() > 500);
-    REQUIRE(nestedText->getComputedWidth() == 500);
+    REQUIRE(nestedText->getComputedWidth() == 490);
     REQUIRE(rootLayout->getScrollY() == 0);
     REQUIRE(nestedLayout->getScrollY() == 0);
 
@@ -232,10 +232,13 @@ TEST_CASE("Scrolling an inner layout in an outer scrollable layout") {
             test::EventGenerator<ALLEGRO_EVENT_MOUSE_AXES>(setup)
                 .asScrollEvent(
                     1,
-                    351,
+                    355,
                     test::ScrollDirection::UP,
                     10000
                 )
+        );
+        setup.autoCapture(
+            "NestedScrollPostInnerScrollUp.bmp"
         );
         REQUIRE(nestedLayout->getScrollY() == 0);
         REQUIRE(rootLayout->getScrollY() == (

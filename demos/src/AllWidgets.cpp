@@ -45,7 +45,7 @@ int main() {
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
 
     al_set_new_display_flags(
-        ALLEGRO_RESIZABLE
+        ALLEGRO_RESIZABLE | ALLEGRO_OPENGL
     );
     ALLEGRO_DISPLAY* disp = al_create_display(640, 480);
     al_set_window_title(disp, "Choo choo");
@@ -125,7 +125,8 @@ int main() {
         alui::FlexDirection::Horizontal,
         alui::ComponentConfig {
             .flex { 1 },
-            .maxHeight = alui::Magnitude::Absolute(300.f)
+            .minWidth = alui::Magnitude::Relative(1.f),
+            .maxHeight = alui::Magnitude::Absolute(300.f),
         }
     );
     auto overflowTextContent = std::make_shared<alui::Text>(

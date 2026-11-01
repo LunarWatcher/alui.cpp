@@ -46,6 +46,7 @@ public:
     virtual void push(std::shared_ptr<Component> c);
     virtual void setShowOverflow(bool showOverflow) {
         this->showOverflow = showOverflow;
+        dirty = true;
     }
     virtual void setFont(ALLEGRO_FONT* font) override;
 

@@ -2,7 +2,6 @@
 
 #include "allegro5/color.h"
 #include "alui/component/Component.hpp"
-#include "alui/style/Style.hpp"
 #include "alui/style/StyleStates.hpp"
 
 namespace alui {

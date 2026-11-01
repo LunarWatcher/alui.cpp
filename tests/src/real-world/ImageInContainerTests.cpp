@@ -23,6 +23,7 @@ TEST_CASE("Test layout sizing of dynamic landscape image with no expanding eleme
                     .style = test::getDebugStyleSpec(),
                 }
             );
+            layout->setShowOverflow(false);
             auto img = std::make_shared<alui::ImageComponent>(
                 setup.imageAssets.fullSlice(
                     setup.imageAssets.d256x128
@@ -70,6 +71,7 @@ TEST_CASE("Test layout sizing of landscape and portrait images") {
                     .style = test::getDebugStyleSpec(),
                 }
             );
+            layout->setShowOverflow(false);
             auto landscapeImg = std::make_shared<alui::ImageComponent>(
                 setup.imageAssets.fullSlice(
                     setup.imageAssets.d256x128

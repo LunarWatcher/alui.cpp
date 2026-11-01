@@ -3,12 +3,8 @@
 #include "allegro5/utf8.h"
 #include "alui/component/Component.hpp"
 #include "alui/GUI.hpp"
-#include <cmath>
 #include <stdexcept>
 #include <string>
-#if defined ALUI_TEST || 1
-#include <iostream>
-#endif
 
 namespace alui {
 

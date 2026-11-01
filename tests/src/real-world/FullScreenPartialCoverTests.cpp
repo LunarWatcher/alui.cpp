@@ -57,6 +57,7 @@ TEST_CASE("100% GUI with partial screen coverage") {
                 .style = test::getDebugStyleSpec(),
             }
         );
+        layout->setShowOverflow(false);
 
         auto btn = std::make_shared<alui::Button>(
             "Click for headpats",

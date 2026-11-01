@@ -67,6 +67,14 @@ void Layout::render(GUI& ctx, float scrollX, float scrollY) {
         );
         child->render(ctx, scrollX, scrollY);
     }
+
+    if (showOverflow) {
+        verticalScroll->render(
+            ctx,
+            srcScrollX,
+            srcScrollY
+        );
+    }
     al_reset_clipping_rectangle();
 }
 
@@ -108,6 +116,11 @@ void Layout::setFont(ALLEGRO_FONT* font) {
 void Layout::updateComputedPos(float parentX, float parentY) {
     this->computedX = parentX;
     this->computedY = parentY;
+
+    verticalScroll->moveParentContainer(
+        parentX,
+        parentY
+    );
 
     for (auto& child : children) {
         auto [cx, cy] = child->getComputedPositions();
