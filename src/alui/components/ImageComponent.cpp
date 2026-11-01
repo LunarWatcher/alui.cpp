@@ -1,5 +1,4 @@
 #include "ImageComponent.hpp"
-#include <iostream>
 
 namespace alui {
 

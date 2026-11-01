@@ -5,7 +5,6 @@
 #include "alui/component/Component.hpp"
 #include "alui/Layout.hpp"
 #include <algorithm>
-#include <iostream>
 #include <memory>
 
 namespace alui {

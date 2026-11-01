@@ -1,10 +1,8 @@
 #pragma once
 
 #include "alui/component/Component.hpp"
-#include "alui/component/ComponentConfig.hpp"
 #include "alui/component/FlexDirection.hpp"
 #include <algorithm>
-#include <iostream>
 
 namespace alui {
 
