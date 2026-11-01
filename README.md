@@ -23,8 +23,14 @@ This is a WIP library that I'll be poking at on and off for the foreseeable futu
 ```cmake
 include(FetchContent)
 
-# TODO: later
+FetchContent_Declare(alui
+    GIT_REPOSITORY https://codeberg.org/LunarWatcher/alui.cpp
+    # Or a versioned  tag, but alui is currently unversioned
+    GIT_TAG master
+)
 ```
+
+If you don't have allegro in a system package, or don't _want_ to use it in a system package, you can use https://codeberg.org/LunarWatcher/allegro5-cmake to make it `FetchContent`-compatible. Note that the patch currently does not support audio because I have no use for it, but feel free to open a PR to add it.
 
 
 ## License

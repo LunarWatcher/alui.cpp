@@ -4,9 +4,9 @@
 namespace alui {
 
 ImageComponent::ImageComponent(
-    const std::shared_ptr<ImageSlice>& imageSlice,
+    const std::shared_ptr<ImageFactory>& imageFactory,
     const ComponentConfig& cfg
-) : Component(cfg), imageSlice(imageSlice) {}
+) : Component(cfg), imageFactory(imageFactory) {}
 
 void ImageComponent::render(GUI&, float scrollX, float scrollY) {
     imageSlice->render(
@@ -23,9 +23,9 @@ float ImageComponent::computeCrossSize(
     float
 ) {
     if (dir == FlexDirection::Horizontal) {
-        return imageSlice->computeHeight(virtualMainSize);
+        return imageFactory->computeHeight(virtualMainSize);
     } else {
-        return imageSlice->computeWidth(virtualMainSize);
+        return imageFactory->computeWidth(virtualMainSize);
     }
 }
 

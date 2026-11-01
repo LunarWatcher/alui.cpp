@@ -2,46 +2,43 @@
 
 #include "allegro5/bitmap.h"
 #include "allegro5/bitmap_draw.h"
-namespace alui {
+#include "alui/data/Rect.hpp"
 
-/*
- * Redesign notes:
- * * I don't know if keeping slices reusable makes sense. It does for standard slices, but it doesn't for 9-slices,
- *   since 9-slices may need to be cached as a bitmap.
- *   It _could_ be drawn on-demand, but that's 9 draw calls per component
- * * I think it might be worth hooking 9-slices into the resize cycle, so a cached ALLEGRO_BITMAP can be made.
- */
+namespace alui {
 
 /**
  * Contains raw information about an image. Applications providing images are required to keep the ALLEGRO_BITMAP valid
  * for the duration of the alui::Image. alui::ImageSlice does not take ownership, and does not do cleanup of the image
  * assets.
  */
-struct ImageSlice {
+class ImageSlice {
+private:
     ALLEGRO_BITMAP* bmp;
-    float x, y, w, h;
+    Rect sliceSize;
 
+    /**
+     * Whether or not the bmp is owned by this class.
+     * If true, bmp is freed when this class is destroyed.
+     */
+    bool takeOwnership;
+
+public:
     ImageSlice(
         ALLEGRO_BITMAP* bmp,
-        float x,
-        float y,
-        float w,
-        float h
-    ) : bmp(bmp), x(x), y(y), w(w), h(h) {}
-
-    float computeHeight(float containerWidth) {
-        return h / w * containerWidth;
-    }
-
-    float computeWidth(float containerHeight) {
-        return w / h * containerHeight;
+        Rect sliceSize,
+        bool takeOwnership = false
+    ) : bmp(bmp), sliceSize(sliceSize), takeOwnership(takeOwnership) {}
+    virtual ~ImageSlice() {
+        if (takeOwnership && bmp != nullptr) {
+            al_destroy_bitmap(bmp);
+        }
     }
 
     /**
      * Renders the image at the given location, with the parameters dx, dy, dw, and dh representing the target
      * location's position.
      */
-    void render(
+    virtual void render(
         float dx,
         float dy,
         float dw,
@@ -49,8 +46,8 @@ struct ImageSlice {
     ) {
         al_draw_scaled_bitmap(
             bmp,
-            x, y,
-            w, h,
+            sliceSize.x, sliceSize.y,
+            sliceSize.w, sliceSize.h,
             dx, dy,
             dw, dh,
             0

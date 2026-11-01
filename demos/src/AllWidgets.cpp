@@ -16,6 +16,7 @@
 #include "alui/component/FlexDirection.hpp"
 #include "alui/components/Text.hpp"
 #include "alui/components/ImageComponent.hpp"
+#include "alui/images/ImageSliceFactory.hpp"
 #include "alui/layouts/FlexBox.hpp"
 
 int main() {
@@ -105,9 +106,9 @@ int main() {
     rootLayout->push(testText);
 
     auto testImage = std::make_shared<alui::ImageComponent>(
-        std::make_shared<alui::ImageSlice>(
+        std::make_shared<alui::ImageSliceFactory>(
             eepyfox,
-            0, 0, 256, 256
+            alui::Rect(0, 0, 256, 256)
         ),
         alui::ComponentConfig {
             .minWidth = alui::Magnitude { 256.f },
