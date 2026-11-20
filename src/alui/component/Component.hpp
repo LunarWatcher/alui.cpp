@@ -93,13 +93,7 @@ public:
     virtual float computeSizeRequirements(FlexDirection dir);
     virtual float computeCrossSize(FlexDirection dir, float virtualMainSize, float maxCrossSize);
 
-    virtual void updateComputedSizes(
-        float width, float height
-    ) {
-
-        this->computedWidth = width;
-        this->computedHeight = height;
-    }
+    virtual void updateComputedSizes(float width, float height);
 
     virtual void updateComputedPos(float x, float y) {
         dirty = false;

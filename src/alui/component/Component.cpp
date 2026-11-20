@@ -43,6 +43,16 @@ float Component::computeCrossSize(FlexDirection dir, float, float) {
             f.padding.getSizeForDimension(dir)
         );
 }
+void Component::updateComputedSizes(float width, float height)
+{
+
+    this->computedWidth = width;
+    this->computedHeight = height;
+
+    if (this->f.style) {
+        this->f.style->resize(width, height);
+    }
+}
 
 bool Component::contains(float x, float y) {
     return x >= this->computedX && x <= this->computedX + this->computedWidth

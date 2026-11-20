@@ -126,8 +126,8 @@ void FlexBox::recomputeBounds(
     // }}}
     // § 9.4: cross size {{{
     //for (auto& it : components) {
-        //// TODO(fix): this assumes height: 100% (or whatever the flex equivalent is)
-        //it.flexOpposingSize = lineMaxOpposingSize;
+    //// TODO(fix): this assumes height: 100% (or whatever the flex equivalent is)
+    //it.flexOpposingSize = lineMaxOpposingSize;
     //}
     // }}}
 
@@ -212,15 +212,18 @@ void FlexBox::recomputeBounds(
     this->computedY = computedY;
 
     // TODO: The compute params are probably wrong
-    this->computedWidth = std::clamp(
-        maxX + f.padding.right - computedX,
-        f.minWidth.value_or(Magnitude {0.0f}).compute(parentWidth),
-        f.maxWidth.value_or(Magnitude {parentWidth}).compute(parentWidth)
-    );
-    this->computedHeight = std::clamp(
-        maxY + f.padding.bot - computedY,
-        f.minHeight.value_or(Magnitude {0.0f}).compute(parentHeight),
-        f.maxHeight.value_or(Magnitude {parentHeight}).compute(parentHeight)
+
+    updateComputedSizes(
+        std::clamp(
+            maxX + f.padding.right - computedX,
+            f.minWidth.value_or(Magnitude {0.0f}).compute(parentWidth),
+            f.maxWidth.value_or(Magnitude {parentWidth}).compute(parentWidth)
+        ),
+        std::clamp(
+            maxY + f.padding.bot - computedY,
+            f.minHeight.value_or(Magnitude {0.0f}).compute(parentHeight),
+            f.maxHeight.value_or(Magnitude {parentHeight}).compute(parentHeight)
+        )
     );
 
     this->verticalScroll->resizeParentContainer(
