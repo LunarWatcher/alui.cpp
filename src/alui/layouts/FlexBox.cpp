@@ -196,10 +196,10 @@ void FlexBox::recomputeBounds(
             item.c->updateComputedSizes(width, height);
 
             // TODO: + gap
-            (dir == FlexDirection::Horizontal ? x : y) += item.flexAxialSize;
+            (dir == FlexDirection::Horizontal ? x : y) += item.flexAxialSize + flexGap;
         }
         // TODO: + gap
-        (dir == FlexDirection::Horizontal ? y : x) += localMaxCrossSize;
+        (dir == FlexDirection::Horizontal ? y : x) += localMaxCrossSize + flexGap;
 
         maxX = std::max(x + f.padding.right, maxX);
         maxY = std::max(y, maxY);

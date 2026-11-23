@@ -21,10 +21,13 @@ add_library(alui STATIC
 
     alui/components/sub/Scrollbar.cpp
 
+    alui/images/NineSliceImageFactory.cpp
+
     alui/layouts/FlexBox.cpp
 
     alui/style/BackgroundColourStyle.cpp
     alui/style/BorderStyle.cpp
+    alui/style/StyleStates.cpp
 )
 
 target_include_directories(alui PUBLIC .)

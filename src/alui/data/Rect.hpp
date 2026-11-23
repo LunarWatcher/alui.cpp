@@ -7,6 +7,19 @@ namespace alui {
  */
 struct Rect {
     float x, y, w, h;
+
+    float endX() {
+        return x + w;
+    }
+    float endY() {
+        return y + h;
+    }
+
+    Rect& operator+(const Rect& other) {
+        x += other.x;
+        y += other.y;
+        return *this;
+    }
 };
 
 }

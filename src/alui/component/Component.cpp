@@ -45,13 +45,8 @@ float Component::computeCrossSize(FlexDirection dir, float, float) {
 }
 void Component::updateComputedSizes(float width, float height)
 {
-
     this->computedWidth = width;
     this->computedHeight = height;
-
-    if (this->f.style) {
-        this->f.style->resize(width, height);
-    }
 }
 
 bool Component::contains(float x, float y) {

@@ -17,13 +17,6 @@ struct StyleSpec {
     ), borderStyle(
         std::move(borderStyle)
     ) {}
-
-    void resize(
-        float width, float height
-    ) {
-        backgroundStyle.resize(width, height);
-        borderStyle.resize(width, height);
-    }
 };
 
 }

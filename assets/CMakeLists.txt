@@ -9,6 +9,8 @@ set(ASSETS
     # layout tests)
     128x256.png
     256x128.png
+
+    9slice-sprite.png
 )
 foreach(ASSET IN LISTS ASSETS)
     message(STATUS "Copying ${ASSET}")

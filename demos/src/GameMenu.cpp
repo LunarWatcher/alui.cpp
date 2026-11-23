@@ -1,3 +1,4 @@
+#include "allegro5/allegro_image.h"
 #include "allegro5/allegro_primitives.h"
 #include <iostream>
 
@@ -6,7 +7,9 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/display.h>
 
+#include "allegro5/bitmap.h"
 #include "allegro5/color.h"
+#include "allegro5/error.h"
 #include "allegro5/events.h"
 #include "allegro5/timer.h"
 
@@ -15,6 +18,8 @@
 #include "alui/components/Button.hpp"
 #include "alui/layouts/FlexBox.hpp"
 #include "alui/style/BackgroundColourStyle.hpp"
+#include "alui/style/BackgroundImageStyle.hpp"
+#include "alui/images/NineSliceImageFactory.hpp"
 #include "alui/style/BorderStyle.hpp"
 #include "alui/style/StyleStates.hpp"
 #include <alui/style/Style.hpp>
@@ -31,6 +36,7 @@ int main() {
     al_init_font_addon();
     al_init_ttf_addon();
     al_init_primitives_addon();
+    al_init_image_addon();
 
     al_install_keyboard();
     al_install_mouse();
@@ -46,6 +52,10 @@ int main() {
     
 
     ALLEGRO_FONT* font = al_load_ttf_font(FONT, 36, 0);
+    ALLEGRO_BITMAP* nineslice = al_load_bitmap("./assets/9slice-sprite.png");
+    if (nineslice == nullptr) {
+        throw std::runtime_error("bad girl");
+    }
 
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_mouse_event_source());
@@ -62,20 +72,30 @@ int main() {
         .width = alui::Magnitude::Absolute(640.f),
         .height = alui::Magnitude::Absolute(480.f),
     });
-    std::shared_ptr<alui::StyleSpec> buttonStyle = std::make_shared<alui::StyleSpec>(
+    auto buttonStyle = std::make_shared<alui::StyleSpec>(
         alui::StyleStates {
-            .defaultState = std::make_shared<alui::BackgroundColourStyle>(
-                al_map_rgb(80, 80, 80)
+            // .defaultState = std::make_shared<alui::BackgroundColourStyle>(
+            //     al_map_rgb(80, 80, 80)
+            // ),
+            .defaultState = std::make_shared<alui::BackgroundImageStyle>(
+                std::make_shared<alui::NineSliceImageFactory>(
+                    nineslice,
+                    alui::Rect(0, 0, 64, 64),
+                    // alui::Rect(0, 64, 64, 64), // Alternate variant
+                    // alui::Rect(64, 0, 64, 64), // Alternate variant
+                    // alui::Rect(64, 64, 64, 64), // Alternate variant
+                    alui::Rect(5, 5, 64 - 10, 64 - 10)
+                )
             ),
             .focusedState = std::make_shared<alui::BackgroundColourStyle>(
                 al_map_rgb(135, 113, 46)
             )
         },
         alui::StyleStates {
-            .defaultState = std::make_shared<alui::BorderStyle>(
-                al_map_rgb(83, 27, 70),
-                2
-            ),
+            // .defaultState = std::make_shared<alui::BorderStyle>(
+            //     al_map_rgb(83, 27, 70),
+            //     2
+            // ),
         }
     );
 
@@ -89,7 +109,7 @@ int main() {
         .flex = { 0.f, 0.f },
         .style = buttonStyle
     });
-    playBtn->setTextColour(al_map_rgb_f(1, 1, 1));
+    playBtn->setTextColour(al_map_rgb_f(0, 0, 0));
     playBtn->addClickListener([](auto*, auto, auto) {
         std::cout << "Play owo" << std::endl;
         return true;
@@ -112,11 +132,12 @@ int main() {
         .flex = { 0.f, 0.f },
         .style = buttonStyle
     });
-    settingsBtn->setTextColour(al_map_rgb_f(1, 1, 1));
+    settingsBtn->setTextColour(al_map_rgb_f(0, 0, 0));
     settingsBtn->addClickListener([](auto*, auto, auto) {
         std::cout << "Settings" << std::endl;
         return true;
     });
+    rootLayout->setFlexGap(2.f);
     rootLayout->push(settingsBtn);
 
     gui.push(rootLayout);
